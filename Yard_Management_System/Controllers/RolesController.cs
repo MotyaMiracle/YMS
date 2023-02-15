@@ -9,10 +9,12 @@ namespace Yard_Management_System.Controllers
     public class RolesController : Controller
     {
         ApplicationContext db;
+
         public RolesController(ApplicationContext context)
         {
             db = context;
         }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {

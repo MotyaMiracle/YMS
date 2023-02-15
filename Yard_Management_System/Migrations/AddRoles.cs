@@ -19,6 +19,7 @@ namespace Yard_Management_System.Migrations
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
                 });
+
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ListOfPermissions", "Name" },
