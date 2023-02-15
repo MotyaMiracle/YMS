@@ -39,20 +39,6 @@ namespace YardManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a2524daf-6498-471a-adf8-f6c54703cf08"),
-                            ListOfPermissions = new[] { 2, 1, 3, 0 },
-                            Name = "Гл. Администратор"
-                        },
-                        new
-                        {
-                            Id = new Guid("624df587-97b9-4b82-a025-c1ebfdfed153"),
-                            ListOfPermissions = new[] { 2, 0 },
-                            Name = "Оператор стойки регистрации"
-                        });
                 });
 #pragma warning restore 612, 618
         }
