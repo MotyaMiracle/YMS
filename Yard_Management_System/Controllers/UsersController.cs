@@ -18,7 +18,7 @@ namespace Yard_Management_System.Controllers
             db = context;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> Get()
+        public async Task<IActionResult> Get(CancellationToken token)
         {
             var users = await db.Users.Include(u => u.Role).ToListAsync();
             return Ok(users);
