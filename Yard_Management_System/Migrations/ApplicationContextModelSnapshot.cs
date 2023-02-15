@@ -35,18 +35,6 @@ namespace YardManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("79ff6fd3-9bcd-48c0-af37-81d47cf00fac"),
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = new Guid("1f347d77-e2f8-4eab-a48d-c1a9e043b04a"),
-                            Name = "User"
-                        });
                 });
 
             modelBuilder.Entity("Yard_Management_System.Models.User", b =>
@@ -89,28 +77,6 @@ namespace YardManagementSystem.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("300ea297-113d-4266-8956-436f0c129ccd"),
-                            Email = "tom@gmail.com",
-                            IsActive = false,
-                            Login = "tom123",
-                            Password = "12345",
-                            PhoneNumber = "89169436523",
-                            RoleId = new Guid("79ff6fd3-9bcd-48c0-af37-81d47cf00fac")
-                        },
-                        new
-                        {
-                            Id = new Guid("815dd257-00e7-4617-bd58-a6ddfaa7c20d"),
-                            Email = "alice@gmail.com",
-                            IsActive = false,
-                            Login = "alice321",
-                            Password = "54321",
-                            PhoneNumber = "89267434513",
-                            RoleId = new Guid("1f347d77-e2f8-4eab-a48d-c1a9e043b04a")
-                        });
                 });
 
             modelBuilder.Entity("Yard_Management_System.Models.User", b =>
