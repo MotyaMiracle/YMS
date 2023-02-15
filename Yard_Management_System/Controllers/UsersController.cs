@@ -13,14 +13,16 @@ namespace Yard_Management_System.Controllers
     public class UsersController : ControllerBase
     {
         ApplicationContext db;
+
         public UsersController(ApplicationContext context)
         {
             db = context;
         }
+
         [HttpGet]
         public async Task<IActionResult> Get(CancellationToken token)
         {
-            var users = await db.Users.Include(u => u.Role).ToListAsync();
+            var users = await db.Users.Include(u => u.Role).ToListAsync(token);
             return Ok(users);
         }
     }
