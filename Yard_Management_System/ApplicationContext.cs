@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
-using Yard_Management_System.Models;
 
 namespace Yard_Management_System
 {

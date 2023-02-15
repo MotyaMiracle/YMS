@@ -1,6 +1,4 @@
-﻿using Yard_Management_System.Entity;
-
-namespace Yard_Management_System.Models
+﻿namespace Yard_Management_System.Entity
 {
     public class User
     {
@@ -12,7 +10,6 @@ namespace Yard_Management_System.Models
         public bool IsActive { get; set; }
         public string PhoneNumber { get; set; }
         public Guid RoleId { get; set; }
-        public Role? Role { get; set; }
-
+        public Role Role { get; set; }
     }
 }

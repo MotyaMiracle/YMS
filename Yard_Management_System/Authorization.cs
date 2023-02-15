@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Yard_Management_System.Models;
+using Yard_Management_System.Entity;
 
 namespace Yard_Management_System
 {
