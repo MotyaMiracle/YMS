@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230215122850_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,18 +25,11 @@ namespace YardManagementSystem.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
+            modelBuilder.Entity("Yard_Management_System.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-
-                    b.Property<int[]>("ListOfPermissions")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
-
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -44,8 +40,7 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Roles");
                 });
 
-
-            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
+            modelBuilder.Entity("Yard_Management_System.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,22 +82,21 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
+            modelBuilder.Entity("Yard_Management_System.Models.User", b =>
                 {
-                    b.HasOne("Yard_Management_System.Entity.Role", "Role")
+                    b.HasOne("Yard_Management_System.Models.Role", "Role")
                         .WithOne("User")
-                        .HasForeignKey("Yard_Management_System.Entity.User", "RoleId")
+                        .HasForeignKey("Yard_Management_System.Models.User", "RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
+            modelBuilder.Entity("Yard_Management_System.Models.Role", b =>
                 {
                     b.Navigation("User");
                 });
-
 #pragma warning restore 612, 618
         }
     }
