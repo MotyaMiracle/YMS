@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Data;
+﻿using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Models
 {

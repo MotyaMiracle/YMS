@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FluentValidation;
-using System.IdentityModel.Tokens.Jwt;
-using Serilog;
-using System.ComponentModel.DataAnnotations.Schema;
+using Yard_Management_System.Entity;
 using Yard_Management_System.Models;
-using System.Data;
 
 namespace Yard_Management_System
 {
