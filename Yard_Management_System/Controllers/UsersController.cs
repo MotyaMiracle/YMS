@@ -21,7 +21,7 @@ namespace Yard_Management_System.Controllers
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
             var users = await db.Users.Include(u => u.Role).ToListAsync();
-            return new JsonResult(users);
+            return Ok(users);
         }
     }
 }
