@@ -95,7 +95,7 @@ app.MapGet("/", () => Results.Redirect("api/login"));
 app.MapGet("api/login", async (HttpContext context) =>
 {
     context.Response.ContentType = "text/html; charset=utf-8";
-    // html-форма для ввода логина/пароля
+    // html-ГґГ®Г°Г¬Г  Г¤Г«Гї ГўГўГ®Г¤Г  Г«Г®ГЈГЁГ­Г /ГЇГ Г°Г®Г«Гї
     string loginForm = @"<!DOCTYPE html>
     <html>
     <head>

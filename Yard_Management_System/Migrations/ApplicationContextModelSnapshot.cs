@@ -22,11 +22,18 @@ namespace YardManagementSystem.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Yard_Management_System.Models.Role", b =>
+
+            modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+
+                    b.Property<int[]>("ListOfPermissions")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -37,7 +44,8 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Models.User", b =>
+
+            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,21 +87,22 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Models.User", b =>
+            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
-                    b.HasOne("Yard_Management_System.Models.Role", "Role")
+                    b.HasOne("Yard_Management_System.Entity.Role", "Role")
                         .WithOne("User")
-                        .HasForeignKey("Yard_Management_System.Models.User", "RoleId")
+                        .HasForeignKey("Yard_Management_System.Entity.User", "RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Models.Role", b =>
+            modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
                 {
                     b.Navigation("User");
                 });
+
 #pragma warning restore 612, 618
         }
     }
