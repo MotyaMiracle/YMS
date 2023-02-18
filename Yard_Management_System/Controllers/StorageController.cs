@@ -27,7 +27,7 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpPost("createStorage")]
-        public async Task<IActionResult> Post(CreateStorage newStorage,CancellationToken token)
+        public async Task<IActionResult> Post(CreateStorage newStorage, CancellationToken token)
         {
             if (newStorage == null)
                 return BadRequest();
@@ -44,7 +44,7 @@ namespace Yard_Management_System.Controllers
 
             await _db.Storages.AddAsync(storage, token);
             await _db.SaveChangesAsync(token);
-            return Ok(storage);
+            return Ok();
         }
 
         [HttpDelete("deleteStorage")]
