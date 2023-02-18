@@ -29,7 +29,7 @@ namespace YardManagementSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Routes",
                 columns: new[] { "Id", "ArrivalTime", "DriverId", "NowStatus", "StorageId" },
-                values: new object[] { new Guid("a42490c8-d837-4613-b28a-aac251903e45"), new DateTime(2022, 2, 18, 12, 0, 0, 0, DateTimeKind.Utc), new Guid("564afa54-2f20-4521-85f5-bb0e080d7f2a"), 0, new Guid("33066b28-d708-46d8-a683-c2ae0dcd2f44") });
+                values: new object[] { new Guid("a42490c8-d837-4613-b28a-aac251903e45"), new DateTime(2022, 2, 18, 16, 0, 0, 0, DateTimeKind.Utc), new Guid("564afa54-2f20-4521-85f5-bb0e080d7f2a"), 2, new Guid("33066b28-d708-46d8-a683-c2ae0dcd2f44") });
         }
 
         /// <inheritdoc />

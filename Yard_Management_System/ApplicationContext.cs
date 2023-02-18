@@ -22,8 +22,6 @@ namespace Yard_Management_System
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasIndex(u => new { u.Login, u.Email }).IsUnique();
-            Road road = new Road { Id = Guid.NewGuid(), StorageId = Guid.NewGuid(), DriverId = Guid.NewGuid(), ArrivalTime = new DateTime(2022, 2, 18, 15, 0, 0).ToUniversalTime(), NowStatus = Road.Status.Create };
-            modelBuilder.Entity<Road>().HasData(road);
         }
     }
 }

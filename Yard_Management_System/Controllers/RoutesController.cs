@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Controllers
 {
@@ -11,6 +12,17 @@ namespace Yard_Management_System.Controllers
         public RoutesController(ApplicationContext context)
         {
             db = context;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CancellationToken token, Road route)
+        {
+            if (route == null)
+                return BadRequest();
+            route.Id = Guid.NewGuid();
+            await db.Routes.AddAsync(route, token);
+            await db.SaveChangesAsync(token);
+            return Ok(route);
         }
 
         [HttpGet]
