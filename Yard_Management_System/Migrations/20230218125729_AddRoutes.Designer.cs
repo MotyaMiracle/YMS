@@ -12,7 +12,7 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230218124533_AddRoutes")]
+    [Migration("20230218125729_AddRoutes")]
     partial class AddRoutes
     {
         /// <inheritdoc />
@@ -85,11 +85,11 @@ namespace YardManagementSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6d72a696-17db-4020-b0ae-88c1c86e701e"),
+                            Id = new Guid("a42490c8-d837-4613-b28a-aac251903e45"),
                             ArrivalTime = new DateTime(2022, 2, 18, 12, 0, 0, 0, DateTimeKind.Utc),
-                            DriverId = new Guid("2c96f974-e8d2-48f9-8040-bb649bf41aaf"),
+                            DriverId = new Guid("564afa54-2f20-4521-85f5-bb0e080d7f2a"),
                             NowStatus = 0,
-                            StorageId = new Guid("406c5d8b-00ee-419a-b901-4d670601ee4f")
+                            StorageId = new Guid("33066b28-d708-46d8-a683-c2ae0dcd2f44")
                         });
                 });
 
