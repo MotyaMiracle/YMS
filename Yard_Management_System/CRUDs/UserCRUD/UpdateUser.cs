@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Yard_Management_System.Entity
+namespace Yard_Management_System.CRUDs.UserCRUD
 {
     public class UpdateUser
     {

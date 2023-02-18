@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Yard_Management_System.CRUDs.UserCRUD;
 using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Controllers
@@ -25,11 +26,11 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<ActionResult<User>> Edit(UpdateUser updateUser)
+        public async Task<ActionResult<User>> Edit(UpdateUser updateUser, CancellationToken token)
         {
             if (updateUser != null)
             {
-                User? user = await db.Users.FirstOrDefaultAsync(p => p.Login == updateUser.Login);
+                User? user = await db.Users.FirstOrDefaultAsync(p => p.Login == updateUser.Login, token);
                 if (user != null)
                 {
                     if (updateUser.NewLogin != "string") 
@@ -51,7 +52,7 @@ namespace Yard_Management_System.Controllers
                     }
                     
                     db.Users.Update(user);
-                    await db.SaveChangesAsync();
+                    await db.SaveChangesAsync(token);
                     return Ok(user);
                 }
                     

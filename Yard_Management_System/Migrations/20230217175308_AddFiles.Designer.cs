@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230217175308_AddFiles")]
+    partial class AddFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,39 +58,6 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("DriverId");
 
                     b.ToTable("Files");
-                });
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Road", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ArrivalTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("DriverId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("NowStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StorageId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Routes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("6d72a696-17db-4020-b0ae-88c1c86e701e"),
-                            ArrivalTime = new DateTime(2022, 2, 18, 12, 0, 0, 0, DateTimeKind.Utc),
-                            DriverId = new Guid("2c96f974-e8d2-48f9-8040-bb649bf41aaf"),
-                            NowStatus = 0,
-                            StorageId = new Guid("406c5d8b-00ee-419a-b901-4d670601ee4f")
-                        });
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
@@ -152,11 +122,13 @@ namespace YardManagementSystem.Migrations
 
             modelBuilder.Entity("Yard_Management_System.Entity.MyFile", b =>
                 {
-                    b.HasOne("Yard_Management_System.Entity.Driver", null)
+                    b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
                         .WithMany("Files")
                         .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Driver");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>

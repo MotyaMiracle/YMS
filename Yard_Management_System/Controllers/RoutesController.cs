@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Controllers
 {
-    [Route("api/roles")]
+    [Route("api/routes")]
     [ApiController]
-    public class RolesController : Controller
+    public class RoutesController : Controller
     {
         ApplicationContext db;
-
-        public RolesController(ApplicationContext context)
+        public RoutesController(ApplicationContext context)
         {
             db = context;
         }
@@ -18,8 +16,8 @@ namespace Yard_Management_System.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(CancellationToken token)
         {
-            var roles = await db.Roles.ToListAsync(token);
-            return Ok(roles);
+            var routes = await db.Routes.ToListAsync(token);
+            return Ok(routes);
         }
     }
 }
