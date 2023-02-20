@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yard_Management_System", "Yard_Management_System\Yard_Management_System.csproj", "{150BD601-9799-4B4B-AFDA-119FA2AD8093}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yard_Management_System", "Yard_Management_System\Yard_Management_System.csproj", "{150BD601-9799-4B4B-AFDA-119FA2AD8093}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61C9BB59-66E9-4544-9DBB-025099E8B054} = {61C9BB59-66E9-4544-9DBB-025099E8B054}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{61C9BB59-66E9-4544-9DBB-025099E8B054}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{150BD601-9799-4B4B-AFDA-119FA2AD8093}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{150BD601-9799-4B4B-AFDA-119FA2AD8093}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{150BD601-9799-4B4B-AFDA-119FA2AD8093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C9BB59-66E9-4544-9DBB-025099E8B054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C9BB59-66E9-4544-9DBB-025099E8B054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C9BB59-66E9-4544-9DBB-025099E8B054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C9BB59-66E9-4544-9DBB-025099E8B054}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

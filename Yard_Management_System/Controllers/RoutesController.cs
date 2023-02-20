@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Yard_Management_System.Entity;
+
 
 namespace Yard_Management_System.Controllers
 {
@@ -9,6 +11,7 @@ namespace Yard_Management_System.Controllers
     public class RoutesController : Controller
     {
         ApplicationContext db;
+
         public RoutesController(ApplicationContext context)
         {
             db = context;
@@ -28,8 +31,7 @@ namespace Yard_Management_System.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(CancellationToken token)
         {
-            var routes = await db.Routes.ToListAsync(token);
-            return Ok(routes);
+
         }
     }
 }
