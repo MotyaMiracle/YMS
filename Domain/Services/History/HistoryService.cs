@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Yard_Management_System;
-using Yard_Management_System.Entity;
-
-namespace Domain.Services.History
+﻿namespace Domain.Services.History
 {
-    internal class HistoryService : IHistoryService
+    public class HistoryService : IHistoryService
     {
-        private readonly ApplicationContext _database;
-
-        public HistoryService(ApplicationContext database) 
-        { 
-            _database = database;
-        }
-        public async Task GetAsync(Guid routeId, CancellationToken token)
+        public void Get(Guid routeId)
         {
-            Road route 
-            
+            throw new NotImplementedException();
         }
 
-        public async Task SaveAsync()
+        public Task GetAsync(Guid routeId, CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save(Guid routeId, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync(Guid routeId, CancellationToken token, string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

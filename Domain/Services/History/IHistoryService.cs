@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Services.History
 {
-    internal interface IHistoryService
+    public interface IHistoryService
     {
         Task GetAsync(Guid routeId, CancellationToken token);
         void Get(Guid routeId);
