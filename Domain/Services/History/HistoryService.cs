@@ -16,8 +16,7 @@ namespace Domain.Services.History
 
         public void Get(Guid tripId)
         {
-            //Trip trip = _db.Trips.FirstOrDefault(t => t.Id == tripId);
-            //return;
+            throw new NotImplementedException();
         }
 
         public async Task<HistoryDto> GetAsync(Guid entityId, CancellationToken token)
