@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Database.Entity;
+using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -11,6 +12,7 @@ namespace Yard_Management_System
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<MyFile> Files { get; set; }
         public DbSet<Trip> Trips { get; set; }
+        public DbSet<HistoryEntry> HistoryEntries { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

@@ -1,7 +1,7 @@
-﻿using Yard_Management_System;
-using Yard_Management_System.Entity;
+﻿using Database.Entity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Yard_Management_System;
 
 namespace Domain.Services.History
 {
@@ -9,19 +9,32 @@ namespace Domain.Services.History
     {
         ApplicationContext _db;
 
-        public void Get(Guid tripId)
+        public HistoryService(ApplicationContext db)
         {
-            Trip trip = _db.Trips.FirstOrDefault(t => t.Id == tripId);
-            return;
+            _db = db;
         }
 
-        public async Task<HistoryDto> GetAsync(Guid tripId, CancellationToken token)
+        public void Get(Guid tripId)
         {
-            var trip = await _db.Trips.FirstOrDefault(t => t.Id == tripId);
-            
+            //Trip trip = _db.Trips.FirstOrDefault(t => t.Id == tripId);
+            //return;
+        }
+
+        public async Task<HistoryDto> GetAsync(Guid entityId, CancellationToken token)
+        {
+            var historyEntries = await _db.HistoryEntries
+               .Include(x => x.User)
+               .Where(x => x.EntityId == entityId)
+               .ToListAsync(token);
+
             return new HistoryDto
             {
-                Entries = trip
+                Entries = historyEntries.Select(x => new HistoryEntryDto
+                {
+                    Date = x.Date,
+                    Text = x.Text,
+                    UserName = x.User.Login,
+                }).ToList()
             };
         }
 
@@ -30,9 +43,18 @@ namespace Domain.Services.History
             throw new NotImplementedException();
         }
 
-        public Task SaveAsync(Guid tripId, CancellationToken token, string message)
+        public async Task SaveAsync(Guid entityId, string message, Guid userId, CancellationToken token)
         {
-            throw new NotImplementedException();
+            var entry = new HistoryEntry
+            {
+                Date = DateTime.UtcNow,
+                Text = message,
+                UserId = userId,
+                EntityId = entityId
+            };
+
+            await _db.HistoryEntries.AddAsync(entry, token);
+            await _db.SaveChangesAsync(token);
         }
     }
 }

@@ -1,5 +1,5 @@
+using Domain.Services.History;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -11,12 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
+builder.Services.
+    AddDbContext<ApplicationContext>(options => 
+    options.UseNpgsql(connection, b => b.MigrationsAssembly("Database")));
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
+
+builder.Services.AddScoped<IHistoryService, HistoryService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -32,7 +38,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
 builder.Services.AddControllers();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("OnlyForAdmin", policy =>
@@ -40,8 +48,10 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim(ClaimsIdentity.DefaultRoleClaimType, "Гл. Администратор");
     });
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

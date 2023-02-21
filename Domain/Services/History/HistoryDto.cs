@@ -1,7 +1,9 @@
-﻿namespace Domain.Services.History
+﻿using Database.Entity;
+
+namespace Domain.Services.History
 {
     public class HistoryDto
     {
-        public List<HistoryDto> Entries { get; set;}
+        public List<HistoryEntryDto> Entries { get; set;}
     }
 }

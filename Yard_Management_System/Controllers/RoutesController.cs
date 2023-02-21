@@ -1,5 +1,6 @@
 ﻿using Domain.Services.History;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
 
 
@@ -9,29 +10,38 @@ namespace Yard_Management_System.Controllers
     [ApiController]
     public class RoutesController : Controller
     {
-        ApplicationContext db;
-        IHistoryService historyService;
+        ApplicationContext _db;
+        private readonly IHistoryService _historyService;
+        
 
-        public RoutesController(ApplicationContext context)
+        public RoutesController(ApplicationContext db, IHistoryService historyService)
         {
-            db = context;
+            _db = db;
+            _historyService = historyService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CancellationToken token, Trip route)
+        public async Task<IActionResult> Create(CancellationToken token)
         {
-            if (route == null)
-                return BadRequest();
-            route.Id = Guid.NewGuid();
-            await db.Trips.AddAsync(route, token);
-            await db.SaveChangesAsync(token);
-            return Ok(route);
+            Trip trip = new Trip
+            {
+                Id = Guid.NewGuid(),
+                StorageId = Guid.NewGuid(),
+                DriverId = Guid.NewGuid(),
+                ArrivalTime = DateTime.UtcNow,
+                NowStatus = Trip.Status.Create
+            };
+            
+            await _db.Trips.AddAsync(trip, token);
+            await _db.SaveChangesAsync(token);
+            return Ok(trip);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken token)
+        public async Task<IActionResult> Get(Guid entityId,CancellationToken token)
         {
-            return Ok(token);
+            var response = await _historyService.GetAsync(entityId, token);
+            return Ok(response);
         }
     }
 }

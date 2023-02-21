@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,16 +12,41 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230221133358_AddHistory")]
+    partial class AddHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Database.Entity.HistoryEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("HistoryEntries");
+                });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
                 {
@@ -57,7 +83,26 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Files");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Entity.Road", b =>
+            modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int[]>("ListOfPermissions")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,36 +122,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Routes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a42490c8-d837-4613-b28a-aac251903e45"),
-                            ArrivalTime = new DateTime(2022, 2, 18, 12, 0, 0, 0, DateTimeKind.Utc),
-                            DriverId = new Guid("564afa54-2f20-4521-85f5-bb0e080d7f2a"),
-                            NowStatus = 0,
-                            StorageId = new Guid("33066b28-d708-46d8-a683-c2ae0dcd2f44")
-                        });
-                });
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int[]>("ListOfPermissions")
-                        .IsRequired()
-                        .HasColumnType("integer[]");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
@@ -148,6 +164,17 @@ namespace YardManagementSystem.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Database.Entity.HistoryEntry", b =>
+                {
+                    b.HasOne("Yard_Management_System.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.MyFile", b =>

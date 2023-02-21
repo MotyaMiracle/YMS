@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 		{0691FA5F-E99B-47B3-A46D-AD28C06937FF} = {0691FA5F-E99B-47B3-A46D-AD28C06937FF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{0691FA5F-E99B-47B3-A46D-AD28C06937FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Database\Database.csproj", "{0691FA5F-E99B-47B3-A46D-AD28C06937FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
