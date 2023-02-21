@@ -10,7 +10,7 @@ namespace Yard_Management_System
         public DbSet<Role> Roles { get; set; }
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<MyFile> Files { get; set; }
-        public DbSet<Road> Routes { get; set; }
+        public DbSet<Trip> Trips { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

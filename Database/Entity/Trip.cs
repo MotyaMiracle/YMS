@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 namespace Yard_Management_System.Entity
 {
-    public class Road
+    public class Trip
     {
         public Guid Id { get; set; }
         public Guid StorageId { get; set; }

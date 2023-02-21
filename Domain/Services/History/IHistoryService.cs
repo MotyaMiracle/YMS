@@ -8,10 +8,10 @@ namespace Domain.Services.History
 {
     public interface IHistoryService
     {
-        Task GetAsync(Guid routeId, CancellationToken token);
-        void Get(Guid routeId);
-        Task SaveAsync (Guid routeId, CancellationToken token, string message);
-        void Save (Guid routeId, string message);
+        Task GetAsync(Guid tripId, CancellationToken token);
+        void Get(Guid tripId);
+        Task SaveAsync (Guid tripId, CancellationToken token, string message);
+        void Save (Guid tripId, string message);
 
     }
 }

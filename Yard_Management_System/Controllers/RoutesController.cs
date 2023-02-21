@@ -1,8 +1,7 @@
 ﻿using Domain.Services.History;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Yard_Management_System.Entity;
+
 
 namespace Yard_Management_System.Controllers
 {
@@ -19,12 +18,12 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CancellationToken token, Road route)
+        public async Task<IActionResult> Create(CancellationToken token, Trip route)
         {
             if (route == null)
                 return BadRequest();
             route.Id = Guid.NewGuid();
-            await db.Routes.AddAsync(route, token);
+            await db.Trips.AddAsync(route, token);
             await db.SaveChangesAsync(token);
             return Ok(route);
         }
@@ -32,6 +31,7 @@ namespace Yard_Management_System.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(CancellationToken token)
         {
+            return Ok(token);
         }
     }
 }
