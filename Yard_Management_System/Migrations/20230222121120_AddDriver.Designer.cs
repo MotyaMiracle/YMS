@@ -12,15 +12,15 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230218123746_AddDrivers")]
-    partial class AddDrivers
+    [Migration("20230222121120_AddDriver")]
+    partial class AddDriver
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -31,8 +31,8 @@ namespace YardManagementSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AttachmentFilesId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AttachmentFilesId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("DateOfIssueDriveLicense")
                         .HasColumnType("date");

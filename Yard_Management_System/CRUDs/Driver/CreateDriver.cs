@@ -4,6 +4,7 @@ namespace Yard_Management_System.CRUDs.Driver
 {
     public class CreateDriver
     {
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -12,18 +13,18 @@ namespace Yard_Management_System.CRUDs.Driver
         [Required]
         public string Passport { get; set; }
         [Required]
-        public string DateOfIssuePassport { get; set; }
+        public DateOnly DateOfIssuePassport { get; set; }
         [Required]
-        public string ExpirationDatePassport { get; set; }
+        public DateOnly ExpirationDatePassport { get; set; }
         [Required]
         public string DriveLicense { get; set; }
         [Required]
-        public string DateOfIssueDriveLicense { get; set; }
+        public DateOnly DateOfIssueDriveLicense { get; set; }
         [Required]
-        public string ExpirationDriveLicense { get; set; }
+        public DateOnly ExpirationDriveLicense { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
         [Required]
-        public int AttachmentFilesId { get; set; }
+        public Guid AttachmentFilesId { get; set; }
     }
 }

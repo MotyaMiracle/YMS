@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace YardManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class AddDrivers : Migration
+    public partial class AddDriver : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,7 +26,7 @@ namespace YardManagementSystem.Migrations
                     DateOfIssueDriveLicense = table.Column<DateOnly>(type: "date", nullable: false),
                     ExpirationDriveLicense = table.Column<DateOnly>(type: "date", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    AttachmentFilesId = table.Column<int>(type: "integer", nullable: false)
+                    AttachmentFilesId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

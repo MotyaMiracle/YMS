@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.CRUDs.Driver;
 using Yard_Management_System.Entity;
@@ -9,11 +10,13 @@ namespace Yard_Management_System.Controllers
     [ApiController]
     public class DriversController : ControllerBase
     {
-        ApplicationContext _db;
+        private readonly ApplicationContext _db;
+        private readonly IMapper _mapper;
 
-        public DriversController(ApplicationContext context)
+        public DriversController(ApplicationContext context, IMapper mapper)
         {
             _db = context;
+            _mapper = mapper;
         }
 
         [HttpGet("getDrivers")]
@@ -29,36 +32,31 @@ namespace Yard_Management_System.Controllers
         {
             if (newDriver == null)
                 return BadRequest();
-
-            Driver driver = new Driver
+            //Create
+            if (newDriver.Id == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
             {
-                Id = Guid.NewGuid(),
-                Name = newDriver.Name,
-                Surname = newDriver.Surname,
-                Patronymic = newDriver.Patronymic,
-                Passport = newDriver.Passport,
-                DateOfIssuePassport = DateOnly.Parse(newDriver.ExpirationDatePassport),
-                ExpirationDatePassport = DateOnly.Parse(newDriver.ExpirationDatePassport),
-                DriveLicense = newDriver.DriveLicense,
-                DateOfIssueDriveLicense = DateOnly.Parse(newDriver.ExpirationDriveLicense),
-                ExpirationDriveLicense = DateOnly.Parse(newDriver.ExpirationDriveLicense),
-                PhoneNumber = newDriver.PhoneNumber,
-                AttachmentFilesId = newDriver.AttachmentFilesId
-            };
-
-            await _db.Drivers.AddAsync(driver, token);
+                Driver driver = _mapper.Map<Driver>(newDriver);
+                driver.Id = Guid.NewGuid();
+                await _db.Drivers.AddAsync(driver, token);
+            }
+            //Update
+            else
+            {
+                Driver updateDriver = _mapper.Map<Driver>(newDriver);
+                _db.Drivers.Update(updateDriver);
+            }
             await _db.SaveChangesAsync(token);
             return Ok();
         }
 
         [HttpDelete("deleteDriver")]
-        public async Task<IActionResult> Delete(DeleteDriver deleteDriver, CancellationToken token)
+        public async Task<IActionResult> Delete(Guid driveId, CancellationToken token)
         {
-            if(deleteDriver == null) 
+            if (driveId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
                 return BadRequest();
 
             Driver driver = await _db.Drivers
-                .FirstOrDefaultAsync(d => d.Passport == deleteDriver.Passport, token);
+                .FirstOrDefaultAsync(d => d.Id == driveId, token);
 
             if (driver == null)
                 return NotFound();
@@ -66,53 +64,6 @@ namespace Yard_Management_System.Controllers
             _db.Drivers.Remove(driver);
             await _db.SaveChangesAsync(token);
             return Ok();
-        }
-
-        [HttpPut("updateDriver")]
-        public async Task<IActionResult> Put(UpdateDriver updateDriver, CancellationToken token)
-        {
-            if (updateDriver == null)
-                return BadRequest();
-
-            Driver driver = await _db.Drivers
-                .FirstOrDefaultAsync(d => d.Passport == updateDriver.OldPassport, token);
-
-            if (driver == null)
-                return NotFound();
-
-            if(driver.Name != "string")
-                driver.Name = updateDriver.Name;
-
-            if (driver.Surname != "string")
-                driver.Surname = updateDriver.Surname;
-
-            if (driver.Patronymic != "string")
-                driver.Patronymic = updateDriver.Patronymic;
-
-            if (driver.Passport != "string")
-            {
-                driver.Passport = updateDriver.Passport;
-                driver.DateOfIssuePassport = DateOnly.Parse(updateDriver.DateOfIssuePassport);
-                driver.ExpirationDatePassport = DateOnly.Parse(updateDriver.ExpirationDatePassport);
-            }
-                
-            if (driver.DriveLicense != "string")
-            {
-                driver.DriveLicense = updateDriver.DriveLicense;
-                driver.DateOfIssueDriveLicense = DateOnly.Parse(updateDriver.DateOfIssueDriveLicense);
-                driver.DateOfIssueDriveLicense = DateOnly.Parse(updateDriver.DateOfIssueDriveLicense);
-            }
-
-            if (driver.PhoneNumber != "string")
-                driver.PhoneNumber = updateDriver.PhoneNumber;
-
-            if (driver.AttachmentFilesId != 0)
-                driver.AttachmentFilesId = updateDriver.AttachmentFilesId;
-
-            _db.Drivers.Update(driver);
-            await _db.SaveChangesAsync(token);
-            return Ok();
-
         }
     }
 }

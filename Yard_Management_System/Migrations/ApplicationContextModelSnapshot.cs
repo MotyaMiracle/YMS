@@ -17,7 +17,7 @@ namespace YardManagementSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.2")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -28,8 +28,8 @@ namespace YardManagementSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("AttachmentFilesId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AttachmentFilesId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateOnly>("DateOfIssueDriveLicense")
                         .HasColumnType("date");
