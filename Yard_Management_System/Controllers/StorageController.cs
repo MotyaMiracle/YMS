@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.CRUDs.Storage;
 using Yard_Management_System.Entity;
+using AutoMapper;
 
 namespace Yard_Management_System.Controllers
 {
@@ -11,11 +12,13 @@ namespace Yard_Management_System.Controllers
     [ApiController]
     public class StorageController : ControllerBase
     {
-        ApplicationContext _db;
-        
-        public StorageController(ApplicationContext context) 
+        private readonly ApplicationContext _db;
+        private readonly IMapper _mapper;
+
+        public StorageController(ApplicationContext context, IMapper mapper) 
         {
             _db = context;
+            _mapper = mapper;
         }
 
         [HttpGet("getStorage")]
@@ -32,66 +35,36 @@ namespace Yard_Management_System.Controllers
             if (newStorage == null)
                 return BadRequest();
 
-            Storage storage = new Storage
+            //Create
+            if (newStorage.Id == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
             {
-                Id = Guid.NewGuid(),
-                Name = newStorage.Name,
-                Address = newStorage.Address,
-                Coordinates = newStorage.Coordinates,
-                OpeningHours = newStorage.OpeningHours,
-                DayOfWeeks = newStorage.DayOfWeeks,
-            };
-
-            await _db.Storages.AddAsync(storage, token);
+                Storage storage = _mapper.Map<Storage>(newStorage);
+                storage.Id = Guid.NewGuid();
+                await _db.Storages.AddAsync(storage, token);
+            }
+            //Update
+            else
+            {
+                Storage updateStorage = _mapper.Map<Storage>(newStorage);
+                _db.Storages.Update(updateStorage);
+            }
             await _db.SaveChangesAsync(token);
             return Ok();
         }
 
         [HttpDelete("deleteStorage")]
-        public async Task<IActionResult> Delete(DeleteStorage deleteStorage, CancellationToken token)
+        public async Task<IActionResult> Delete(Guid StorageId, CancellationToken token)
         {
-            if (deleteStorage == null)
+            if (StorageId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
                 return BadRequest();
 
             Storage storage = await _db.Storages
-                .FirstOrDefaultAsync(s => s.Name == deleteStorage.Name, token);
+                .FirstOrDefaultAsync(s => s.Id == StorageId, token);
 
             if (storage == null)
                 return NotFound();
 
             _db.Storages.Remove(storage);
-            await _db.SaveChangesAsync(token);
-            return Ok();
-        }
-
-        [HttpPut("updateStorage")]
-        public async Task<IActionResult> Put(UpdateStorage updateStorage, CancellationToken token)
-        {
-            if (updateStorage == null)
-                return BadRequest();
-
-            Storage storage = await _db.Storages
-                .FirstOrDefaultAsync(s => s.Name == updateStorage.OldName, token);
-
-            if(storage == null)
-                return NotFound();
-
-            if(updateStorage.NewName != "string")
-                storage.Name = updateStorage.NewName;
-
-            if(updateStorage.NewAddress != "string")
-                storage.Address = updateStorage.NewAddress;
-
-            if(updateStorage.NewCoordinates.Any())
-                storage.Coordinates = updateStorage.NewCoordinates;
-
-            if(updateStorage.NewOpeningHours != "string")
-                storage.OpeningHours = updateStorage.NewOpeningHours;
-
-            if(updateStorage.NewDayOfWeeks.Any())
-                storage.DayOfWeeks = updateStorage.NewDayOfWeeks;
-
-            _db.Storages.Update(storage);
             await _db.SaveChangesAsync(token);
             return Ok();
         }

@@ -6,7 +6,14 @@ namespace Yard_Management_System.Entity
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
-        public double[] Coordinates { get; set; }
+        /// <summary>
+        /// Широта
+        /// </summary>
+        public double Latitude { get; set; }
+        /// <summary>
+        /// Долгота
+        /// </summary>
+        public double Longitude { get; set; }
         /// <summary>
         /// Часы работы
         /// </summary>

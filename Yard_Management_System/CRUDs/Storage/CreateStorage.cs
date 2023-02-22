@@ -4,6 +4,7 @@ namespace Yard_Management_System.CRUDs.Storage
 {
     public class CreateStorage
     {
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
