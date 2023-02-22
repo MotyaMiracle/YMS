@@ -7,7 +7,7 @@ namespace Yard_Management_System
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Driver> Drivers { get; set; }
         public DbSet<MyFile> Files { get; set; }
@@ -23,7 +23,7 @@ namespace Yard_Management_System
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().HasIndex(u => new { u.Login, u.Email }).IsUnique();
+            modelBuilder.Entity<UserEntity>().HasIndex(u => new { u.Login, u.Email }).IsUnique();
         }
     }
 }

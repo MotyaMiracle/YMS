@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Services.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security.Claims;
-using Yard_Management_System.CRUDs.Authorization;
 using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Controllers
@@ -20,9 +20,9 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<User>> Post(LoginDto dto, CancellationToken token)
+        public async Task<ActionResult<UserEntity>> Post(LoginDto dto, CancellationToken token)
         {
-            User user = await _db.Users.Include(u => u.Role)
+            UserEntity user = await _db.Users.Include(u => u.Role)
                                        .FirstOrDefaultAsync(p => p.Login == dto.Login && p.Password == dto.Password, token);
             
             if (user is null)

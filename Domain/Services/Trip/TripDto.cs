@@ -6,5 +6,9 @@ namespace Domain.Services.Trip
     {
         [Required]
         public Guid TripId { get; set; }
+        public Guid DriverId { get; set; }
+        public Guid StorageId { get; set; }
+        public DateTime ArrivalTime { get; set; }
+
     }
 }

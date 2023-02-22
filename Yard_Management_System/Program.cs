@@ -1,4 +1,5 @@
 using Domain.Services.History;
+using Domain.Services.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -6,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 using Yard_Management_System;
+using Yard_Management_System.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 builder.Services.AddScoped<IHistoryService, HistoryService>();
-
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -49,6 +51,11 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim(ClaimsIdentity.DefaultRoleClaimType, "Гл. Администратор");
     });
 });
+
+builder.Services.AddAutoMapper(
+    typeof(AppMappingTrip),
+    typeof(MapUser)
+    );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

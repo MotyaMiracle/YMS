@@ -1,6 +1,6 @@
 ﻿namespace Yard_Management_System.Entity
 {
-    public class User
+    public class UserEntity
     {
         public Guid Id { get; set; }
         public string Login { get; set; }

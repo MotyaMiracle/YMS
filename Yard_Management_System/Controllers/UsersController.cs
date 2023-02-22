@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Domain.Services.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.CRUDs.UserCRUD;
@@ -12,10 +13,12 @@ namespace Yard_Management_System.Controllers
     public class UsersController : ControllerBase
     {
         ApplicationContext db;
+        IUserService _userService;
 
-        public UsersController(ApplicationContext context)
+        public UsersController(ApplicationContext context, IUserService userService)
         {
             db = context;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -25,39 +28,20 @@ namespace Yard_Management_System.Controllers
             return Ok(users);
         }
 
-        [HttpPut("update")]
-        public async Task<ActionResult<User>> Edit(UpdateUser updateUser, CancellationToken token)
+        [HttpPost]
+        public async Task<IActionResult> RegistrationAndUpdate(UserDto user, CancellationToken token)
         {
-            if (updateUser != null)
-            {
-                User? user = await db.Users.FirstOrDefaultAsync(p => p.Login == updateUser.Login, token);
-                if (user != null)
-                {
-                    if (updateUser.NewLogin != "string") 
-                    {
-                        user.Login = updateUser.NewLogin;
-                    }
-                    if (updateUser.NewPhoneNumber != "string")
-                    {
-                        user.PhoneNumber = updateUser.NewPhoneNumber;
-                    }
-                    if (updateUser.NewEmail != "string")
-                    {
-                        user.Email = updateUser.NewEmail;
-                    }
-                    if (updateUser.NewPassword != "string")
-                    {
-                        user.Password = updateUser.NewPassword;
-                        user.PasswordHash = Authorization.GetHash(user.Password);
-                    }
-                    
-                    db.Users.Update(user);
-                    await db.SaveChangesAsync(token);
-                    return Ok(user);
-                }
-                    
-            }
-            return NotFound();
+            await _userService.RegistrationAndUpdateAsync(user, token);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(Guid userId, CancellationToken token)
+        {
+            if (userId == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
+                return BadRequest();
+            await _userService.DeleteUserAsync(userId, token);
+            return Ok();
         }
     }
 }
