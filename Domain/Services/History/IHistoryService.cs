@@ -1,13 +1,4 @@
-﻿using Database.Entity;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Services.History
+﻿namespace Domain.Services.History
 {
     public interface IHistoryService
     {

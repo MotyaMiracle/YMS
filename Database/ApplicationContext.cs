@@ -1,7 +1,6 @@
 ﻿using Database.Entity;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Yard_Management_System
 {

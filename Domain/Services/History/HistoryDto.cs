@@ -1,6 +1,4 @@
-﻿using Database.Entity;
-
-namespace Domain.Services.History
+﻿namespace Domain.Services.History
 {
     public class HistoryDto
     {
