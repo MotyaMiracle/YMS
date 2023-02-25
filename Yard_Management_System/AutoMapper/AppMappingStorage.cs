@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Yard_Management_System.CRUDs.Storage;
+using Yard_Management_System.Services.Storages;
 using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.AutoMapper
@@ -8,7 +8,7 @@ namespace Yard_Management_System.AutoMapper
     {
         public AppMappingStorage()
         {
-            CreateMap<CreateStorage, Storage>();
+            CreateMap<Storage, StorageDto>().ReverseMap();
         }
     }
 }

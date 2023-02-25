@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Yard_Management_System.CRUDs.Storage
+namespace Yard_Management_System.Services.Storages
 {
-    public class CreateStorage
+    public class StorageDto
     {
         public Guid Id { get; set; }
         [Required]
@@ -10,7 +10,9 @@ namespace Yard_Management_System.CRUDs.Storage
         [Required]
         public string Address { get; set; }
         [Required]
-        public double[] Coordinates { get; set; }
+        public double Latitude { get; set; }
+        [Required]
+        public double Longitude { get; set; }
         [Required]
         public string OpeningHours { get; set; }
         [Required]
