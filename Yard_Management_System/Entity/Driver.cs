@@ -11,6 +11,10 @@
         /// </summary>
         public string Patronymic { get; set; }
         public string Passport { get; set; }
+
+        /// <summary>
+        /// Дата выдачи паспорта
+        /// </summary>
         public DateOnly DateOfIssuePassport { get; set; }
 
         /// <summary>

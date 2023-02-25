@@ -1,8 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Yard_Management_System.CRUDs.Driver;
-using Yard_Management_System.Entity;
+﻿using Microsoft.AspNetCore.Mvc;
+using Yard_Management_System.Services.Drivers;
 
 namespace Yard_Management_System.Controllers
 {
@@ -10,59 +7,43 @@ namespace Yard_Management_System.Controllers
     [ApiController]
     public class DriversController : ControllerBase
     {
-        private readonly ApplicationContext _db;
-        private readonly IMapper _mapper;
-
-        public DriversController(ApplicationContext context, IMapper mapper)
+        private readonly IDriverService _driverService;
+        public DriversController(IDriverService driverService)
         {
-            _db = context;
-            _mapper = mapper;
+            _driverService = driverService;
         }
 
-        [HttpGet("getDrivers")]
+        [HttpGet("all")]
         public async Task<IActionResult> Get(CancellationToken token)
         {
-            var drivers = await _db.Drivers.ToListAsync(token);
+            return Ok(await _driverService.GetAllAsync(token));
+        }
 
-            return Ok(drivers);
+        [HttpGet("getDriver")]
+        public async Task<IActionResult> Get(Guid driverId, CancellationToken token)
+        {
+            return Ok(await _driverService.GetAsync(driverId, token));
         }
 
         [HttpPost("createDriver")]
-        public async Task<IActionResult> Post(CreateDriver newDriver, CancellationToken token)
+        public async Task<IActionResult> Post(DriverDto driverDto, CancellationToken token)
         {
-            if (newDriver == null)
+            if (driverDto == null)
                 return BadRequest();
-            //Create
-            if (newDriver.Id == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
-            {
-                Driver driver = _mapper.Map<Driver>(newDriver);
-                driver.Id = Guid.NewGuid();
-                await _db.Drivers.AddAsync(driver, token);
-            }
-            //Update
-            else
-            {
-                Driver updateDriver = _mapper.Map<Driver>(newDriver);
-                _db.Drivers.Update(updateDriver);
-            }
-            await _db.SaveChangesAsync(token);
+
+            await _driverService.CreateAndUpdateAsync(driverDto, token);
+
             return Ok();
         }
 
         [HttpDelete("deleteDriver")]
-        public async Task<IActionResult> Delete(Guid driveId, CancellationToken token)
+        public async Task<IActionResult> Delete(Guid driverId, CancellationToken token)
         {
-            if (driveId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
+            if (driverId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
                 return BadRequest();
 
-            Driver driver = await _db.Drivers
-                .FirstOrDefaultAsync(d => d.Id == driveId, token);
+            await _driverService.DeleteDriverAsync(driverId, token);
 
-            if (driver == null)
-                return NotFound();
-
-            _db.Drivers.Remove(driver);
-            await _db.SaveChangesAsync(token);
             return Ok();
         }
     }

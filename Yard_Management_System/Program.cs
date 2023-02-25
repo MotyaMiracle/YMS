@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using Yard_Management_System;
 using Yard_Management_System.AutoMapper;
+using Yard_Management_System.Services.Drivers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,7 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+builder.Services.AddScoped<IDriverService, DriverService>();
 
 builder.Services.AddAutoMapper(typeof(AppMappingDriver));
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Yard_Management_System.CRUDs.Driver;
 using Yard_Management_System.Entity;
+using Yard_Management_System.Services.Drivers;
 
 namespace Yard_Management_System.AutoMapper
 {
@@ -8,7 +8,7 @@ namespace Yard_Management_System.AutoMapper
     {
         public AppMappingDriver() 
         {
-            CreateMap<CreateDriver, Driver>();
+            CreateMap<Driver, DriverDto>().ReverseMap();
         }
     }
 }
