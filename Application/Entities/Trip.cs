@@ -1,4 +1,4 @@
-﻿using Database.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 namespace Yard_Management_System.Entity
 {
     public class Trip
@@ -11,10 +11,7 @@ namespace Yard_Management_System.Entity
         /// Год, месяц, день, час, минута
         /// </summary>
         public DateTime ArrivalTime { get; set; }
-        public Status NowStatus { get; set; }
-        public enum Status { Create, Arrived, InArchive }
-        public Driver Driver { get; set; }
-        public Storage Storage { get; set; }
-        public string Number { get; set; }
+        public TripStatus NowStatus { get; set; }
+        
     }
 }

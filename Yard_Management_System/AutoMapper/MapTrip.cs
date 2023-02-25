@@ -4,9 +4,9 @@ using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.AutoMapper
 {
-    public class AppMappingTrip : Profile
+    public class MapTrip : Profile
     {
-        public AppMappingTrip() 
+        public MapTrip()
         {
             CreateMap<TripDto, Trip>();
         }

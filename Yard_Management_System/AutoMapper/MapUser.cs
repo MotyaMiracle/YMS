@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Domain.Services.User;
+using Domain.Services.Users;
 using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.AutoMapper
@@ -8,7 +8,7 @@ namespace Yard_Management_System.AutoMapper
     {
         public MapUser() 
         {
-            CreateMap<UserDto, UserEntity>();
+            CreateMap<UserDto, User>();
         }
     }
 }

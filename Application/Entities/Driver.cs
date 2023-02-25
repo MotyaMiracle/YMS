@@ -3,6 +3,6 @@
     public class Driver
     {
         public Guid Id { get; set; }
-        public List <EntityFile> Files { get; set; }
+        public List <MyFile> Files { get; set; }
     }
 }

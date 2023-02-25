@@ -9,7 +9,7 @@ namespace Yard_Management_System
 {
     public class Authorization
     {
-        public static ClaimsIdentity GetIdentity(UserEntity? user)
+        public static ClaimsIdentity GetIdentity(User? user)
         {
             if (user == null)
                 return null;

@@ -1,5 +1,6 @@
 using Domain.Services.History;
-using Domain.Services.User;
+using Domain.Services.Trips;
+using Domain.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -25,6 +26,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddScoped<IHistoryService, HistoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITripService, TripService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -54,7 +56,8 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddAutoMapper(
     typeof(AppMappingTrip),
-    typeof(MapUser)
+    typeof(MapUser),
+    typeof(MapTrip)
     );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

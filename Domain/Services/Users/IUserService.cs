@@ -1,4 +1,4 @@
-﻿namespace Domain.Services.User
+﻿namespace Domain.Services.Users
 {
     public interface IUserService
     {

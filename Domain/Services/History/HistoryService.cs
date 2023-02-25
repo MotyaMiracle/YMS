@@ -14,7 +14,7 @@ namespace Domain.Services.History
             _db = db;
         }
 
-        public void Get(Guid tripId)
+        public void Get(Guid entityId)
         {
             throw new NotImplementedException();
         }

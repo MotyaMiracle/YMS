@@ -1,4 +1,4 @@
-﻿using Domain.Services.User;
+﻿using Domain.Services.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

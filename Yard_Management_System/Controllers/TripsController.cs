@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Services.History;
-using Domain.Services.Trip;
+using Domain.Services.Trips;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
@@ -14,34 +14,23 @@ namespace Yard_Management_System.Controllers
     {
         private readonly ApplicationContext _db;
         private readonly IHistoryService _historyService;
+        private readonly ITripService _tripService;
         private readonly IMapper _mapper;
         
 
-        public TripsController(ApplicationContext db, IHistoryService historyService, IMapper mapper)
+        public TripsController(ApplicationContext db, IHistoryService historyService, IMapper mapper, ITripService tripService)
         {
             _db = db;
             _historyService = historyService;
             _mapper = mapper;
+            _tripService = tripService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CancellationToken token, TripDto dto)
+        public async Task<IActionResult> Create(TripDto trip, CancellationToken token)
         {
-
-            var trip = _mapper.Map<Trip>(dto);
-            trip.NowStatus = Trip.Status.Create;
-            //Trip trip = new Trip
-            //{
-            //    Id = Guid.NewGuid(),
-            //    StorageId = Guid.NewGuid(),
-            //    DriverId = dto.DriverId,
-            //    ArrivalTime = dto.ArrivalDate,
-            //    NowStatus = Trip.Status.Create
-            //};
-             
-            await _db.Trips.AddAsync(trip, token);
-            await _db.SaveChangesAsync(token);
-            return Ok(trip);
+            await _tripService.CreateAsync(trip, token);
+            return Ok(trip);    
         }
 
         [HttpPost("toHistory")]

@@ -20,9 +20,9 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserEntity>> Post(LoginDto dto, CancellationToken token)
+        public async Task<ActionResult<User>> Post(LoginDto dto, CancellationToken token)
         {
-            UserEntity user = await _db.Users.Include(u => u.Role)
+            User user = await _db.Users.Include(u => u.Role)
                                        .FirstOrDefaultAsync(p => p.Login == dto.Login && p.Password == dto.Password, token);
             
             if (user is null)
