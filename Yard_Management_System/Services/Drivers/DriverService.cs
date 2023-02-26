@@ -42,11 +42,28 @@ namespace Yard_Management_System.Services.Drivers
             await _database.SaveChangesAsync(token);
         }
 
-        public async Task<List<Driver>> GetAllAsync(CancellationToken token)
+        public async Task<DriverEntriesDto> GetAllAsync(CancellationToken token)
         {
             var drivers = await _database.Drivers.ToListAsync(token);
 
-            return drivers;
+            return new DriverEntriesDto
+            {
+                Entries = drivers.Select(d => new DriverDto
+                {
+                    Id = d.Id,
+                    Name = d.Name,
+                    Surname = d.Surname,
+                    Patronymic = d.Patronymic,
+                    Passport = d.Passport,
+                    DateOfIssuePassport = d.DateOfIssuePassport,
+                    ExpirationDatePassport = d.ExpirationDatePassport,
+                    DriveLicense = d.DriveLicense,
+                    DateOfIssueDriveLicense = d.DateOfIssueDriveLicense,
+                    ExpirationDriveLicense = d.ExpirationDriveLicense,
+                    PhoneNumber = d.PhoneNumber,
+                    AttachmentFilesId = d.AttachmentFilesId
+                }).ToList()
+            };
         }
 
         public async Task<DriverDto> GetAsync(Guid driverId, CancellationToken token)

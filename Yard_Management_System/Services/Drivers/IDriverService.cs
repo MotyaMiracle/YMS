@@ -10,6 +10,6 @@ namespace Yard_Management_System.Services.Drivers
 
         Task DeleteDriverAsync(Guid driverId, CancellationToken token);
 
-        Task<List<Driver>> GetAllAsync(CancellationToken token);
+        Task<DriverEntriesDto> GetAllAsync(CancellationToken token);
     }
 }
