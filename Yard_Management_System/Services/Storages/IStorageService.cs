@@ -10,7 +10,7 @@ namespace Yard_Management_System.Services.Storages
 
         Task DeleteStorageAsync(Guid storageId, CancellationToken token);
 
-        Task<List<Storage>> GetAllAsync(CancellationToken token);
+        Task<StorageEntriesDto> GetAllAsync(CancellationToken token);
 
     }
 }

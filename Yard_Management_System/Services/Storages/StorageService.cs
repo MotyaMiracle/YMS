@@ -52,11 +52,23 @@ namespace Yard_Management_System.Services.Storages
             return response;
         }
 
-        public async Task<List<Storage>> GetAllAsync(CancellationToken token)
+        public async Task<StorageEntriesDto> GetAllAsync(CancellationToken token)
         {
             var storages = await _database.Storages.ToListAsync(token);
 
-            return storages;
+            return new StorageEntriesDto { 
+                Entries = storages.Select(s => new StorageDto 
+                { 
+                    Id = s.Id,
+                    Name = s.Name,
+                    Address = s.Address,
+                    Latitude = s.Latitude,
+                    Longitude = s.Longitude,
+                    OpeningHours = s.OpeningHours,
+                    DayOfWeeks = s.DayOfWeeks
+                }).ToList()
+            };
+
         }
     }
 }
