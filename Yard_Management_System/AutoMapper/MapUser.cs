@@ -8,7 +8,7 @@ namespace Yard_Management_System.AutoMapper
     {
         public MapUser() 
         {
-            CreateMap<UserDto, User>();
+            CreateMap<UserDto, User>().ReverseMap();
         }
     }
 }

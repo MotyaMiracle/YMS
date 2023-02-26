@@ -20,10 +20,15 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken token)
+        public async Task<IActionResult> Get(Guid userId, CancellationToken token)
         {
-            var users = await db.Users.Include(u => u.Role).ToListAsync(token);
-            return Ok(users);
+            return Ok(await _userService.GetAsync(userId, token));
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll(CancellationToken token)
+        {
+            return Ok(await _userService.GetAllAsync(token));
         }
 
         [HttpPost]

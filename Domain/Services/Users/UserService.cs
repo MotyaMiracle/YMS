@@ -41,5 +41,37 @@ namespace Domain.Services.Users
             _db.Users.Remove(user);
             await _db.SaveChangesAsync(token);
         }
+
+        public async Task<UserDto> GetAsync(Guid userId, CancellationToken token)
+        {
+            var user = await _db.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == userId, token);
+            var response = _mapper.Map<UserDto>(user);
+            return(response);
+        }
+
+        public async Task<UserEntryDto> GetAllAsync(CancellationToken token)
+        {
+            var users = await _db.Users
+                .Include(u => u.Role)
+                .ToListAsync(token);
+            return new UserEntryDto
+            {
+                Users = users.Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    Login = u.Login,
+                    Password = u.Password,
+                    PasswordHash = u.PasswordHash,
+                    IsActive = u.IsActive,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    RoleId = u.RoleId,
+                    Role = u.Role
+
+                }).ToList()
+            };
+        }
     }
 }
