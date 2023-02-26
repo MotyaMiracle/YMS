@@ -5,7 +5,7 @@ namespace Yard_Management_System.Entity
     {
         public Guid Id { get; set; }
         public string FileName { get; set; }
-        public Guid DriverId { get; set; }
+        public Guid EntityId { get; set; }
         public byte[] Data  { get; set; }
     }
 }

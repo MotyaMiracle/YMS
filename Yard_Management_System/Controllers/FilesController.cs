@@ -19,7 +19,7 @@ namespace Yard_Management_System.Controllers
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile formFile, CancellationToken token)
         {
-            EntityFile file = new EntityFile { Id = Guid.NewGuid(), FileName = formFile.FileName, DriverId = new Guid("5064330d-daf1-48bb-9b60-59ea2c1db0ba") };
+            EntityFile file = new EntityFile { Id = Guid.NewGuid(), FileName = formFile.FileName, EntityId = new Guid("5064330d-daf1-48bb-9b60-59ea2c1db0ba") };
             using (var stream = new MemoryStream())
             {
                 await formFile.CopyToAsync(stream);
