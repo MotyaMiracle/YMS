@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Domain.Services.Files;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
@@ -9,33 +11,31 @@ namespace Yard_Management_System.Controllers
     [ApiController]
     public class FilesController : Controller
     {
-        ApplicationContext db;
+        ApplicationContext _db;
+        IFileService _fileService;
 
-        public FilesController(ApplicationContext context)
+        public FilesController(ApplicationContext db, IFileService fileService)
         {
-            db = context;
+            _db = db;
+            _fileService = fileService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile formFile, CancellationToken token)
+        public async Task<IActionResult> Upload(IFormFile formFile,Guid entityId, CancellationToken token)
         {
-            EntityFile file = new EntityFile { Id = Guid.NewGuid(), FileName = formFile.FileName, EntityId = new Guid("5064330d-daf1-48bb-9b60-59ea2c1db0ba") };
-            using (var stream = new MemoryStream())
-            {
-                await formFile.CopyToAsync(stream);
+            return Ok(await _fileService.AddAsync(formFile, entityId, token));
+        }
 
-                file.Data = stream.ToArray();
-            }
-            db.Files.Add(file);
-            db.SaveChanges();
-            return Ok(file);
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll(CancellationToken token)
+        {
+            return Ok(await _fileService.GetAllAsync(token));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(CancellationToken token)
+        public async Task<IActionResult> Get(Guid fileId, CancellationToken token)
         {
-            var files = await db.Files.ToListAsync(token);
-            return Ok(files);
+            return Ok(await _fileService.GetAsync(fileId, token));
         }
     }
 }

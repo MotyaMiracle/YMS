@@ -80,7 +80,10 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<Guid>("DriverId")
+                    b.Property<Guid?>("DriverId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("EntityId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("FileName")
@@ -200,9 +203,7 @@ namespace YardManagementSystem.Migrations
                 {
                     b.HasOne("Yard_Management_System.Entity.Driver", null)
                         .WithMany("Files")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DriverId");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>

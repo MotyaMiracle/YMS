@@ -1,3 +1,4 @@
+using Domain.Services.Files;
 using Domain.Services.History;
 using Domain.Services.Trips;
 using Domain.Services.Users;
@@ -27,6 +28,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddScoped<IHistoryService, HistoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -57,7 +59,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddAutoMapper(
     typeof(AppMappingTrip),
     typeof(MapUser),
-    typeof(MapTrip)
+    typeof(MapTrip),
+    typeof(MapFile)
     );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
