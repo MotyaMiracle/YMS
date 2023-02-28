@@ -18,10 +18,9 @@ namespace Yard_Management_System.Services.Storages
         public async Task CreateAndUpdateAsync(StorageDto storageDto, CancellationToken token)
         {
             //Create
-            if (storageDto.Id == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
+            if (string.IsNullOrWhiteSpace(storageDto.Id))
             {
                 Storage storage = _mapper.Map<Storage>(storageDto);
-                storage.Id = Guid.NewGuid();
                 await _database.Storages.AddAsync(storage, token);
             }
             //Update
@@ -57,16 +56,7 @@ namespace Yard_Management_System.Services.Storages
             var storages = await _database.Storages.ToListAsync(token);
 
             return new StorageEntriesDto { 
-                Entries = storages.Select(s => new StorageDto 
-                { 
-                    Id = s.Id,
-                    Name = s.Name,
-                    Address = s.Address,
-                    Latitude = s.Latitude,
-                    Longitude = s.Longitude,
-                    OpeningHours = s.OpeningHours,
-                    DayOfWeeks = s.DayOfWeeks
-                }).ToList()
+                Entries = _mapper.Map<IEnumerable<StorageDto>>(storages).ToList()
             };
 
         }

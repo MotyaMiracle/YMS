@@ -4,7 +4,7 @@ namespace Yard_Management_System.Services.Storages
 {
     public class StorageDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
