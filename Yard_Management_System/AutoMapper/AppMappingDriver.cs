@@ -8,7 +8,10 @@ namespace Yard_Management_System.AutoMapper
     {
         public AppMappingDriver() 
         {
-            CreateMap<Driver, DriverDto>().ReverseMap();
+            CreateMap<Driver, DriverDto>()
+                .ForMember(dto => dto.Id, opt => opt.MapFrom(src => src.Id.ToString()));
+            CreateMap<DriverDto, Driver>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
         }
     }
 }

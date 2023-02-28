@@ -4,7 +4,7 @@ namespace Yard_Management_System.Services.Drivers
 {
     public class DriverDto
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Имя

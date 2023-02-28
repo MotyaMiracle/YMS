@@ -18,10 +18,10 @@ namespace Yard_Management_System.Services.Drivers
         public async Task CreateAndUpdateAsync(DriverDto driverDto, CancellationToken token)
         {
             //Create
-            if (driverDto.Id == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
+            if (string.IsNullOrWhiteSpace(driverDto.Id))
             {
+                
                 Driver driver = _mapper.Map<Driver>(driverDto);
-                driver.Id = Guid.NewGuid();
                 await _database.Drivers.AddAsync(driver, token);
             }
             //Update
@@ -50,7 +50,7 @@ namespace Yard_Management_System.Services.Drivers
             {
                 Entries = drivers.Select(d => new DriverDto
                 {
-                    Id = d.Id,
+                    Id = d.Id.ToString(),
                     Name = d.Name,
                     Surname = d.Surname,
                     Patronymic = d.Patronymic,
