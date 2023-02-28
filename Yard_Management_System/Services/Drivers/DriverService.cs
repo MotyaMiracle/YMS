@@ -20,7 +20,6 @@ namespace Yard_Management_System.Services.Drivers
             //Create
             if (string.IsNullOrWhiteSpace(driverDto.Id))
             {
-                
                 Driver driver = _mapper.Map<Driver>(driverDto);
                 await _database.Drivers.AddAsync(driver, token);
             }
@@ -48,21 +47,22 @@ namespace Yard_Management_System.Services.Drivers
 
             return new DriverEntriesDto
             {
-                Entries = drivers.Select(d => new DriverDto
-                {
-                    Id = d.Id.ToString(),
-                    Name = d.Name,
-                    Surname = d.Surname,
-                    Patronymic = d.Patronymic,
-                    Passport = d.Passport,
-                    DateOfIssuePassport = d.DateOfIssuePassport,
-                    ExpirationDatePassport = d.ExpirationDatePassport,
-                    DriveLicense = d.DriveLicense,
-                    DateOfIssueDriveLicense = d.DateOfIssueDriveLicense,
-                    ExpirationDriveLicense = d.ExpirationDriveLicense,
-                    PhoneNumber = d.PhoneNumber,
-                    AttachmentFilesId = d.AttachmentFilesId
-                }).ToList()
+                Entries = _mapper.Map<IEnumerable<DriverDto>>(drivers).ToList()
+                //Entries = drivers.Select(d => new DriverDto
+                //{
+                //    Id = d.Id.ToString(),
+                //    Name = d.Name,
+                //    Surname = d.Surname,
+                //    Patronymic = d.Patronymic,
+                //    Passport = d.Passport,
+                //    DateOfIssuePassport = d.DateOfIssuePassport,
+                //    ExpirationDatePassport = d.ExpirationDatePassport,
+                //    DriveLicense = d.DriveLicense,
+                //    DateOfIssueDriveLicense = d.DateOfIssueDriveLicense,
+                //    ExpirationDriveLicense = d.ExpirationDriveLicense,
+                //    PhoneNumber = d.PhoneNumber,
+                //    AttachmentFilesId = d.AttachmentFilesId
+                //}).ToList()
             };
         }
 
