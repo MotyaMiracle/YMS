@@ -26,14 +26,14 @@ namespace YardManagementSystem.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FileName = table.Column<string>(type: "text", nullable: false),
-                    DriverId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EntityId = table.Column<Guid>(type: "uuid", nullable: false),
                     Data = table.Column<byte[]>(type: "bytea", nullable: false)
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Files_DriverId",
+                name: "IX_Files_EntityId",
                 table: "Files",
-                column: "DriverId");
+                column: "EntityId");
         }
 
         /// <inheritdoc />

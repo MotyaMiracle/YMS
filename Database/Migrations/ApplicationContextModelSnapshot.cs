@@ -80,9 +80,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<Guid?>("DriverId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("EntityId")
                         .HasColumnType("uuid");
 
@@ -91,8 +88,6 @@ namespace YardManagementSystem.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DriverId");
 
                     b.ToTable("Files");
                 });
@@ -199,13 +194,6 @@ namespace YardManagementSystem.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Entity.EntityFile", b =>
-                {
-                    b.HasOne("Yard_Management_System.Entity.Driver", null)
-                        .WithMany("Files")
-                        .HasForeignKey("DriverId");
-                });
-
             modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
                 {
                     b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
@@ -239,11 +227,6 @@ namespace YardManagementSystem.Migrations
             modelBuilder.Entity("Database.Entity.Storage", b =>
                 {
                     b.Navigation("Trips");
-                });
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

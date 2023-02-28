@@ -20,7 +20,7 @@ namespace Domain.Services.Files
 
         public async Task<FileDto> AddAsync(IFormFile formFile, Guid entityId, CancellationToken token)
         {
-            FileDto file = new FileDto { Id = Guid.NewGuid(), FileName = formFile.FileName, DriverId = entityId };
+            FileDto file = new FileDto { Id = Guid.NewGuid(), FileName = formFile.FileName, EntityId = entityId };
 
             using (var stream = new MemoryStream())
             {
@@ -45,7 +45,7 @@ namespace Domain.Services.Files
                 {
                     Id = f.Id,
                     FileName= f.FileName,
-                    DriverId = f.DriverId,
+                    EntityId = f.EntityId,
                     Data= f.Data,
                 }).ToList()
             };
