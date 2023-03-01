@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Yard_Management_System.Services.Storages;
-using Yard_Management_System.Entity;
+using Database.Entity;
 
 namespace Yard_Management_System.AutoMapper
 {

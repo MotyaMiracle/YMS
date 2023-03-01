@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Database.Entity;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
 
