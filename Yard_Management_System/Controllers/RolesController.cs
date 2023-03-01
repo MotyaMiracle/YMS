@@ -16,9 +16,9 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(CancellationToken token)
         {
-            var roles = await db.Roles.ToListAsync();
+            var roles = await db.Roles.ToListAsync(token);
             return Ok(roles);
         }
     }

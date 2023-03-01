@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230217175308_AddFiles")]
+    partial class AddFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,7 +97,7 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Models.User", b =>
+            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -135,6 +138,17 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Yard_Management_System.Entity.MyFile", b =>
+                {
+                    b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
+                        .WithMany("Files")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
+                });
+
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
                     b.HasOne("Yard_Management_System.Entity.Role", "Role")
@@ -144,6 +158,11 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
+                {
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,3 +1,7 @@
+using Domain.Services.Files;
+using Domain.Services.History;
+using Domain.Services.Trips;
+using Domain.Services.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,16 +18,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
+builder.Services.
+    AddDbContext<ApplicationContext>(options => 
+    options.UseNpgsql(connection, b => b.MigrationsAssembly("Database")));
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
 
-builder.Services.AddAutoMapper(typeof(AppMappingStorage));
+builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<IHistoryService, HistoryService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITripService, TripService>();
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -40,7 +51,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
 builder.Services.AddControllers();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("OnlyForAdmin", policy =>
@@ -49,12 +62,18 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
-builder.Services.AddScoped<IDriverService, DriverService>();
-
-builder.Services.AddAutoMapper(typeof(AppMappingDriver));
+builder.Services.AddAutoMapper(
+    typeof(AppMappingTrip),
+    typeof(MapUser),
+    typeof(MapTrip),
+    typeof(MapFile),
+    typeof(AppMappingDriver),
+    typeof(AppMappingStorage)
+    );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
