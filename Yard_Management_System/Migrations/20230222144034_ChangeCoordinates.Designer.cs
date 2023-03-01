@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,69 +12,18 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230222144034_ChangeCoordinates")]
+    partial class ChangeCoordinates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AttachmentFilesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateOnly>("DateOfIssueDriveLicense")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("DateOfIssuePassport")
-                        .HasColumnType("date");
-
-                    b.Property<string>("DriveLicense")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly>("ExpirationDatePassport")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("ExpirationDriveLicense")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Passport")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Patronymic")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Passport", "DriveLicense")
-                        .IsUnique();
-
-                    b.ToTable("Drivers");
-                });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
                 {
@@ -94,7 +44,43 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Models.User", b =>
+            modelBuilder.Entity("Yard_Management_System.Entity.Storage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int[]>("DayOfWeeks")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OpeningHours")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Storages");
+                });
+
+            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

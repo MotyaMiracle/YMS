@@ -4,7 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Yard_Management_System;
+using Yard_Management_System.Services.Storages;
 using Yard_Management_System.AutoMapper;
 using Yard_Management_System.Services.Drivers;
 
@@ -18,6 +20,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
+
+builder.Services.AddAutoMapper(typeof(AppMappingStorage));
+
+builder.Services.AddScoped<IStorageService, StorageService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
