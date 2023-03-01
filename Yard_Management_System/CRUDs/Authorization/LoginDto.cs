@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Yard_Management_System.Models
+namespace Yard_Management_System.CRUDs.Authorization
 {
     public class LoginDto
     {
