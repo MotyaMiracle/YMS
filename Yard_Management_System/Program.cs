@@ -6,8 +6,9 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Yard_Management_System;
-using Yard_Management_System.AutoMapper;
 using Yard_Management_System.Services.Storages;
+using Yard_Management_System.AutoMapper;
+using Yard_Management_System.Services.Drivers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,11 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim(ClaimsIdentity.DefaultRoleClaimType, "Гл. Администратор");
     });
 });
+
+builder.Services.AddScoped<IDriverService, DriverService>();
+
+builder.Services.AddAutoMapper(typeof(AppMappingDriver));
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
