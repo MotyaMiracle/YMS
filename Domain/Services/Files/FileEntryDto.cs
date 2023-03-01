@@ -8,6 +8,6 @@ namespace Domain.Services.Files
 {
     public class FileEntryDto
     {
-        public List<FileDto> Files { get; set; }
+        public List<FileDto> Entries { get; set; }
     }
 }

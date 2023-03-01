@@ -2,6 +2,6 @@
 {
     public class UserEntryDto
     {
-        public List<UserDto> Users { get; set; }
+        public List<UserDto> Entries { get; set; }
     }
 }

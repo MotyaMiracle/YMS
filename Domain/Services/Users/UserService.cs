@@ -20,10 +20,9 @@ namespace Domain.Services.Users
         public async Task RegistrationAndUpdateAsync(UserDto user,CancellationToken token)
         {
             //Create
-            if (user.Id == new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
+            if (string.IsNullOrWhiteSpace(user.Id))
             {
                 User newUser = _mapper.Map<User>(user);
-                newUser.Id = Guid.NewGuid();
                 await _db.Users.AddAsync(newUser, token);
             }
             //Update
@@ -58,19 +57,7 @@ namespace Domain.Services.Users
                 .ToListAsync(token);
             return new UserEntryDto
             {
-                Users = users.Select(u => new UserDto
-                {
-                    Id = u.Id,
-                    Login = u.Login,
-                    Password = u.Password,
-                    PasswordHash = u.PasswordHash,
-                    IsActive = u.IsActive,
-                    Email = u.Email,
-                    PhoneNumber = u.PhoneNumber,
-                    RoleId = u.RoleId,
-                    Role = u.Role
-
-                }).ToList()
+                Entries = _mapper.Map<IEnumerable<UserDto>>(users).ToList()
             };
         }
     }

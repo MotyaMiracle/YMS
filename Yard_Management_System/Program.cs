@@ -25,10 +25,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.WriteIndented = true;
 });
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IHistoryService, HistoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITripService, TripService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IUserProvider, UserProvider>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
