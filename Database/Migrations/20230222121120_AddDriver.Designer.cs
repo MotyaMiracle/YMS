@@ -12,8 +12,8 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230217175308_AddFiles")]
-    partial class AddFiles
+    [Migration("20230222121120_AddDriver")]
+    partial class AddDriver
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,17 +138,6 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Entity.MyFile", b =>
-                {
-                    b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
-                        .WithMany("Files")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Driver");
-                });
-
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
                     b.HasOne("Yard_Management_System.Entity.Role", "Role")
@@ -158,11 +147,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

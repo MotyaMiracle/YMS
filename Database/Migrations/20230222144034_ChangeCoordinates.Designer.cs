@@ -12,71 +12,18 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230217175308_AddFiles")]
-    partial class AddFiles
+    [Migration("20230222144034_ChangeCoordinates")]
+    partial class ChangeCoordinates
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AttachmentFilesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateOnly>("DateOfIssueDriveLicense")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("DateOfIssuePassport")
-                        .HasColumnType("date");
-
-                    b.Property<string>("DriveLicense")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateOnly>("ExpirationDatePassport")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("ExpirationDriveLicense")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Passport")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Patronymic")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Passport", "DriveLicense")
-                        .IsUnique();
-
-                    b.ToTable("Drivers");
-                });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
                 {
@@ -95,6 +42,42 @@ namespace YardManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Yard_Management_System.Entity.Storage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int[]>("DayOfWeeks")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OpeningHours")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Storages");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
@@ -138,17 +121,6 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Yard_Management_System.Entity.MyFile", b =>
-                {
-                    b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
-                        .WithMany("Files")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Driver");
-                });
-
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
                 {
                     b.HasOne("Yard_Management_System.Entity.Role", "Role")
@@ -158,11 +130,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

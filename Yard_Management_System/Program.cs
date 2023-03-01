@@ -8,8 +8,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Yard_Management_System;
+using Yard_Management_System.Services.Storages;
 using Yard_Management_System.AutoMapper;
+using Yard_Management_System.Services.Drivers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,7 +66,9 @@ builder.Services.AddAutoMapper(
     typeof(AppMappingTrip),
     typeof(MapUser),
     typeof(MapTrip),
-    typeof(MapFile)
+    typeof(MapFile),
+    typeof(AppMappingDriver),
+    typeof(AppMappingStorage)
     );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -24,6 +24,8 @@ namespace Yard_Management_System
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasIndex(u => new { u.Login, u.Email }).IsUnique();
+            modelBuilder.Entity<Driver>().HasIndex(d => new { d.Passport, d.DriveLicense }).IsUnique();
+            modelBuilder.Entity<Storage>().HasIndex(s => s.Name).IsUnique();
         }
     }
 }
