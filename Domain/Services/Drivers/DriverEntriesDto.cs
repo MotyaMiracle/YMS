@@ -1,4 +1,4 @@
-﻿namespace Yard_Management_System.Services.Drivers
+﻿namespace Domain.Services.Drivers
 {
     public class DriverEntriesDto
     {

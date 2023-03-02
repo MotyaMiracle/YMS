@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Services.History;
 using Domain.Services.Trips;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
@@ -8,6 +9,7 @@ using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Controllers
 {
+    [Authorize]
     [Route("api/trips")]
     [ApiController]
     public class TripsController : Controller

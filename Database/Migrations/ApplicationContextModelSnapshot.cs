@@ -45,7 +45,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HistoryEntries");
+                    b.ToTable("HistoryEntries", (string)null);
                 });
 
             modelBuilder.Entity("Database.Entity.Storage", b =>
@@ -56,7 +56,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Storages");
+                    b.ToTable("Storages", (string)null);
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
@@ -67,7 +67,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Drivers");
+                    b.ToTable("Drivers", (string)null);
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.EntityFile", b =>
@@ -80,7 +80,7 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<Guid>("EntityId")
+                    b.Property<Guid>("DriverId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("FileName")
@@ -89,7 +89,9 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Files");
+                    b.HasIndex("DriverId");
+
+                    b.ToTable("Files", (string)null);
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Role", b =>
@@ -108,7 +110,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
@@ -139,7 +141,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("StorageId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
@@ -180,7 +182,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Login", "Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Database.Entity.HistoryEntry", b =>
@@ -192,6 +194,15 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Yard_Management_System.Entity.EntityFile", b =>
+                {
+                    b.HasOne("Yard_Management_System.Entity.Driver", null)
+                        .WithMany("Files")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
@@ -227,6 +238,11 @@ namespace YardManagementSystem.Migrations
             modelBuilder.Entity("Database.Entity.Storage", b =>
                 {
                     b.Navigation("Trips");
+                });
+
+            modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
+                {
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

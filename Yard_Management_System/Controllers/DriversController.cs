@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Yard_Management_System.Services.Drivers;
+using Domain.Services.Drivers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Yard_Management_System.Controllers
 {
+    [Authorize]
     [Route("api/driver")]
     [ApiController]
     public class DriversController : ControllerBase

@@ -29,6 +29,5 @@
         public DateOnly DateOfIssueDriveLicense { get; set; }
         public DateOnly ExpirationDriveLicense { get; set; }
         public string PhoneNumber { get; set; }
-        public Guid AttachmentFilesId { get; set; }
     }
 }

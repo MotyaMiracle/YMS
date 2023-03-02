@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Database.Entity;
 using Microsoft.EntityFrameworkCore;
-using Yard_Management_System.Entity;
+using Yard_Management_System;
 
-namespace Yard_Management_System.Services.Storages
+namespace Domain.Services.Storages
 {
     public class StorageService : IStorageService
     {

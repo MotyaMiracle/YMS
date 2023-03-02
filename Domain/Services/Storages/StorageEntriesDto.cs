@@ -1,4 +1,4 @@
-﻿namespace Yard_Management_System.Services.Storages
+﻿namespace Domain.Services.Storages
 {
     public class StorageEntriesDto
     {

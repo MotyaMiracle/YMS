@@ -1,6 +1,6 @@
 ﻿using Yard_Management_System.Entity;
 
-namespace Yard_Management_System.Services.Storages
+namespace Domain.Services.Storages
 {
     public interface IStorageService
     {

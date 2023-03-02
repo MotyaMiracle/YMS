@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Yard_Management_System.Services.Drivers
+namespace Domain.Services.Drivers
 {
     public class DriverDto
     {
@@ -64,11 +64,5 @@ namespace Yard_Management_System.Services.Drivers
         /// </summary>
         [Required]
         public string PhoneNumber { get; set; }
-
-        /// <summary>
-        /// Прикрепленные документы
-        /// </summary>
-        [Required]
-        public Guid AttachmentFilesId { get; set; }
     }
 }

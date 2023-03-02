@@ -10,9 +10,9 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Yard_Management_System;
-using Yard_Management_System.Services.Storages;
+using Domain.Services.Storages;
 using Yard_Management_System.AutoMapper;
-using Yard_Management_System.Services.Drivers;
+using Domain.Services.Drivers;
 
 var builder = WebApplication.CreateBuilder(args);
 

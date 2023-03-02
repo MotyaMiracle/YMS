@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Yard_Management_System.Services.Storages;
-using Yard_Management_System.Entity;
-using AutoMapper;
+using Domain.Services.Storages;
 
 namespace Yard_Management_System.Controllers
 {

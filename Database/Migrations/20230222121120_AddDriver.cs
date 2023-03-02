@@ -25,8 +25,7 @@ namespace YardManagementSystem.Migrations
                     DriveLicense = table.Column<string>(type: "text", nullable: false),
                     DateOfIssueDriveLicense = table.Column<DateOnly>(type: "date", nullable: false),
                     ExpirationDriveLicense = table.Column<DateOnly>(type: "date", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    AttachmentFilesId = table.Column<Guid>(type: "uuid", nullable: false)
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
+using Yard_Management_System;
 
-namespace Yard_Management_System.Services.Drivers
+namespace Domain.Services.Drivers
 {
     public class DriverService : IDriverService
     {
