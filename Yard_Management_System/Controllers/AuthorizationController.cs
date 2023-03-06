@@ -22,19 +22,12 @@ namespace Yard_Management_System.Controllers
         public async Task<ActionResult<User>> Post(LoginDto dto, CancellationToken token)
         {
             User user = await _db.Users.Include(u => u.Role)
-                                       .FirstOrDefaultAsync(p => p.Login == dto.Login && p.Password == dto.Password, token);
+                                       .FirstOrDefaultAsync(p => p.Login == dto.Login && p.PasswordHash == Authorization.GetHash(dto.Password), token);
             
             if (user is null)
                 return Unauthorized();
 
-            // Костыль чтобы задать хешированный пароль, а то при HasData не получалось
-            if (user.PasswordHash == null)
-            {
-                user.PasswordHash = Authorization.GetHash(user.Password);
-                await _db.SaveChangesAsync();
-            }
-
-            var identity = Authorization.GetIdentity(user);
+            var identity = Authorization.GetIdentity(dto, user) ;
             var claims = identity.Claims.ToList();
             var encodedJwt = Authorization.GenerateJwtToken(claims, TimeSpan.FromDays(7));
             var claimsPrincipal = new ClaimsPrincipal(identity);

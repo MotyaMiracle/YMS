@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Yard_Management_System.Entity;
+﻿using Domain.Shared;
 
 namespace Domain.Services.Users
 {
@@ -9,10 +8,8 @@ namespace Domain.Services.Users
         public string Login { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string? PasswordHash { get; set; }
         public bool IsActive { get; set; }
         public string PhoneNumber { get; set; }
-        public Guid RoleId { get; set; }
-        public Role Role { get; set; }
+        public LookUpDto RoleId { get; set; }
     }
 }

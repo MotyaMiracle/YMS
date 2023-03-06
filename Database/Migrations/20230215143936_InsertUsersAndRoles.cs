@@ -22,11 +22,10 @@ namespace YardManagementSystem.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "IsActive", "Login", "Password", "PasswordHash", "PhoneNumber", "RoleId" },
+                columns: new[] { "Id", "Email", "IsActive", "Login", "PasswordHash", "PhoneNumber", "RoleId" },
                 values: new object[,]
                 {
-                    { new Guid("5dd30af3-7fd4-4793-b777-2f48205138d0"), "tom@gmail.com", false, "tom123", "12345", null, "89169436523", SystemRoleIds.AdminId},
-                    { new Guid("b58b787e-bb63-4649-9809-0ed1604e4efb"), "alice@gmail.com", false, "alice321", "54321", null, "89267434513", SystemRoleIds.ReceptionistId }
+                    { new Guid("ee976536-0900-4a50-a530-ff76ffd77302"), "123@gmail.com", false, "123", "pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=", "123", SystemRoleIds.AdminId},
                 });    
         }
 

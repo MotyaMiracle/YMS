@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Domain.Services.Authorization;
+using Domain.Services.Users;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -9,7 +11,7 @@ namespace Yard_Management_System
 {
     public class Authorization
     {
-        public static ClaimsIdentity GetIdentity(User? user)
+        public static ClaimsIdentity GetIdentity(LoginDto loginDto, User user)
         {
             if (user == null)
                 return null;
@@ -18,7 +20,7 @@ namespace Yard_Management_System
             if (role == null)
                 return null;
 
-            var passwordHash = GetHash(user.Password);
+            var passwordHash = GetHash(loginDto.Password);
             if (passwordHash != user.PasswordHash)
             {
                 return null;

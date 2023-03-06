@@ -30,8 +30,7 @@ namespace YardManagementSystem.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Login = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     RoleId = table.Column<Guid>(type: "uuid", nullable: false)
