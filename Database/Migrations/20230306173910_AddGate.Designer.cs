@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230306173910_AddGate")]
+    partial class AddGate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +31,6 @@ namespace YardManagementSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<TimeOnly>("ClosingHour")
-                        .HasColumnType("time without time zone");
-
                     b.Property<string>("Height")
                         .IsRequired()
                         .HasColumnType("text");
@@ -39,11 +39,12 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<TimeOnly>("OpeningHour")
-                        .HasColumnType("time without time zone");
+                    b.Property<string>("OpeningHours")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<TimeOnly>("PalletHandlingTime")
-                        .HasColumnType("time without time zone");
+                    b.Property<DateTime>("PalletHandlingTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
