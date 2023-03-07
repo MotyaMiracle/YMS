@@ -13,6 +13,8 @@ using Yard_Management_System;
 using Domain.Services.Storages;
 using Yard_Management_System.AutoMapper;
 using Domain.Services.Drivers;
+using Domain.Services.Trucks;
+using Database.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<ITruckService,TruckService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -70,7 +73,8 @@ builder.Services.AddAutoMapper(
     typeof(MapTrip),
     typeof(MapFile),
     typeof(AppMappingDriver),
-    typeof(AppMappingStorage)
+    typeof(AppMappingStorage),
+    typeof(MapTruck)
     );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -154,5 +158,7 @@ app.MapGet("api/login", async (HttpContext context) =>
     </html>";
     await context.Response.WriteAsync(loginForm);
 });
+
+Company company = new Company() { Id = Guid.Parse("f360f334-25c7-424d-827b-7607f67931ba") };
 
 app.Run();
