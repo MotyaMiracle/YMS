@@ -9,6 +9,7 @@ namespace Domain.Services.Trips
         public Guid Id { get; set; }
         public Guid StorageId { get; set; }
         public Guid DriverId { get; set; }
+        public Guid TruckId { get; set; }
         public DateTime ArrivalTime { get; set; }
         public Status NowStatus { get; set; }
         public enum Status { Create, Arrived, InArchive }

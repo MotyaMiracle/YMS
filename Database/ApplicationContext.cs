@@ -28,10 +28,6 @@ namespace Yard_Management_System
             modelBuilder.Entity<User>().HasIndex(u => new { u.Login, u.Email }).IsUnique();
             modelBuilder.Entity<Driver>().HasIndex(d => new { d.Passport, d.DriveLicense }).IsUnique();
             modelBuilder.Entity<Storage>().HasIndex(s => s.Name).IsUnique();
-
-            modelBuilder.Entity<Company>().HasData(
-                new Company { Id = new Guid("f360f334-25c7-424d-827b-7607f67931ba") }
-                );
         }
     }
 }
