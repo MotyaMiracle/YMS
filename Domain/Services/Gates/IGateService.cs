@@ -9,5 +9,7 @@
         Task DeleteGateAsync(Guid gateId, CancellationToken token);
 
         Task<GateEntriesDto> GetAllAsync(CancellationToken token);
+
+        public Task<bool> CanDriveToGateAsync(string carNumber, Guid tripId, CancellationToken token);
     }
 }

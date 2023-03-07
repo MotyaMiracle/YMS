@@ -24,20 +24,22 @@ namespace YardManagementSystem.Migrations
 
 
             modelBuilder.Entity("Database.Entity.Company", b =>
-            b.Property<Guid>("Id")
+            {
+                b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-            b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Companies");
+                b.ToTable("Companies");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f360f334-25c7-424d-827b-7607f67931ba")
-                        });
+                b.HasData(
+                    new
+                    {
+                        Id = new Guid("f360f334-25c7-424d-827b-7607f67931ba")
+                    });
+            });
 
-            modelBuilder.Entity("Database.Entity.Gate", b =>
+                modelBuilder.Entity("Database.Entity.Gate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,6 +71,7 @@ namespace YardManagementSystem.Migrations
 
                     b.ToTable("Gates");
                 });
+
 
             modelBuilder.Entity("Database.Entity.HistoryEntry", b =>
                 {

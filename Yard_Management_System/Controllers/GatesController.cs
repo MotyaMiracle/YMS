@@ -49,5 +49,12 @@ namespace Yard_Management_System.Controllers
 
             return Ok();
         }
+
+        [HttpGet("{carNumber}")]
+        public async Task<IActionResult> CanDrive(string carNumber, Guid tripId, CancellationToken token)
+        {
+            return Ok(await _gatesService.CanDriveToGateAsync(carNumber, tripId, token));
+        }
+
     }
 }

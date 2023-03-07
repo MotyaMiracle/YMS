@@ -61,5 +61,33 @@ namespace Domain.Services.Gates
 
             return response;
         }
+
+        public async Task<bool> CanDriveToGateAsync(string carNumber, Guid tripId, CancellationToken token)
+        {
+            DateTime arrivalTime = DateTime.UtcNow;
+
+            var trip = await _database.Trips
+                .FirstOrDefaultAsync(s => s.Id == tripId, token);
+
+            var storage = await _database.Storages
+                .FirstOrDefaultAsync(s => s.Id == trip.StorageId, token);
+
+
+            var truck = await _database.Trucks
+                .FirstOrDefaultAsync(s => s.CarNumber == carNumber, token);
+
+
+            var current = _database.Trips.Where(t => t.TruckId == truck.Id && t.StorageId == storage.Id);
+            if (current == null)
+            {
+                return false;
+            }
+
+            if (arrivalTime <= trip.ArrivalTime.AddMinutes(+30) 
+                && arrivalTime >= trip.ArrivalTime.AddMinutes(-30))
+                return true;
+            else
+                return false;
+        }
     }
 }
