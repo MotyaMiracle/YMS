@@ -15,6 +15,8 @@ using Yard_Management_System.AutoMapper;
 using Domain.Services.Drivers;
 using Domain.Services.Trucks;
 using Database.Entity;
+using Domain.Services.Gates;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,7 @@ builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ITruckService,TruckService>();
+builder.Services.AddScoped<IGatesService, GateService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -74,7 +77,8 @@ builder.Services.AddAutoMapper(
     typeof(MapFile),
     typeof(AppMappingDriver),
     typeof(AppMappingStorage),
-    typeof(MapTruck)
+    typeof(MapTruck),
+    typeof(AppMappingGate)
     );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

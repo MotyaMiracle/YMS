@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230307113557_ChangeGateEntity")]
+    partial class ChangeGateEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,26 +25,12 @@ namespace YardManagementSystem.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-
-            modelBuilder.Entity("Database.Entity.Company", b =>
-            b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-            b.HasKey("Id");
-
-                    b.ToTable("Companies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f360f334-25c7-424d-827b-7607f67931ba")
-                        });
-
             modelBuilder.Entity("Database.Entity.Gate", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
                     b.Property<TimeOnly>("ClosingHour")
                         .HasColumnType("time without time zone");
 
@@ -130,36 +119,6 @@ namespace YardManagementSystem.Migrations
                         .IsUnique();
 
                     b.ToTable("Storages");
-                });
-
-            modelBuilder.Entity("Database.Entity.Truck", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CarBrand")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CarNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId")
-                        .IsUnique();
-
-                    b.ToTable("Trucks");
-
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
@@ -275,16 +234,11 @@ namespace YardManagementSystem.Migrations
                     b.Property<Guid>("StorageId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TruckId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DriverId");
 
                     b.HasIndex("StorageId");
-
-                    b.HasIndex("TruckId");
 
                     b.ToTable("Trips");
                 });
@@ -338,17 +292,6 @@ namespace YardManagementSystem.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Database.Entity.Truck", b =>
-                {
-                    b.HasOne("Database.Entity.Company", "Company")
-                        .WithOne("Truck")
-                        .HasForeignKey("Database.Entity.Truck", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
                 {
                     b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
@@ -363,17 +306,9 @@ namespace YardManagementSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Database.Entity.Truck", "Truck")
-                        .WithMany()
-                        .HasForeignKey("TruckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Driver");
 
                     b.Navigation("Storage");
-
-                    b.Navigation("Truck");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
@@ -385,12 +320,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Database.Entity.Company", b =>
-                {
-                    b.Navigation("Truck")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
