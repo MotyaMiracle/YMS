@@ -13,6 +13,7 @@ using Yard_Management_System;
 using Domain.Services.Storages;
 using Yard_Management_System.AutoMapper;
 using Domain.Services.Drivers;
+using Domain.Services.Trailers;
 using Domain.Services.Companies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,7 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<ITrailerService,TrailerService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -73,6 +75,7 @@ builder.Services.AddAutoMapper(
     typeof(MapFile),
     typeof(AppMappingDriver),
     typeof(AppMappingStorage),
+    typeof(MapTrailer),
     typeof(AppMappingCompany)
     );
 

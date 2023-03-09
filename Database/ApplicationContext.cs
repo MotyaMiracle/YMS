@@ -13,7 +13,8 @@ namespace Yard_Management_System
         public DbSet<Trip> Trips { get; set; }
         public DbSet<HistoryEntry> HistoryEntries { get; set; }
         public DbSet<Storage> Storages { get; set; }
-        public DbSet<Company> Companys { get; set; }
+        public DbSet<Trailer> Trailers { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
