@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230307103134_AddTruckToTrip")]
+    partial class AddTruckToTrip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,50 +32,14 @@ namespace YardManagementSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-                    
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-                    
-                    b.Property<string>("Inn")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.ToTable("Companies");
-                });
 
-            modelBuilder.Entity("Database.Entity.Gate", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ClosingHour")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Height");
-                        
-                    b.HasKey("Id");                   
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OpeningHour")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("PalletHandlingTime")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("StorageId")
-                        .HasColumnType("uuid");
-
-                    b.ToTable("Gates");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f360f334-25c7-424d-827b-7607f67931ba")
+                        });
                 });
 
             modelBuilder.Entity("Database.Entity.HistoryEntry", b =>
@@ -111,10 +78,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ClosingHour")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int[]>("DayOfWeeks")
                         .IsRequired()
                         .HasColumnType("integer[]");
@@ -129,7 +92,7 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("OpeningHour")
+                    b.Property<string>("OpeningHours")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -146,34 +109,12 @@ namespace YardManagementSystem.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-                        
-                    b.Property<string>("Brand");
-                   
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-                        
-                    b.Property<string>("Description")
+
+                    b.Property<string>("CarBrand")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("text");
-                        
-                    b.HasIndex("CompanyId")
-                        .IsUnique();
-                    
-                    b.ToTable("Trucks");
-                    
-                });
-
-            modelBuilder.Entity("Database.Entity.Trailer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-                        
-                    b.Property<string>("CargoCapacity")
+                    b.Property<string>("CarNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -181,10 +122,6 @@ namespace YardManagementSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -193,7 +130,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("CompanyId")
                         .IsUnique();
 
-                    b.ToTable("Trailers");
+                    b.ToTable("Trucks");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
@@ -311,9 +248,6 @@ namespace YardManagementSystem.Migrations
 
                     b.Property<Guid>("TruckId")
                         .HasColumnType("uuid");
-                      
-                    b.Property<Guid>("TrailerId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -322,9 +256,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("StorageId");
 
                     b.HasIndex("TruckId");
-                    
-                    b.HasIndex("TrailerId");
-                    
+
                     b.ToTable("Trips");
                 });
 
@@ -384,15 +316,6 @@ namespace YardManagementSystem.Migrations
                         .HasForeignKey("Database.Entity.Truck", "CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                    b.Navigation("Company");
-                    
-            modelBuilder.Entity("Database.Entity.Trailer", b =>
-                {
-                    b.HasOne("Database.Entity.Company", "Company")
-                        .WithOne("Trailer")
-                        .HasForeignKey("Database.Entity.Trailer", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Company");
                 });
@@ -438,8 +361,6 @@ namespace YardManagementSystem.Migrations
             modelBuilder.Entity("Database.Entity.Company", b =>
                 {
                     b.Navigation("Truck")
-                        .IsRequired();
-                    b.Navigation("Trailer")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

@@ -10,7 +10,7 @@ namespace Domain.Services.Storages
 
         Task DeleteStorageAsync(Guid storageId, CancellationToken token);
 
-        Task<StorageEntriesDto> GetAllAsync(CancellationToken token);
+        Task<IEnumerable<StorageDto>> GetAllAsync(CancellationToken token);
 
     }
 }

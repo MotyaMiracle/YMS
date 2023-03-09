@@ -26,7 +26,7 @@ namespace YardManagementSystem.Migrations
                 values: new object[,]
                 {
                     { new Guid("ee976536-0900-4a50-a530-ff76ffd77302"), "123@gmail.com", false, "123", "pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=", "123", SystemRoleIds.AdminId},
-                });    
+                });
         }
 
         /// <inheritdoc />

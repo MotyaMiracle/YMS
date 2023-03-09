@@ -38,24 +38,27 @@ namespace Domain.Services.Drivers
             Driver driver = await _database.Drivers
                 .FirstOrDefaultAsync(d => d.Id == driverId, token);
 
+            if (driver is null)
+                return;
+
             _database.Drivers.Remove(driver);
             await _database.SaveChangesAsync(token);
         }
 
-        public async Task<DriverEntriesDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<DriverDto>> GetAllAsync(CancellationToken token)
         {
             var drivers = await _database.Drivers.ToListAsync(token);
 
-            return new DriverEntriesDto
-            {
-                Entries = _mapper.Map<IEnumerable<DriverDto>>(drivers).ToList()
-            };
+            return _mapper.Map<IEnumerable<DriverDto>>(drivers).ToList();
         }
 
         public async Task<DriverDto> GetAsync(Guid driverId, CancellationToken token)
         {
             var driver = await _database.Drivers
                 .FirstOrDefaultAsync(s => s.Id == driverId, token);
+
+            if (driver is null)
+                return null;
 
             var response = _mapper.Map<DriverDto>(driver);
 

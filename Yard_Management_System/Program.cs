@@ -13,6 +13,9 @@ using Yard_Management_System;
 using Domain.Services.Storages;
 using Yard_Management_System.AutoMapper;
 using Domain.Services.Drivers;
+using Domain.Services.Trucks;
+using Database.Entity;
+using Domain.Services.Gates;
 using Domain.Services.Trailers;
 using Domain.Services.Companies;
 
@@ -39,6 +42,8 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
 builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<ITruckService,TruckService>();
+builder.Services.AddScoped<IGatesService, GateService>();
 builder.Services.AddScoped<ITrailerService,TrailerService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 
@@ -75,6 +80,8 @@ builder.Services.AddAutoMapper(
     typeof(MapFile),
     typeof(AppMappingDriver),
     typeof(AppMappingStorage),
+    typeof(MapTruck),
+    typeof(AppMappingGate),
     typeof(MapTrailer),
     typeof(AppMappingCompany)
     );
@@ -160,5 +167,7 @@ app.MapGet("api/login", async (HttpContext context) =>
     </html>";
     await context.Response.WriteAsync(loginForm);
 });
+
+Company company = new Company() { Id = Guid.Parse("f360f334-25c7-424d-827b-7607f67931ba") };
 
 app.Run();

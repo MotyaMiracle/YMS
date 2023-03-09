@@ -27,10 +27,9 @@ namespace Domain.Services.Trips
 
         public async Task CreateAsync(TripDto trip, CancellationToken token)
         {
-            trip.Id = Guid.NewGuid();
             trip.NowStatus = TripDto.Status.Create;
             Trip newTrip = _mapper.Map<Trip>(trip);
-            await _historyService.SaveAsync(trip.Id, "Создана путёвка", await _userProvider.GetCurrentUserAsync(token), token);
+            await _historyService.SaveAsync(newTrip.Id, "Создана путёвка", await _userProvider.GetCurrentUserAsync(token), token);
             await _db.Trips.AddAsync(newTrip, token);
             await _db.SaveChangesAsync(token);
         }

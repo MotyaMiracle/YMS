@@ -35,20 +35,22 @@ namespace Domain.Services.Files
             return file;
         }
 
-        public async Task<FileEntryDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<FileDto>> GetAllAsync(CancellationToken token)
         {
             var files = await _db.Files
                 .ToListAsync(token);
-            return new FileEntryDto
-            {
-                Entries = _mapper.Map<IEnumerable<FileDto>>(files).ToList()
-            };
+
+            return  _mapper.Map<IEnumerable<FileDto>>(files).ToList();
         }
 
         public async Task<FileDto> GetAsync(Guid fileId, CancellationToken token)
         {
             var file = await _db.Files
                 .FirstOrDefaultAsync(f => f.Id == fileId, token);
+
+            if (file is null)
+                return null;
+
             var response = _mapper.Map<FileDto>(file);
             return response;
         }
