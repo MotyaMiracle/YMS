@@ -38,6 +38,9 @@ namespace Domain.Services.Storages
             Storage storage = await _database.Storages
                 .FirstOrDefaultAsync(s => s.Id == storageId, token);
 
+            if (storage is null)
+                return;
+
             _database.Storages.Remove(storage);
             await _database.SaveChangesAsync(token);
         }
@@ -47,19 +50,19 @@ namespace Domain.Services.Storages
             var storage = await _database.Storages
                 .FirstOrDefaultAsync(s => s.Id == storageId, token);
 
+            if (storage is null)
+                return null;
+
             var response = _mapper.Map<StorageDto>(storage);
 
             return response;
         }
 
-        public async Task<StorageEntriesDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<StorageDto>> GetAllAsync(CancellationToken token)
         {
             var storages = await _database.Storages.ToListAsync(token);
 
-            return new StorageEntriesDto { 
-                Entries = _mapper.Map<IEnumerable<StorageDto>>(storages).ToList()
-            };
-
+            return _mapper.Map<IEnumerable<StorageDto>>(storages).ToList();
         }
     }
 }

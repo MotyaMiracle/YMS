@@ -41,24 +41,27 @@ namespace Domain.Services.Trucks
             Truck truck = await _db.Trucks
                 .FirstOrDefaultAsync(d => d.Id == truckId, token);
 
+            if (truck is null)
+                return;
+
             _db.Trucks.Remove(truck);
             await _db.SaveChangesAsync(token);
         }
 
-        public async Task<TruckEntriesDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<TruckDto>> GetAllAsync(CancellationToken token)
         {
             var trucks = await _db.Trucks.ToListAsync(token);
 
-            return new TruckEntriesDto
-            {
-                Entries = _mapper.Map<IEnumerable<TruckDto>>(trucks).ToList()
-            };
+            return _mapper.Map<IEnumerable<TruckDto>>(trucks).ToList();
         }
 
         public async Task<TruckDto> GetAsync(Guid truckId, CancellationToken token)
         {
             var truck = await _db.Trucks
                 .FirstOrDefaultAsync(s => s.Id == truckId, token);
+
+            if (truck is null)
+                return null;
 
             var response = _mapper.Map<TruckDto>(truck);
 

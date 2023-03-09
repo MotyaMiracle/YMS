@@ -14,7 +14,9 @@ namespace Domain.Services.Storages
         [Required]
         public double Longitude { get; set; }
         [Required]
-        public string OpeningHours { get; set; }
+        public string OpeningHour { get; set; }
+        [Required]
+        public string ClosingHour { get; set; }
         [Required]
         public List<DayOfWeek> DayOfWeeks { get; set; }
     }

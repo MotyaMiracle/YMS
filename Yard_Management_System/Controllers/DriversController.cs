@@ -41,9 +41,6 @@ namespace Yard_Management_System.Controllers
         [HttpDelete("deleteDriver")]
         public async Task<IActionResult> Delete(Guid driverId, CancellationToken token)
         {
-            if (driverId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
-                return BadRequest();
-
             await _driverService.DeleteDriverAsync(driverId, token);
 
             return Ok();

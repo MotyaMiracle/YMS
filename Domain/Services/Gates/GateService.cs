@@ -38,24 +38,27 @@ namespace Domain.Services.Gates
             Gate gate = await _database.Gates
                 .FirstOrDefaultAsync(s => s.Id == gateId, token);
 
+            if (gate is null)
+                return;
+
             _database.Gates.Remove(gate);
             await _database.SaveChangesAsync(token);
         }
 
-        public async Task<GateEntriesDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<GateDto>> GetAllAsync(CancellationToken token)
         {
             var gates = await _database.Gates.ToListAsync(token);
 
-            return new GateEntriesDto
-            {
-                Entries = _mapper.Map<IEnumerable<GateDto>>(gates).ToList()
-            };
+            return _mapper.Map<IEnumerable<GateDto>>(gates).ToList();
         }
 
         public async Task<GateDto> GetAsync(Guid gateId, CancellationToken token)
         {
             var gate = await _database.Gates
                 .FirstOrDefaultAsync(s => s.Id == gateId, token);
+
+            if (gate is null)
+                return null;
 
             var response = _mapper.Map<GateDto>(gate);
 

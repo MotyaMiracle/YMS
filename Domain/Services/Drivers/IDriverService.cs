@@ -10,6 +10,6 @@ namespace Domain.Services.Drivers
 
         Task DeleteDriverAsync(Guid driverId, CancellationToken token);
 
-        Task<DriverEntriesDto> GetAllAsync(CancellationToken token);
+        Task<IEnumerable<DriverDto>> GetAllAsync(CancellationToken token);
     }
 }

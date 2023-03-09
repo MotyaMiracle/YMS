@@ -18,7 +18,7 @@ namespace YardManagementSystem.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Height = table.Column<string>(type: "text", nullable: false),
-                    PalletHandlingTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    PalletHandlingTime = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     OpeningHours = table.Column<string>(type: "text", nullable: false),
                     StorageId = table.Column<Guid>(type: "uuid", nullable: false)

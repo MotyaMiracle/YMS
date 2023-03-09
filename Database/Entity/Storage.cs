@@ -23,7 +23,8 @@ namespace Database.Entity
         /// <summary>
         /// Часы работы
         /// </summary>
-        public string OpeningHours { get; set; }
+        public string OpeningHour { get; set; }
+        public string ClosingHour { get; set; }
         /// <summary>
         /// Enum 0 - Воскресенье, 5 - Пятница
         /// </summary>

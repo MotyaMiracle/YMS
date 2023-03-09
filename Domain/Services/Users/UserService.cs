@@ -37,6 +37,10 @@ namespace Domain.Services.Users
         public async Task DeleteUserAsync(Guid userId, CancellationToken token)
         {
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId, token);
+
+            if (user is null)
+                return;
+
             _db.Users.Remove(user);
             await _db.SaveChangesAsync(token);
         }
@@ -46,19 +50,21 @@ namespace Domain.Services.Users
             var user = await _db.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Id == userId, token);
+
+            if (user is null)
+                return null;
+
             var response = _mapper.Map<UserDto>(user);
             return(response);
         }
 
-        public async Task<UserEntryDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken token)
         {
             var users = await _db.Users
                 .Include(u => u.Role)
                 .ToListAsync(token);
-            return new UserEntryDto
-            {
-                Entries = _mapper.Map<IEnumerable<UserDto>>(users).ToList()
-            };
+
+            return _mapper.Map<IEnumerable<UserDto>>(users).ToList();
         }
     }
 }

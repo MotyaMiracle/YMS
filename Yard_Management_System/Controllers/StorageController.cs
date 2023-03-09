@@ -42,8 +42,6 @@ namespace Yard_Management_System.Controllers
         [HttpDelete("deleteStorage")]
         public async Task<IActionResult> Delete(Guid storageId, CancellationToken token)
         {
-            if (storageId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
-                return BadRequest();
 
             await _storageService.DeleteStorageAsync(storageId, token);
 

@@ -1,4 +1,6 @@
-﻿namespace Domain.Services.Gates
+﻿using Domain.Shared;
+
+namespace Domain.Services.Gates
 {
     public class GateDto
     {
@@ -17,7 +19,7 @@
         /// <summary>
         /// Время обработки палет
         /// </summary>
-        public string PalletHandlingTime { get; set; }
+        public int PalletHandlingTime { get; set; }
 
         /// <summary>
         /// Тип выполняемых операций
@@ -38,6 +40,6 @@
         /// <summary>
         /// Код склада
         /// </summary>
-        public Guid StorageId { get; set; }
+        public LookUpDto StorageId { get; set; }
     }
 }
