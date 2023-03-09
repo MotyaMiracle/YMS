@@ -42,14 +42,11 @@ namespace Domain.Services.Trailers
             await _db.SaveChangesAsync(token);
         }
 
-        public async Task<TrailerEntriesDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<TrailerDto>> GetAllAsync(CancellationToken token)
         {
             var trailers = await _db.Trailers.ToListAsync(token);
 
-            return new TrailerEntriesDto
-            {
-                Entries = _mapper.Map<IEnumerable<TrailerDto>>(trailers).ToList()
-            };
+            return _mapper.Map<IEnumerable<TrailerDto>>(trailers).ToList();
         }
 
         public async Task<TrailerDto> GetAsync(Guid trailerId, CancellationToken token)
