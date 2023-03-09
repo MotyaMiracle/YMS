@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Yard_Management_System;
@@ -11,9 +12,11 @@ using Yard_Management_System;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230307123108_AddCompanyEntity")]
+    partial class AddCompanyEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,18 +30,20 @@ namespace YardManagementSystem.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-                        
-                    b.HasKey("Id");
-                    
-                    b.Property<string>("Inn")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.ToTable("Companies");
+                    b.Property<Guid>("TrailerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TruckId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companys");
                 });
 
             modelBuilder.Entity("Database.Entity.HistoryEntry", b =>
@@ -101,35 +106,6 @@ namespace YardManagementSystem.Migrations
                         .IsUnique();
 
                     b.ToTable("Storages");
-                });
-
-            modelBuilder.Entity("Database.Entity.Trailer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CargoCapacity")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId")
-                        .IsUnique();
-
-                    b.ToTable("Trailers");
                 });
 
             modelBuilder.Entity("Yard_Management_System.Entity.Driver", b =>
@@ -245,9 +221,6 @@ namespace YardManagementSystem.Migrations
                     b.Property<Guid>("StorageId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TrailerId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DriverId");
@@ -306,17 +279,6 @@ namespace YardManagementSystem.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Database.Entity.Trailer", b =>
-                {
-                    b.HasOne("Database.Entity.Company", "Company")
-                        .WithOne("Trailer")
-                        .HasForeignKey("Database.Entity.Trailer", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
             modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
                 {
                     b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
@@ -345,12 +307,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Database.Entity.Company", b =>
-                {
-                    b.Navigation("Trailer")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
