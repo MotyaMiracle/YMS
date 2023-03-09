@@ -42,9 +42,6 @@ namespace Yard_Management_System.Controllers
         [HttpDelete("deleteCompany")]
         public async Task<IActionResult> Delete(Guid companyId, CancellationToken token)
         {
-            if (companyId == Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
-                return BadRequest();
-
             await _companyService.DeleteCompanyAsync(companyId, token);
 
             return Ok();

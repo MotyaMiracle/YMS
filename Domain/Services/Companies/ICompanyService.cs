@@ -8,6 +8,6 @@
 
         Task DeleteCompanyAsync(Guid companyId, CancellationToken token);
 
-        Task<CompanyEntriesDto> GetAllAsync(CancellationToken token);
+        Task<IEnumerable<CompanyDto>> GetAllAsync(CancellationToken token);
     }
 }

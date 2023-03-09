@@ -40,18 +40,18 @@ namespace Domain.Services.Companies
             Company company = await _database.Companys
                 .FirstOrDefaultAsync(s => s.Id == companyId, token);
 
+            if (company is null)
+                return;
+
             _database.Companys.Remove(company);
             await _database.SaveChangesAsync(token);
         }
 
-        public async Task<CompanyEntriesDto> GetAllAsync(CancellationToken token)
+        public async Task<IEnumerable<CompanyDto>> GetAllAsync(CancellationToken token)
         {
             var companies = await _database.Companys.ToListAsync(token);
 
-            return new CompanyEntriesDto
-            {
-                Entries = _mapper.Map<IEnumerable<CompanyDto>>(companies).ToList()
-            };
+            return _mapper.Map<IEnumerable<CompanyDto>>(companies).ToList();
         }
 
         public async Task<CompanyDto> GetAsync(Guid companyId, CancellationToken token)

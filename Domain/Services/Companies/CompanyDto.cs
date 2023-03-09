@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-namespace Domain.Services.Companies
+﻿namespace Domain.Services.Companies
 {
     public class CompanyDto
     {
@@ -12,13 +10,8 @@ namespace Domain.Services.Companies
         public string Name { get; set; }
 
         /// <summary>
-        /// Id Грузовика
+        /// ИНН
         /// </summary>
-        public Guid TruckId { get; set; }
-
-        /// <summary>
-        /// Id Прицепа
-        /// </summary>
-        public Guid TrailerId { get; set; }
+        public string Inn { get; set; }
     }
 }
