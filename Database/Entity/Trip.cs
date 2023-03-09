@@ -7,6 +7,7 @@ namespace Yard_Management_System.Entity
         public Guid StorageId { get; set; }
         public Guid DriverId { get; set; }
         public Guid TruckId { get; set; }
+        public Guid TrailerId { get; set; }
 
         /// <summary>
         /// Год, месяц, день, час, минута

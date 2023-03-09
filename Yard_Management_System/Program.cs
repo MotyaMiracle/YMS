@@ -16,7 +16,8 @@ using Domain.Services.Drivers;
 using Domain.Services.Trucks;
 using Database.Entity;
 using Domain.Services.Gates;
-
+using Domain.Services.Trailers;
+using Domain.Services.Companies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,8 @@ builder.Services.AddScoped<IDriverService, DriverService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ITruckService,TruckService>();
 builder.Services.AddScoped<IGatesService, GateService>();
+builder.Services.AddScoped<ITrailerService,TrailerService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -78,7 +81,9 @@ builder.Services.AddAutoMapper(
     typeof(AppMappingDriver),
     typeof(AppMappingStorage),
     typeof(MapTruck),
-    typeof(AppMappingGate)
+    typeof(AppMappingGate),
+    typeof(MapTrailer),
+    typeof(AppMappingCompany)
     );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -3,6 +3,7 @@
     public class Company
     {
         public Guid Id { get; set; }
-        public Truck Truck { get; set; }
+        public string Name { get; set; }
+        public string Inn { get; set; }
     }
 }

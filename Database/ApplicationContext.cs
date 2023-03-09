@@ -16,7 +16,7 @@ namespace Yard_Management_System
         public DbSet<Truck> Trucks { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Gate> Gates { get; set; }
-
+        public DbSet<Trailer> Trailers { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
