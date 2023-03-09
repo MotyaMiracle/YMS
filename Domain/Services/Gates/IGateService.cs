@@ -10,6 +10,6 @@
 
         Task<GateEntriesDto> GetAllAsync(CancellationToken token);
 
-        public Task<bool> CanDriveToGateAsync(string carNumber, Guid tripId, CancellationToken token);
+        public Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token);
     }
 }

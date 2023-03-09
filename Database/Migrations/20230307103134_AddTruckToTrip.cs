@@ -23,23 +23,11 @@ namespace YardManagementSystem.Migrations
                 name: "IX_Trips_TruckId",
                 table: "Trips",
                 column: "TruckId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Trips_Trucks_TruckId",
-                table: "Trips",
-                column: "TruckId",
-                principalTable: "Trucks",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Trips_Trucks_TruckId",
-                table: "Trips");
-
             migrationBuilder.DropIndex(
                 name: "IX_Trips_TruckId",
                 table: "Trips");
