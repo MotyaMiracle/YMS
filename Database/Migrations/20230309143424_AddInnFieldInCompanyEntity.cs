@@ -13,15 +13,15 @@ namespace YardManagementSystem.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "TrailerId",
-                table: "Companys");
+                table: "Companies");
 
             migrationBuilder.DropColumn(
                 name: "TruckId",
-                table: "Companys");
+                table: "Companies");
 
             migrationBuilder.AddColumn<string>(
                 name: "Inn",
-                table: "Companys",
+                table: "Companies",
                 type: "text",
                 nullable: false,
                 defaultValue: "");
@@ -32,18 +32,18 @@ namespace YardManagementSystem.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "Inn",
-                table: "Companys");
+                table: "Companies");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "TrailerId",
-                table: "Companys",
+                table: "Companies",
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.AddColumn<Guid>(
                 name: "TruckId",
-                table: "Companys",
+                table: "Companies",
                 type: "uuid",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));

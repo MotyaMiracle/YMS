@@ -385,62 +385,65 @@ namespace YardManagementSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                     b.Navigation("Company");
-                    
-            modelBuilder.Entity("Database.Entity.Trailer", b =>
-                {
-                    b.HasOne("Database.Entity.Company", "Company")
-                        .WithOne("Trailer")
-                        .HasForeignKey("Database.Entity.Trailer", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
-                    b.Navigation("Company");
-                });
+                    modelBuilder.Entity("Database.Entity.Trailer", b =>
+                        {
+                            b.HasOne("Database.Entity.Company", "Company")
+                                .WithOne("Trailer")
+                                .HasForeignKey("Database.Entity.Trailer", "CompanyId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-            modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
-                {
-                    b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
-                        .WithMany()
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b.Navigation("Company");
+                        });
 
-                    b.HasOne("Database.Entity.Storage", "Storage")
-                        .WithMany()
-                        .HasForeignKey("StorageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    modelBuilder.Entity("Yard_Management_System.Entity.Trip", b =>
+                        {
+                            b.HasOne("Yard_Management_System.Entity.Driver", "Driver")
+                                .WithMany()
+                                .HasForeignKey("DriverId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.HasOne("Database.Entity.Truck", "Truck")
-                        .WithMany()
-                        .HasForeignKey("TruckId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b.HasOne("Database.Entity.Storage", "Storage")
+                                .WithMany()
+                                .HasForeignKey("StorageId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Driver");
+                            b.HasOne("Database.Entity.Truck", "Truck")
+                                .WithMany()
+                                .HasForeignKey("TruckId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-                    b.Navigation("Storage");
+                            b.Navigation("Driver");
 
-                    b.Navigation("Truck");
-                });
+                            b.Navigation("Storage");
 
-            modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
-                {
-                    b.HasOne("Yard_Management_System.Entity.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                            b.Navigation("Truck");
+                        });
 
-                    b.Navigation("Role");
-                });
+                    modelBuilder.Entity("Yard_Management_System.Entity.User", b =>
+                        {
+                            b.HasOne("Yard_Management_System.Entity.Role", "Role")
+                                .WithMany()
+                                .HasForeignKey("RoleId")
+                                .OnDelete(DeleteBehavior.Cascade)
+                                .IsRequired();
 
-            modelBuilder.Entity("Database.Entity.Company", b =>
-                {
-                    b.Navigation("Truck")
-                        .IsRequired();
-                    b.Navigation("Trailer")
-                        .IsRequired();
+                            b.Navigation("Role");
+                        });
+
+                    modelBuilder.Entity("Database.Entity.Company", b =>
+                        {
+                            b.Navigation("Truck")
+                                .IsRequired();
+                            b.Navigation("Trailer")
+                                .IsRequired();
+                        });
+
+
                 });
 #pragma warning restore 612, 618
         }

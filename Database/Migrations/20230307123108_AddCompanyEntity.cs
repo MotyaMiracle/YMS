@@ -12,7 +12,7 @@ namespace YardManagementSystem.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Companys",
+                name: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -22,7 +22,7 @@ namespace YardManagementSystem.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Companys", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
         }
 
@@ -30,7 +30,7 @@ namespace YardManagementSystem.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Companys");
+                name: "Companies");
         }
     }
 }

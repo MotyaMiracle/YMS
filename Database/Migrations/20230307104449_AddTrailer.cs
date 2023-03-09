@@ -19,17 +19,6 @@ namespace YardManagementSystem.Migrations
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
 
             migrationBuilder.CreateTable(
-                name: "Companies",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Companies", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Trailers",
                 columns: table => new
                 {
@@ -50,9 +39,6 @@ namespace YardManagementSystem.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Trailers");
-
-            migrationBuilder.DropTable(
-                name: "Companies");
 
             migrationBuilder.DropColumn(
                 name: "TrailerId",
