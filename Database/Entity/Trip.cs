@@ -18,6 +18,7 @@ namespace Yard_Management_System.Entity
         public Driver Driver { get; set; }
         public Storage Storage { get; set; }
         public Truck Truck { get; set; }
+        public Trailer Trailer { get; set; }
         public string Number { get; set; }
     }
 }
