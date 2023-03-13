@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using Yard_Management_System;
 using Database.Entity;
+using Domain.Services.Trailers;
 using Microsoft.EntityFrameworkCore;
+using Yard_Management_System;
 
-namespace Domain.Services.Trailers
+namespace Application.Services.Trailers
 {
     public class TrailerService : ITrailerService
     {

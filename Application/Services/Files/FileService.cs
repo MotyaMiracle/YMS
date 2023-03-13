@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Domain.Services.Users;
+using Domain.Services.Files;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System;
 using Yard_Management_System.Entity;
 
-namespace Domain.Services.Files
+namespace Application.Services.Files
 {
     public class FileService : IFileService
     {

@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using Domain.Services.Users;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System;
 using Yard_Management_System.Entity;
 
-namespace Domain.Services.Users
+namespace Application.Services.Users
 {
     public class UserService : IUserService
     {

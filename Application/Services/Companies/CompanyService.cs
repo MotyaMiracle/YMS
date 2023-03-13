@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Database.Entity;
-using Domain.Services.Storages;
+using Domain.Services.Companies;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System;
 
-namespace Domain.Services.Companies
+namespace Application.Services.Companies
 {
     public class CompanyService : ICompanyService
     {

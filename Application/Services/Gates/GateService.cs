@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Database.Entity;
+using Domain.Services.Gates;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System;
 
-namespace Domain.Services.Gates
+namespace Application.Services.Gates
 {
     public class GateService : IGatesService
     {
