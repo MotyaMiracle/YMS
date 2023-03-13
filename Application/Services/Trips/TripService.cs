@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Domain.Services.History;
+using Domain.Services.Trips;
 using Domain.Services.Users;
 using Yard_Management_System;
 using Yard_Management_System.Entity;
 
-namespace Domain.Services.Trips
+namespace Application.Services.Trips
 {
     public class TripService : ITripService
     {

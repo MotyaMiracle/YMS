@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Yard_Management_System
+namespace Application.Services.Identity
 {
     public static class SigningOptions
     {

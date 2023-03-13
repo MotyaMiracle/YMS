@@ -1,5 +1,5 @@
-﻿using Domain.Services.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Application.Services.Identity;
+using Domain.Services.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;

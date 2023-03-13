@@ -2,8 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System.Entity;
 using Yard_Management_System;
+using Domain.Services.Drivers;
 
-namespace Domain.Services.Drivers
+namespace Application.Services.Drivers
 {
     public class DriverService : IDriverService
     {

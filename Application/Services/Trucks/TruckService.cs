@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Database.Entity;
-using Domain.Services.Drivers;
+using Domain.Services.Trucks;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System;
-using Yard_Management_System.Entity;
 
-namespace Domain.Services.Trucks
+namespace Application.Services.Trucks
 {
     public class TruckService : ITruckService
     {

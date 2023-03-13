@@ -1,30 +1,20 @@
-using Domain.Services.Files;
-using Domain.Services.History;
-using Domain.Services.Trips;
-using Domain.Services.Users;
+using Application.Services.Identity;
+using Database.Entity;
+using Install;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using System.Threading.RateLimiting;
 using Yard_Management_System;
-using Domain.Services.Storages;
-using Yard_Management_System.AutoMapper;
-using Domain.Services.Drivers;
-using Domain.Services.Trucks;
-using Database.Entity;
-using Domain.Services.Gates;
-using Domain.Services.Trailers;
-using Domain.Services.Companies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.
-    AddDbContext<ApplicationContext>(options => 
+    AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(connection, b => b.MigrationsAssembly("Database")));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -35,17 +25,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddScoped<IHistoryService, HistoryService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITripService, TripService>();
-builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<IUserProvider, UserProvider>();
-builder.Services.AddScoped<IDriverService, DriverService>();
-builder.Services.AddScoped<IStorageService, StorageService>();
-builder.Services.AddScoped<ITruckService,TruckService>();
-builder.Services.AddScoped<IGatesService, GateService>();
-builder.Services.AddScoped<ITrailerService,TrailerService>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddDomain(builder.Configuration);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -72,19 +52,6 @@ builder.Services.AddAuthorization(options =>
         policy.RequireClaim(ClaimsIdentity.DefaultRoleClaimType, "Гл. Администратор");
     });
 });
-
-builder.Services.AddAutoMapper(
-    typeof(AppMappingTrip),
-    typeof(MapUser),
-    typeof(MapTrip),
-    typeof(MapFile),
-    typeof(AppMappingDriver),
-    typeof(AppMappingStorage),
-    typeof(MapTruck),
-    typeof(AppMappingGate),
-    typeof(MapTrailer),
-    typeof(AppMappingCompany)
-    );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

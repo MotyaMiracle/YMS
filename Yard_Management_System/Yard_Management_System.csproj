@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Install\Install.csproj" />
   </ItemGroup>
 
 </Project>

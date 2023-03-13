@@ -1,9 +1,9 @@
 ﻿using Database.Entity;
-using Microsoft.AspNetCore.Http;
+using Domain.Services.History;
 using Microsoft.EntityFrameworkCore;
 using Yard_Management_System;
 
-namespace Domain.Services.History
+namespace Application.Services.History
 {
     public class HistoryService : IHistoryService
     {
