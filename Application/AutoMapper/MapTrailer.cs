@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Database.Entity;
+using Domain.Entity;
 using Domain.Services.Trailers;
-using System.Diagnostics;
 
 namespace Yard_Management_System.AutoMapper
 {

@@ -1,8 +1,8 @@
-using Database.Entity;
 using Microsoft.EntityFrameworkCore;
-using Yard_Management_System.Entity;
+using Domain.Entity;
 
-namespace Yard_Management_System
+
+namespace Database
 {
     public class ApplicationContext : DbContext
     {

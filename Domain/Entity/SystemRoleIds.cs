@@ -1,4 +1,4 @@
-﻿namespace Yard_Management_System.Entity
+﻿namespace Domain.Entity
 {
     public static class SystemRoleIds
     {

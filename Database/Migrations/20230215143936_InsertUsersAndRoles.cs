@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Yard_Management_System.Entity;
+using Domain.Entity;
 
 #nullable disable
 

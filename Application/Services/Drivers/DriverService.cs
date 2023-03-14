@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Yard_Management_System.Entity;
-using Yard_Management_System;
+using Domain.Entity;
+using Database;
 using Domain.Services.Drivers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Drivers
 {

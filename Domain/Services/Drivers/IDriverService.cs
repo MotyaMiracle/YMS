@@ -1,4 +1,4 @@
-﻿using Yard_Management_System.Entity;
+﻿using Domain.Entity;
 
 namespace Domain.Services.Drivers
 {

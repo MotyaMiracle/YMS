@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Database.Entity;
+using Database;
+using Domain.Entity;
 using Domain.Services.Trailers;
 using Microsoft.EntityFrameworkCore;
-using Yard_Management_System;
 
 namespace Application.Services.Trailers
 {

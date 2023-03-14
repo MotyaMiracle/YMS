@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Database;
 using Domain.Services.Trucks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

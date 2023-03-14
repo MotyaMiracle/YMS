@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Database.Entity;
+using Domain.Entity;
 using Domain.Services.Companies;
 using System.Text.RegularExpressions;
 
@@ -7,7 +7,7 @@ namespace Yard_Management_System.AutoMapper
 {
     public class AppMappingCompany : Profile
     {
-        public AppMappingCompany() 
+        public AppMappingCompany()
         {
             CreateMap<Company, CompanyDto>()
                 .ForMember(dto => dto.Id, opt => opt.MapFrom(src => src.Id.ToString()));

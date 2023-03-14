@@ -1,5 +1,6 @@
 using Application.Services.Identity;
-using Database.Entity;
+using Database;
+using Domain.Entity;
 using Install;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using Yard_Management_System;
 
 var builder = WebApplication.CreateBuilder(args);
 

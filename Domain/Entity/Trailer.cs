@@ -1,4 +1,4 @@
-﻿namespace Database.Entity
+﻿namespace Domain.Entity
 {
     public class Trailer
     {

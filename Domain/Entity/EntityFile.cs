@@ -1,5 +1,6 @@
 ﻿using System.IO;
-namespace Yard_Management_System.Entity
+
+namespace Domain.Entity
 {
     public class EntityFile
     {
