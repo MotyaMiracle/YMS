@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Yard_Management_System.Entity;
+using Domain.Entity;
 using Domain.Services.Drivers;
 
 namespace Yard_Management_System.AutoMapper

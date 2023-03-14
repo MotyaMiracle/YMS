@@ -1,10 +1,10 @@
-﻿using Domain.Services.Authorization;
+﻿using Domain.Entity;
+using Domain.Services.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Yard_Management_System.Entity;
 
 namespace Application.Services.Identity
 {

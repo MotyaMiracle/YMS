@@ -1,5 +1,4 @@
-﻿using Database.Entity;
-using Domain.Shared;
+﻿using Domain.Shared;
 
 namespace Domain.Services.Trailers
 {

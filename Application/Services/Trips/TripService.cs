@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Database;
+using Domain.Entity;
 using Domain.Services.History;
 using Domain.Services.Trips;
 using Domain.Services.Users;
-using Yard_Management_System;
-using Yard_Management_System.Entity;
 
 namespace Application.Services.Trips
 {

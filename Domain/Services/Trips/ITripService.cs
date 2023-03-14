@@ -1,5 +1,4 @@
-﻿using Yard_Management_System.Entity;
-namespace Domain.Services.Trips
+﻿namespace Domain.Services.Trips
 {
     public interface ITripService
     {

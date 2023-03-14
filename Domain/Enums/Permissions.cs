@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Yard_Management_System.Entity
+﻿namespace Domain.Enums
 {
     public enum Permissions
     {

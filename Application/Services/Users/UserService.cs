@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using Database;
+using Domain.Entity;
 using Domain.Services.Users;
 using Microsoft.EntityFrameworkCore;
-using Yard_Management_System;
-using Yard_Management_System.Entity;
 
 namespace Application.Services.Users
 {

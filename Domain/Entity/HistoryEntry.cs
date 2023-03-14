@@ -1,6 +1,6 @@
-﻿using Yard_Management_System.Entity;
+﻿using Domain.Entity;
 
-namespace Database.Entity
+namespace Domain.Entity
 {
     public class HistoryEntry
     {

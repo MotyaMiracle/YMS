@@ -1,7 +1,7 @@
-﻿using Domain.Services.Users;
+﻿using Database;
+using Domain.Services.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Yard_Management_System.Controllers
 {

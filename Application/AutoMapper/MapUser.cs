@@ -1,7 +1,7 @@
 ﻿using Application.Services.Identity;
 using AutoMapper;
+using Domain.Entity;
 using Domain.Services.Users;
-using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.AutoMapper
 {

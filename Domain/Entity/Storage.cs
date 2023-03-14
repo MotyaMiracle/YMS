@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Yard_Management_System.Entity;
-
-namespace Database.Entity
+﻿namespace Domain.Entity
 {
     public class Storage
     {

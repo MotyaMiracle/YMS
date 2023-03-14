@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Security;
+﻿using Domain.Enums;
 
-namespace Yard_Management_System.Entity
+namespace Domain.Entity
 {
     public class Role
     {

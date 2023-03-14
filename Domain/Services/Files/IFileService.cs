@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Yard_Management_System.Entity;
 
 namespace Domain.Services.Files
 {

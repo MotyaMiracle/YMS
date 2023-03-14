@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Database;
+using Domain.Entity;
 using Domain.Services.Files;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Yard_Management_System;
-using Yard_Management_System.Entity;
 
 namespace Application.Services.Files
 {

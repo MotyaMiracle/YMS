@@ -1,9 +1,10 @@
 ﻿using Application.Services.Identity;
+using Database;
+using Domain.Entity;
 using Domain.Services.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.Controllers
 {

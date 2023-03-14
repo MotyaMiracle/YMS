@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Domain.Entity;
 using Domain.Services.Trips;
-using Yard_Management_System.Entity;
 
 namespace Yard_Management_System.AutoMapper
 {

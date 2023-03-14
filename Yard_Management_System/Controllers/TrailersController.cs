@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Database.Entity;
+using Database;
 using Domain.Services.Trailers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

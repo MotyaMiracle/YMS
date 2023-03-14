@@ -1,7 +1,4 @@
-﻿using Database.Entity;
-using Domain.Shared;
-using System.ComponentModel.DataAnnotations;
-using Yard_Management_System.Entity;
+﻿using Domain.Shared;
 
 namespace Domain.Services.Trips
 {
@@ -16,5 +13,7 @@ namespace Domain.Services.Trips
         public Status NowStatus { get; set; }
         public enum Status { Create, Arrived, InArchive }
         public string Number { get; set; }
+
+        public Timeslot Timeslot { get; set; }
     }
 }

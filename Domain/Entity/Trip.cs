@@ -1,5 +1,5 @@
-﻿using Database.Entity;
-namespace Yard_Management_System.Entity
+﻿
+namespace Domain.Entity
 {
     public class Trip
     {
@@ -20,5 +20,11 @@ namespace Yard_Management_System.Entity
         public Truck Truck { get; set; }
         public Trailer Trailer { get; set; }
         public string Number { get; set; }
+
+        //Timeslot
+
+        public Gate Gate { get; set; }
+
+        public int PalletsCount { get; set; }
     }
 }
