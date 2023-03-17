@@ -17,6 +17,7 @@ namespace Database
         public DbSet<Company> Companies { get; set; }
         public DbSet<Gate> Gates { get; set; }
         public DbSet<Trailer> Trailers { get; set; }
+        public DbSet<Timeslot> Timeslots { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
@@ -28,6 +29,10 @@ namespace Database
             modelBuilder.Entity<User>().HasIndex(u => new { u.Login, u.Email }).IsUnique();
             modelBuilder.Entity<Driver>().HasIndex(d => new { d.Passport, d.DriveLicense }).IsUnique();
             modelBuilder.Entity<Storage>().HasIndex(s => s.Name).IsUnique();
+            modelBuilder.Entity<Trip>()
+                            .HasOne(t => t.Timeslot)
+                            .WithOne(t => t.Trip)
+                            .HasForeignKey<Timeslot>(t => t.TripId);
         }
     }
 }
