@@ -20,7 +20,6 @@ namespace Yard_Management_System.Controllers
         public TripsController(ApplicationContext db, IHistoryService historyService, IMapper mapper, ITripService tripService)
         {
             _db = db;
-            
             _mapper = mapper;
             _tripService = tripService;
         }
@@ -30,6 +29,13 @@ namespace Yard_Management_System.Controllers
         {
             await _tripService.CreateAsync(trip, token);
             return Ok(trip);    
+        }
+
+        [HttpGet("startOperation/{tripId}")]
+        public async Task<IActionResult> Operation(Guid tripId, CancellationToken token)
+        {
+            await _tripService.OperationAsync(tripId, token);
+            return Ok();
         }
     }
 }

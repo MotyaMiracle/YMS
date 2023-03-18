@@ -2,7 +2,7 @@
 using Domain.Entity;
 using Domain.Services.Storages;
 
-namespace Yard_Management_System.AutoMapper
+namespace Application.AutoMapper
 {
     public class AppMappingStorage : Profile
     {

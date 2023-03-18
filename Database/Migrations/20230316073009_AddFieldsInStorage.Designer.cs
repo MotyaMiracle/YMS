@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230316073009_AddFieldsInStorage")]
+    partial class AddFieldsInStorage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,31 +246,6 @@ namespace YardManagementSystem.Migrations
                     b.ToTable("Storages");
                 });
 
-            modelBuilder.Entity("Domain.Entity.Timeslot", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("From")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("To")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Timeslots");
-                });
-
             modelBuilder.Entity("Domain.Entity.Trailer", b =>
                 {
                     b.Property<Guid>("Id")
@@ -324,9 +302,6 @@ namespace YardManagementSystem.Migrations
                     b.Property<Guid>("StorageId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("TimeslotId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("TrailerId")
                         .HasColumnType("uuid");
 
@@ -340,8 +315,6 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("GateId");
 
                     b.HasIndex("StorageId");
-
-                    b.HasIndex("TimeslotId");
 
                     b.HasIndex("TrailerId");
 
@@ -458,12 +431,6 @@ namespace YardManagementSystem.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entity.Timeslot", "Timeslot")
-                        .WithMany()
-                        .HasForeignKey("TimeslotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entity.Trailer", "Trailer")
                         .WithMany()
                         .HasForeignKey("TrailerId")
@@ -481,8 +448,6 @@ namespace YardManagementSystem.Migrations
                     b.Navigation("Gate");
 
                     b.Navigation("Storage");
-
-                    b.Navigation("Timeslot");
 
                     b.Navigation("Trailer");
 

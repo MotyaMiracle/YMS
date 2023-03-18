@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain.Entity;
 using Domain.Services.Users;
 
-namespace Yard_Management_System.AutoMapper
+namespace Application.AutoMapper
 {
     public class MapUser : Profile
     {
