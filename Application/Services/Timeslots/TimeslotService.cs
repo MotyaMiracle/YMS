@@ -3,6 +3,7 @@ using Database;
 using Domain.Entity;
 using Domain.Services.Timeslots;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Services.Timeslots
 {
@@ -67,18 +68,22 @@ namespace Application.Services.Timeslots
             return NotEmployedTimeslots;
         }
 
-        public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, CancellationToken token)
+        public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, string gateName, CancellationToken token)
         {
+            //Время необходимое для разгрузки/погрузки паллет
             Trip trip = await _db.Trips
                 .FirstOrDefaultAsync(t => t.Id == Guid.Parse(timeslotDto.TripId.Value), token);
 
             Gate gate = await _db.Gates
                 .FirstOrDefaultAsync(g => g.Id == trip.GateId, token);
 
-            //Время необходимое для разгрузки/погрузки паллет
             int WorkingTime = trip.PalletsCount * gate.PalletHandlingTime;
 
-            var EmployedTimeslots = from t in _db.Trips orderby t.Timeslot != null select t.Timeslot;
+            var EmployedTimeslots = _db.Trips
+            .Where(t => t.Timeslot != null)
+            .Where(d => d.Timeslot.Date.Day == timeslotDto.Date.Day && d.Timeslot.Date.Month == timeslotDto.Date.Month)
+                .Where(g => g.Gate.Name == gateName)
+                .Select(t => t.Timeslot);
 
             //Кол-во таймслотов для разгрузки/погрузки паллет
             int CountOfTimeslots = (int)Math.Ceiling((double)WorkingTime / 30);

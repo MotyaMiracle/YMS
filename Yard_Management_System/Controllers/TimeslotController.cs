@@ -21,10 +21,9 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TimeslotDto timeslotDto, CancellationToken token)
+        public async Task<IActionResult> Create(TimeslotDto timeslotDto, string gateName, CancellationToken token)
         {
-            
-            return Ok(await _timeslotService.CreateAsync(timeslotDto, token));
+            return Ok(await _timeslotService.CreateAsync(timeslotDto, gateName, token));
         }
     }
 }

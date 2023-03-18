@@ -3,6 +3,6 @@
     public interface ITimeslotService
     {
         List<string> GetNotEmployedTimeslots(DateTime date, string gateName);
-        Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, CancellationToken token);
+        Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, string gateName, CancellationToken token);
     }
 }
