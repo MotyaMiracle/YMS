@@ -2,9 +2,7 @@
 using Database;
 using Domain.Entity;
 using Domain.Services.Timeslots;
-using Domain.Services.Trucks;
 using Microsoft.EntityFrameworkCore;
-using static Application.Services.Timeslots.TimeslotService;
 
 namespace Application.Services.Timeslots
 {
@@ -19,9 +17,16 @@ namespace Application.Services.Timeslots
             _mapper = mapper;
         }
 
-        public List<string> GetNotEmployedTimeslots()
+        public List<string> GetNotEmployedTimeslots(DateTime date, string gateName)
         {
-            var EmployedTimeslots = from t in _db.Trips orderby t.Timeslot != null select t.Timeslot;
+            var EmployedTimeslots = _db.Trips
+                .Where(t => t.Timeslot != null)
+                .Where(d => d.Timeslot.Date.Day == date.Day && d.Timeslot.Date.Month == date.Month)
+                .Where(g => g.Gate.Name == gateName)
+                .Select(t => t.Timeslot);
+
+            List<string> NotEmployedTimeslots = new List<string>();
+
             int count = 0;
 
             //Добавление всех таймслотов
@@ -34,8 +39,6 @@ namespace Application.Services.Timeslots
                 count++;
             }
             count = 1;
-
-            List<string> NotEmployedTimeslots = new List<string>();
 
             //Из таймслотов убираем занятые таймслоты
             foreach (var t in EmployedTimeslots)
@@ -72,12 +75,12 @@ namespace Application.Services.Timeslots
             Gate gate = await _db.Gates
                 .FirstOrDefaultAsync(g => g.Id == trip.GateId, token);
 
-            //Время необходимое для разгрузки/разгрузки паллет
+            //Время необходимое для разгрузки/погрузки паллет
             int WorkingTime = trip.PalletsCount * gate.PalletHandlingTime;
 
             var EmployedTimeslots = from t in _db.Trips orderby t.Timeslot != null select t.Timeslot;
 
-            //Кол-во таймслотов для разгрузки/разгрузки паллет
+            //Кол-во таймслотов для разгрузки/погрузки паллет
             int CountOfTimeslots = (int)Math.Ceiling((double)WorkingTime / 30);
 
             //Проверка правильно ли выбрано кол - во таймслотов(не больше и не меньше необходимого)

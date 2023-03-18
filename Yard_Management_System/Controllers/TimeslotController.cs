@@ -15,9 +15,9 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(DateTime date, string gateName)
         {    
-            return Ok(_timeslotService.GetNotEmployedTimeslots());
+            return Ok(_timeslotService.GetNotEmployedTimeslots(date, gateName));
         }
 
         [HttpPost]
