@@ -3,7 +3,7 @@ using Domain.Entity;
 using Domain.Services.Companies;
 using System.Text.RegularExpressions;
 
-namespace Yard_Management_System.AutoMapper
+namespace Application.AutoMapper
 {
     public class AppMappingCompany : Profile
     {

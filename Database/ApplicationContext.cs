@@ -17,6 +17,7 @@ namespace Database
         public DbSet<Company> Companies { get; set; }
         public DbSet<Gate> Gates { get; set; }
         public DbSet<Trailer> Trailers { get; set; }
+        public DbSet<Timeslot> Timeslots { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

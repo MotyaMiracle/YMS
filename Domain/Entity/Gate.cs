@@ -1,4 +1,6 @@
-﻿namespace Domain.Entity
+﻿using Domain.Enums;
+
+namespace Domain.Entity
 {
     public class Gate
     {
@@ -6,8 +8,7 @@
         public string Name { get; set; }
         public string Height { get; set; }
         public int PalletHandlingTime { get; set; }
-        public GateStatus Status { get; set; }
-        public enum GateStatus { Loading, Unloading}
+        public OperationType Status { get; set; }
         public string OpeningHour { get; set; }
         public string ClosingHour { get; set; }
         public Guid StorageId { get; set; }

@@ -1,4 +1,5 @@
-﻿using Domain.Shared;
+﻿using Domain.Enums;
+using Domain.Shared;
 
 namespace Domain.Services.Gates
 {
@@ -24,8 +25,7 @@ namespace Domain.Services.Gates
         /// <summary>
         /// Тип выполняемых операций
         /// </summary>
-        public StatusOfGates Status { get; set; }
-        public enum StatusOfGates { Loading, Unloading }
+        public OperationType Status { get; set; }
 
         /// <summary>
         /// Время открытия

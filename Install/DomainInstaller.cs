@@ -1,4 +1,5 @@
-﻿using Application.Services.Companies;
+﻿using Application.AutoMapper;
+using Application.Services.Companies;
 using Application.Services.Drivers;
 using Application.Services.Files;
 using Application.Services.Gates;
@@ -20,7 +21,6 @@ using Domain.Services.Trucks;
 using Domain.Services.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Yard_Management_System.AutoMapper;
 
 namespace Install
 {
@@ -41,7 +41,6 @@ namespace Install
             services.AddScoped<ICompanyService, CompanyService>();
 
             services.AddAutoMapper(
-                typeof(AppMappingTrip),
                 typeof(MapUser),
                 typeof(MapTrip),
                 typeof(MapFile),

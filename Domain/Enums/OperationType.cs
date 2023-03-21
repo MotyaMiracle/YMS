@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum GateStatus
+    public enum OperationType
     {
         /// <summary>
         /// Загрузка
