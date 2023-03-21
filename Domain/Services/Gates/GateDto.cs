@@ -25,7 +25,7 @@ namespace Domain.Services.Gates
         /// <summary>
         /// Тип выполняемых операций
         /// </summary>
-        public GateStatus Status { get; set; }
+        public OperationType Status { get; set; }
 
         /// <summary>
         /// Время открытия

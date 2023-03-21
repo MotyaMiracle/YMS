@@ -54,29 +54,12 @@ namespace Application.Services.Trips
 
             switch (timeslot.Status)
             {
-                case GateStatus.Loading:
-                    storage.OccupancyExpected = storage.OccupancyActual - trip.PalletsCount;
-                    if(storage.OccupancyExpected >= 0)
-                    {
-                        storage.OccupancyActual = storage.OccupancyExpected;
-                    }
-                    else
-                    {
-                        storage.OccupancyActual = 0;
-                    }
+                case OperationType.Loading:
+                    storage.OccupancyActual -= trip.PalletsCount;
                     break;
-                case GateStatus.Unloading:
-                    storage.OccupancyExpected = storage.OccupancyActual + trip.PalletsCount;
-                    if(storage.OccupancyExpected <= storage.Capacity)
-                    {
-                        storage.OccupancyActual = storage.OccupancyExpected;
-                    }
-                    else
-                    {
-                        var temp = Math.Abs(trip.PalletsCount - storage.Capacity);
-                        trip.PalletsCount -= temp;
-                        storage.OccupancyActual += temp;
-                    }
+
+                case OperationType.Unloading:
+                    storage.OccupancyActual += trip.PalletsCount;
                     break;
             }
 
