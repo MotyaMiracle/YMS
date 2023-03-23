@@ -1,8 +1,10 @@
-﻿namespace Domain.Services.Timeslots
+﻿using Domain.Services.Trips;
+
+namespace Domain.Services.Timeslots
 {
     public interface ITimeslotService
     {
-        List<string> GetNotEmployedTimeslots(DateTime date, string gateName);
+        Task<EntryTimeslotView> GetTimeslotsAsync(Guid tripId, DateTime selectedDate, CancellationToken token);
         Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, string gateName, CancellationToken token);
     }
 }

@@ -15,9 +15,9 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(DateTime date, string gateName)
+        public async Task<IActionResult> Get(Guid tripId, DateTime selectedDate ,CancellationToken token)
         {    
-            return Ok(_timeslotService.GetNotEmployedTimeslots(date, gateName));
+            return Ok(await _timeslotService.GetTimeslotsAsync(tripId, selectedDate, token));
         }
 
         [HttpPost]

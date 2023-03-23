@@ -3,7 +3,6 @@ using Database;
 using Domain.Entity;
 using Domain.Services.Timeslots;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Application.Services.Timeslots
 {
@@ -18,84 +17,107 @@ namespace Application.Services.Timeslots
             _mapper = mapper;
         }
 
-        public List<string> GetNotEmployedTimeslots(DateTime date, string gateName)
+        public async Task<EntryTimeslotView> GetTimeslotsAsync(Guid tripId, DateTime selectedDate, CancellationToken token)
         {
-            var EmployedTimeslots = _db.Trips
+            Trip trip = await _db.Trips
+                .FirstOrDefaultAsync(t => t.Id == tripId, token);
+
+            Gate gate = await _db.Gates
+                .FirstOrDefaultAsync(g => g.Id == trip.GateId, token);
+
+            List<string> notEmployedTimeslots = new List<string>();
+
+            const int maxTimeslotPerDay = 47;
+
+            var timeslots = new List<TimeSpan>();
+
+            int minutes = 0;
+
+            int workingTime = trip.PalletsCount * gate.PalletHandlingTime;
+
+            int time = (int)Math.Ceiling((double)workingTime / 30) * 30;
+
+            //Проверка на правильно ,указанную дату, +- 1 день от запланированного приезда тс
+            if (trip.ArrivalTime.Date != selectedDate.Date &&
+                (trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0)) != selectedDate.Date &&
+                (trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0)) != selectedDate.Date)
+                return null;
+
+            var employedTimeslots = _db.Trips
                 .Where(t => t.Timeslot != null)
-                .Where(d => d.Timeslot.Date.Day == date.Day && d.Timeslot.Date.Month == date.Month)
-                .Where(g => g.Gate.Name == gateName)
+                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
+                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0) ||
+                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0))
+                .Where(g => g.StorageId == trip.StorageId)
                 .Select(t => t.Timeslot);
 
-            List<string> NotEmployedTimeslots = new List<string>();
-
-            int count = 0;
-
             //Добавление всех таймслотов
-            var Timeslots = new List<TimeSpan>();
-            for (int i = 0; i < 48; i++)
+            for (int i = 0; i < maxTimeslotPerDay; i++)
             {
-                Timeslots.Add(new TimeSpan(count, 0, 0));
-                i++;
-                Timeslots.Add(new TimeSpan(count, 30, 0));
-                count++;
+                timeslots.Add(new TimeSpan(0, minutes, 0));
+                minutes += time;
+                if (minutes >= 1440)
+                {
+                    break;
+                }
             }
-            count = 1;
 
             //Из таймслотов убираем занятые таймслоты
-            foreach (var t in EmployedTimeslots)
+            foreach (var t in employedTimeslots)
             {
-                foreach (var x in Timeslots.ToList())
+                foreach (var x in timeslots.ToList())
                 {
-                    if (DateTime.Parse(t.From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
-                        DateTime.Parse(t.From) <= DateTime.Parse(x.ToString()) && DateTime.Parse(t.To) > DateTime.Parse(x.ToString()))
+                    if (t.Date.Day == selectedDate.Day && (DateTime.Parse(t.From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
+                        DateTime.Parse(t.From) <= DateTime.Parse(x.ToString()) && DateTime.Parse(t.To) > DateTime.Parse(x.ToString()) ||
+                        DateTime.Parse(t.From) < DateTime.Parse(x.ToString()).AddMinutes(time) && DateTime.Parse(t.To) >= DateTime.Parse(x.ToString()).AddMinutes(time) ||
+                        (DateTime.Parse(x.ToString()).AddMinutes(time).Day >= DateTime.Parse(x.ToString()).Day + 1 && 
+                        x + new TimeSpan(0, time, 0) != new TimeSpan(1,0,0,0))))
+
                     {
-                        Timeslots.Remove(x); 
+                        timeslots.Remove(x); 
                     }        
                 }    
             }
 
-            //Приведение таймслотов в читабельный вид
-            foreach (var t in Timeslots)
+            return new EntryTimeslotView
             {
-                if (count == Timeslots.Count() && t == new TimeSpan(23, 30, 0))
+                Entries = timeslots.Select(x => new TimeslotViewDto
                 {
-                    NotEmployedTimeslots.Add($"{t} - 23:59:00");
-                    return NotEmployedTimeslots;
-                }
-                NotEmployedTimeslots.Add($"{t} - {t + new TimeSpan(0, 30, 0)}");
-                count++;
-            }
-            return NotEmployedTimeslots;
+                    From = DateTime.Parse(x.ToString()).ToShortTimeString(),
+                    To = DateTime.Parse(x.ToString()).AddMinutes(time).ToShortTimeString(),
+                    Date = selectedDate,
+                }).ToList()
+            };
         }
 
         public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, string gateName, CancellationToken token)
-        {
-            //Время необходимое для разгрузки/погрузки паллет
+        {            
             Trip trip = await _db.Trips
                 .FirstOrDefaultAsync(t => t.Id == Guid.Parse(timeslotDto.TripId.Value), token);
 
             Gate gate = await _db.Gates
                 .FirstOrDefaultAsync(g => g.Id == trip.GateId, token);
+            
+            //Время необходимое для разгрузки/погрузки паллет
+            int workingTime = trip.PalletsCount * gate.PalletHandlingTime;
 
-            int WorkingTime = trip.PalletsCount * gate.PalletHandlingTime;
-
-            var EmployedTimeslots = _db.Trips
+            var employedTimeslots = _db.Trips
             .Where(t => t.Timeslot != null)
             .Where(d => d.Timeslot.Date.Day == timeslotDto.Date.Day && d.Timeslot.Date.Month == timeslotDto.Date.Month)
                 .Where(g => g.Gate.Name == gateName)
                 .Select(t => t.Timeslot);
 
             //Кол-во таймслотов для разгрузки/погрузки паллет
-            int CountOfTimeslots = (int)Math.Ceiling((double)WorkingTime / 30);
+            int countOfTimeslots = (int)Math.Ceiling((double)workingTime / 30);
 
             //Проверка правильно ли выбрано кол - во таймслотов(не больше и не меньше необходимого)
-            if (DateTime.Parse(timeslotDto.From).AddMinutes(30 * CountOfTimeslots).ToShortTimeString() != DateTime.Parse(timeslotDto.To).ToShortTimeString())
+            if (DateTime.Parse(timeslotDto.From).AddMinutes(30 * countOfTimeslots).ToShortTimeString() != DateTime.Parse(timeslotDto.To).ToShortTimeString())
             {
                 return null;
             }
 
             //Проверка не пересекается ли любой из выбранных таймслотов с уже забронируемыми таймслотами
-            foreach (var t in EmployedTimeslots)
+            foreach (var t in employedTimeslots)
             {
                 if (t != null)
                 {
