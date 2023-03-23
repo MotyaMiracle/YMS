@@ -48,7 +48,7 @@ namespace Application.Services.Timeslots
                 .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
                  d.Timeslot.Date.Date == trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0) ||
                  d.Timeslot.Date.Date == trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0))
-                .Where(g => g.StorageId == trip.StorageId)
+                .Where(g => g.GateId == trip.GateId)
                 .Select(t => t.Timeslot);
 
             //Добавление всех таймслотов
@@ -67,11 +67,11 @@ namespace Application.Services.Timeslots
             {
                 foreach (var x in timeslots.ToList())
                 {
-                    if (t.Date.Day == selectedDate.Day && (DateTime.Parse(t.From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
+                    if ((t.Date.Day == selectedDate.Day && (DateTime.Parse(t.From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
                         DateTime.Parse(t.From) <= DateTime.Parse(x.ToString()) && DateTime.Parse(t.To) > DateTime.Parse(x.ToString()) ||
-                        DateTime.Parse(t.From) < DateTime.Parse(x.ToString()).AddMinutes(time) && DateTime.Parse(t.To) >= DateTime.Parse(x.ToString()).AddMinutes(time) ||
-                        (DateTime.Parse(x.ToString()).AddMinutes(time).Day >= DateTime.Parse(x.ToString()).Day + 1 && 
-                        x + new TimeSpan(0, time, 0) != new TimeSpan(1,0,0,0))))
+                        DateTime.Parse(t.From) < DateTime.Parse(x.ToString()).AddMinutes(time) && DateTime.Parse(t.To) >= DateTime.Parse(x.ToString()).AddMinutes(time))) ||
+                        (DateTime.Parse(x.ToString()).AddMinutes(time).Day > DateTime.Parse(x.ToString()).Day && 
+                        x + new TimeSpan(0, time, 0) != new TimeSpan(1,0,0,0)))
 
                     {
                         timeslots.Remove(x); 
