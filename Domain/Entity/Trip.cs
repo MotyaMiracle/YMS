@@ -22,11 +22,9 @@ namespace Domain.Entity
         public Storage Storage { get; set; }
         public Truck Truck { get; set; }
         public Trailer Trailer { get; set; }
-        public string Number { get; set; }
-
         public Timeslot Timeslot { get; set; }
-
         public Gate Gate { get; set; }
+        public string Number { get; set; }
         public int PalletsCount { get; set; }
     }
 }
