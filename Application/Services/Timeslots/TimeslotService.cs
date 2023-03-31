@@ -98,7 +98,7 @@ namespace Application.Services.Timeslots
                         if ((gates[g] == tripEntity[count].Gate.Name && t.Date.Day == selectedDate.Day && (DateTime.Parse(t.From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
                             DateTime.Parse(t.From) <= DateTime.Parse(x.ToString()) && DateTime.Parse(t.To) > DateTime.Parse(x.ToString()) ||
                             DateTime.Parse(t.From) < DateTime.Parse(x.ToString()).AddMinutes(time) && DateTime.Parse(t.To) >= DateTime.Parse(x.ToString()).AddMinutes(time))) ||
-                            (DateTime.Parse(x.ToString()).AddMinutes(time).Day > DateTime.Parse(x.ToString()).Day &&
+                            (DateTime.Parse(x.ToString()).AddMinutes(time).Date > DateTime.Parse(x.ToString()).Date &&
                             x + new TimeSpan(0, time, 0) != new TimeSpan(1, 0, 0, 0)))
 
                         {
@@ -144,6 +144,12 @@ namespace Application.Services.Timeslots
 
             //Кол-во таймслотов для разгрузки/погрузки паллет
             int countOfTimeslots = (int)Math.Ceiling((double)workingTime / 30);
+
+            //Проверка на правильно ,указанную дату, +- 1 день от запланированного приезда тс
+            if (trip.ArrivalTime.Date != timeslotDto.Date.Date &&
+                (trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0)) != timeslotDto.Date.Date &&
+                (trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0)) != timeslotDto.Date.Date)
+                return null;
 
             //Проверка правильно ли выбрано кол - во таймслотов(не больше и не меньше необходимого)
             if (DateTime.Parse(timeslotDto.From).AddMinutes(30 * countOfTimeslots).ToShortTimeString() != DateTime.Parse(timeslotDto.To).ToShortTimeString())
