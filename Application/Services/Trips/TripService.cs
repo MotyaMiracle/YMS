@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.History;
 using Domain.Services.Trips;
 using Domain.Services.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Trips
 {
@@ -28,10 +30,39 @@ namespace Application.Services.Trips
 
         public async Task CreateAsync(TripDto trip, CancellationToken token)
         {
-            trip.NowStatus = TripDto.Status.Create;
+            trip.NowStatus = TripStatus.Create;
             Trip newTrip = _mapper.Map<Trip>(trip);
             await _historyService.SaveAsync(newTrip.Id, "Создана путёвка", await _userProvider.GetCurrentUserAsync(token), token);
             await _db.Trips.AddAsync(newTrip, token);
+            await _db.SaveChangesAsync(token);
+        }
+
+        public async Task OperationAsync(Guid tripId, CancellationToken token)
+        {
+            var trip = await _db.Trips.FirstOrDefaultAsync(t => t.Id == tripId, token);
+
+            if (trip is null)
+                return;
+
+            var storage = await _db.Storages.FirstOrDefaultAsync(s => s.Id == trip.StorageId, token);
+
+            var timeslot = await _db.Timeslots.FirstOrDefaultAsync(t => t.Id == trip.TimeslotId, token);
+
+            if (storage is null && timeslot is null)
+                return;
+
+
+            switch (timeslot.Status)
+            {
+                case OperationType.Loading:
+                    storage.OccupancyActual -= trip.PalletsCount;
+                    break;
+
+                case OperationType.Unloading:
+                    storage.OccupancyActual += trip.PalletsCount;
+                    break;
+            }
+
             await _db.SaveChangesAsync(token);
         }
     }

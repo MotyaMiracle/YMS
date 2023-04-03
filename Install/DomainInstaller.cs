@@ -23,7 +23,6 @@ using Domain.Services.Trucks;
 using Domain.Services.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Yard_Management_System.AutoMapper;
 
 namespace Install
 {
@@ -45,7 +44,6 @@ namespace Install
             services.AddScoped<ITimeslotService, TimeslotService>();
 
             services.AddAutoMapper(
-                typeof(AppMappingTrip),
                 typeof(MapUser),
                 typeof(MapTrip),
                 typeof(MapFile),

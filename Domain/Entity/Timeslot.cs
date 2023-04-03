@@ -1,5 +1,4 @@
 ﻿using Domain.Enums;
-using System.Security.Cryptography;
 
 namespace Domain.Entity
 {
@@ -12,5 +11,6 @@ namespace Domain.Entity
         public GateStatus Status { get; set; }
         public Guid TripId { get; set; }
         public Trip Trip { get; set; }
+        public OperationType Status { get; set; }
     }
 }

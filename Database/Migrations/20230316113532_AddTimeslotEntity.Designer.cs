@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230316113532_AddTimeslotEntity")]
+    partial class AddTimeslotEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,13 +266,7 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("TripId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TripId")
-                        .IsUnique();
 
                     b.ToTable("Timeslots");
                 });
@@ -433,17 +430,6 @@ namespace YardManagementSystem.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entity.Timeslot", b =>
-                {
-                    b.HasOne("Domain.Entity.Trip", "Trip")
-                        .WithOne("Timeslot")
-                        .HasForeignKey("Domain.Entity.Timeslot", "TripId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Trip");
-                });
-                
             modelBuilder.Entity("Domain.Entity.Trailer", b =>
                 {
                     b.HasOne("Domain.Entity.Company", "Company")
@@ -454,7 +440,7 @@ namespace YardManagementSystem.Migrations
 
                     b.Navigation("Company");
                 });
-                        
+
             modelBuilder.Entity("Domain.Entity.Trip", b =>
                 {
                     b.HasOne("Domain.Entity.Driver", "Driver")
@@ -472,6 +458,12 @@ namespace YardManagementSystem.Migrations
                     b.HasOne("Domain.Entity.Storage", "Storage")
                         .WithMany()
                         .HasForeignKey("StorageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.Timeslot", "Timeslot")
+                        .WithMany()
+                        .HasForeignKey("TimeslotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -493,10 +485,13 @@ namespace YardManagementSystem.Migrations
 
                     b.Navigation("Storage");
 
+                    b.Navigation("Timeslot");
+
                     b.Navigation("Trailer");
 
                     b.Navigation("Truck");
                 });
+
             modelBuilder.Entity("Domain.Entity.Truck", b =>
                 {
                     b.HasOne("Domain.Entity.Company", "Company")
@@ -517,12 +512,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Domain.Entity.Trip", b =>
-                {
-                    b.Navigation("Timeslot")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

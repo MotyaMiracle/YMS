@@ -1,4 +1,7 @@
-﻿namespace Domain.Entity
+using Domain.Enums;
+
+namespace Domain.Entity
+
 {
     public class Trip
     {
@@ -14,15 +17,14 @@
         /// Год, месяц, день, час, минута
         /// </summary>
         public DateTime ArrivalTime { get; set; }
-        public Status NowStatus { get; set; }
-        public enum Status { Create, Arrived, InArchive }
+        public TripStatus NowStatus { get; set; }
         public Driver Driver { get; set; }
         public Storage Storage { get; set; }
         public Truck Truck { get; set; }
         public Trailer Trailer { get; set; }
-        public string Number { get; set; }
         public Timeslot Timeslot { get; set; }
         public Gate Gate { get; set; }
+        public string Number { get; set; }
         public int PalletsCount { get; set; }
     }
 }

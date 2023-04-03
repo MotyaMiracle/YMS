@@ -1,5 +1,6 @@
 ﻿using Domain.Entity;
 using Domain.Services.Timeslots;
+using Domain.Enums;
 using Domain.Shared;
 
 namespace Domain.Services.Trips
@@ -13,9 +14,10 @@ namespace Domain.Services.Trips
         public LookUpDto TrailerId { get; set; }
         public LookUpDto GateId { get; set; }
         public DateTime ArrivalTime { get; set; }
-        public Status NowStatus { get; set; }
-        public enum Status { Create, Arrived, InArchive }
+        public TripStatus NowStatus { get; set; }
         public string Number { get; set; }
+        public Timeslot Timeslot { get; set; }
+        public LookUpDto GateId { get; set; }
         public int PalletsCount { get; set; }
     }
 }

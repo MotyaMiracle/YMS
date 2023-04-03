@@ -2,7 +2,7 @@
 using Domain.Entity;
 using Domain.Services.Drivers;
 
-namespace Yard_Management_System.AutoMapper
+namespace Application.AutoMapper
 {
     public class AppMappingDriver : Profile
     {

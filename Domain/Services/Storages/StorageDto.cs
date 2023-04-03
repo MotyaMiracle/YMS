@@ -10,6 +10,11 @@ namespace Domain.Services.Storages
         [Required]
         public string Address { get; set; }
         [Required]
+        public int Capacity { get; set; }
+        [Required]
+        public int OccupancyActual { get; set; }
+        public int OccupancyExpected { get; set; }
+        [Required]
         public double Latitude { get; set; }
         [Required]
         public double Longitude { get; set; }
