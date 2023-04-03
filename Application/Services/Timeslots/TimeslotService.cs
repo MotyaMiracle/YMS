@@ -5,9 +5,10 @@ using Domain.Services.Timeslots;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Timeslots
-{
+{  
     public class TimeslotService : ITimeslotService
     {
+        TimeSpan OneDay = new TimeSpan(1, 0, 0, 0);
         private readonly ApplicationContext _db;
         private readonly IMapper _mapper;
 
@@ -17,67 +18,52 @@ namespace Application.Services.Timeslots
             _mapper = mapper;
         }
 
-        public async Task<List<EntryTimeslotView>> GetTimeslotsAsync(Guid tripId, DateTime selectedDate, CancellationToken token)
+        public async Task<EntryTimeslotView> GetTimeslotsAsync(Guid tripId, DateTime selectedDate, CancellationToken token)
         {
-            Trip trip = await _db.Trips
+            Trip trip = await _db.Trips.Include(x => x.Gate)
                 .FirstOrDefaultAsync(t => t.Id == tripId, token);
 
-            Gate gate = await _db.Gates
-                .FirstOrDefaultAsync(g => g.Id == trip.GateId, token);
-
-            var gates = _db.Gates
+            var gates = await _db.Gates
                 .Where(s => s.StorageId == trip.StorageId)
-                .Select(g => g.Name).ToList();
-
-            List<string> notEmployedTimeslots = new List<string>();
+                .Select(g => g.Name).ToListAsync();
 
             const int maxTimeslotPerDay = 47;
 
             var allTimeslots = new List<List<TimeSpan>>();
 
-            var result = new List<EntryTimeslotView>();
-
             var timeslots = new List<TimeSpan>();
 
-            int minutes = 0;
-
-            int workingTime = trip.PalletsCount * gate.PalletHandlingTime;
+            int workingTime = trip.PalletsCount * trip.Gate.PalletHandlingTime;
 
             int time = (int)Math.Ceiling((double)workingTime / 30) * 30;
 
             //Проверка на правильно ,указанную дату, +- 1 день от запланированного приезда тс
             if (trip.ArrivalTime.Date != selectedDate.Date &&
-                (trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0)) != selectedDate.Date &&
-                (trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0)) != selectedDate.Date)
+                (trip.ArrivalTime.Date + OneDay) != selectedDate.Date &&
+                (trip.ArrivalTime.Date - OneDay) != selectedDate.Date)
                 return null;
 
-            var employedTimeslots = _db.Trips
+            Dictionary<string, List<Timeslot>> timeslotsByGates = await _db.Trips
+                .Include(t => t.Timeslot)
                 .Where(t => t.Timeslot != null)
                 .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0) ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0))
+                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + OneDay ||
+                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - OneDay)
                 .Where(g => g.StorageId == trip.StorageId)
                 .OrderBy(g => g.GateId)
-                .Select(t => t.Timeslot);
+                .GroupBy(g => g.Gate.Name)
+                .ToDictionaryAsync(g => g.Key, t => t.Select(t=> t.Timeslot).ToList());
 
-            //Добавление сущностей рейсов для проверки имени ворот
-            var tripEntity = _db.Trips.Where(t => t.Timeslot != null)
-                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0) ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0))
-                .Where(g => g.StorageId == trip.StorageId)
-                .OrderBy(g => g.GateId)
-                .Select(t => t).ToList();
-
+            int minutes = 0;
             //Добавление всех таймслотов
             for (int i = 0; i < maxTimeslotPerDay; i++)
             {
                 timeslots.Add(new TimeSpan(0, minutes, 0));
-                minutes += time;
-                if (minutes >= 1440)
+                if (timeslots[i] >= OneDay)
                 {
                     break;
                 }
+                minutes += 30;
             }
 
             //Добавление таймслотов на каждые ворота
@@ -89,85 +75,65 @@ namespace Application.Services.Timeslots
             //Из таймслотов убираем занятые таймслоты
             for (int g = 0; g < gates.Count(); g++)
             {
-                int count = -1;
-                foreach (var t in employedTimeslots)
+                int count = 0;
+                foreach (var t in timeslotsByGates)
                 {
-                    count++;
+
                     foreach (var x in timeslots.ToList())
                     {
-                        if ((gates[g] == tripEntity[count].Gate.Name && t.Date.Day == selectedDate.Day && (DateTime.Parse(t.From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
-                            DateTime.Parse(t.From) <= DateTime.Parse(x.ToString()) && DateTime.Parse(t.To) > DateTime.Parse(x.ToString()) ||
-                            DateTime.Parse(t.From) < DateTime.Parse(x.ToString()).AddMinutes(time) && DateTime.Parse(t.To) >= DateTime.Parse(x.ToString()).AddMinutes(time))) ||
+                        if ((gates[g] == t.Key && t.Value[count].Date.Day == selectedDate.Day && (DateTime.Parse(t.Value[count].From).ToShortTimeString() == DateTime.Parse(x.ToString()).ToShortTimeString() ||
+                            DateTime.Parse(t.Value[count].From) <= DateTime.Parse(x.ToString()) && DateTime.Parse(t.Value[count].To) > DateTime.Parse(x.ToString()) ||
+                            DateTime.Parse(t.Value[count].From) < DateTime.Parse(x.ToString()).AddMinutes(time) && DateTime.Parse(t.Value[count].To) >= DateTime.Parse(x.ToString()).AddMinutes(time))) ||
                             (DateTime.Parse(x.ToString()).AddMinutes(time).Date > DateTime.Parse(x.ToString()).Date &&
-                            x + new TimeSpan(0, time, 0) != new TimeSpan(1, 0, 0, 0)))
+                            x + new TimeSpan(0, time, 0) != OneDay))
 
                         {
                             allTimeslots[g].Remove(x);
-                        } 
+                        }
                     }
+                    count++;
                 }
             }
 
-            for (int i = 0; i < gates.Count; i++)
-            {
-                result.Add(new EntryTimeslotView
-                {
-                    Entries = allTimeslots[i].Select(x => new TimeslotViewDto
-                    {
-                        GateName = gates[i],
-                        From = DateTime.Parse(x.ToString()).ToShortTimeString(),
-                        To = DateTime.Parse(x.ToString()).AddMinutes(time).ToShortTimeString(),
-                        Date = selectedDate,
-                    }).ToList()
+            var resultTimeslots = new List<TimeSpan>();
 
-                });
+            foreach (var t in allTimeslots)
+            {
+                resultTimeslots = t.Union(t).ToList();
             }
-            return result;
+
+            return new EntryTimeslotView
+            {
+                Entries = resultTimeslots.Select(x => new TimeslotViewDto
+                {
+                    AllGates = gates,
+                    From = DateTime.Parse(x.ToString()).ToShortTimeString(),
+                    To = DateTime.Parse(x.ToString()).AddMinutes(time).ToShortTimeString(),
+                    Date = selectedDate,
+                }).ToList()
+            };
         }
 
-        public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, string gateName, CancellationToken token)
-        {            
+        public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, CancellationToken token)
+        {
             Trip trip = await _db.Trips
-                .FirstOrDefaultAsync(t => t.Id == Guid.Parse(timeslotDto.TripId.Value), token);
+                .FirstOrDefaultAsync(t => t.Id == timeslotDto.TripId, token);
 
-            Gate gate = await _db.Gates
-                .FirstOrDefaultAsync(g => g.Id == trip.GateId, token);
-            
-            //Время необходимое для разгрузки/погрузки паллет
-            int workingTime = trip.PalletsCount * gate.PalletHandlingTime;
+            Dictionary<string, List<Timeslot>> timeslotsByGates = await _db.Trips
+                .Include(t => t.Timeslot)
+                .Where(t => t.Timeslot != null)
+                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
+                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + OneDay ||
+                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - OneDay)
+                .Where(g => g.StorageId == trip.StorageId)
+                .OrderBy(g => g.GateId)
+                .GroupBy(g => g.Gate.Name)
+                .ToDictionaryAsync(g => g.Key, t => t.Select(t => t.Timeslot).ToList());
 
-            var employedTimeslots = _db.Trips
-            .Where(t => t.Timeslot != null)
-            .Where(d => d.Timeslot.Date.Day == timeslotDto.Date.Day && d.Timeslot.Date.Month == timeslotDto.Date.Month)
-                .Where(g => g.Gate.Name == gateName)
-                .Select(t => t.Timeslot);
-
-            //Кол-во таймслотов для разгрузки/погрузки паллет
-            int countOfTimeslots = (int)Math.Ceiling((double)workingTime / 30);
-
-            //Проверка на правильно ,указанную дату, +- 1 день от запланированного приезда тс
-            if (trip.ArrivalTime.Date != timeslotDto.Date.Date &&
-                (trip.ArrivalTime.Date + new TimeSpan(1, 0, 0, 0)) != timeslotDto.Date.Date &&
-                (trip.ArrivalTime.Date - new TimeSpan(1, 0, 0, 0)) != timeslotDto.Date.Date)
-                return null;
-
-            //Проверка правильно ли выбрано кол - во таймслотов(не больше и не меньше необходимого)
-            if (DateTime.Parse(timeslotDto.From).AddMinutes(30 * countOfTimeslots).ToShortTimeString() != DateTime.Parse(timeslotDto.To).ToShortTimeString())
+            if (timeslotsByGates.Any(g => g.Value.Any(t => DateTime.Parse(t.From) <= DateTime.Parse(timeslotDto.From) && DateTime.Parse(t.To) > DateTime.Parse(timeslotDto.From) ||
+                        DateTime.Parse(t.From) < DateTime.Parse(timeslotDto.To) && DateTime.Parse(t.To) >= DateTime.Parse(timeslotDto.To))))
             {
                 return null;
-            }
-
-            //Проверка не пересекается ли любой из выбранных таймслотов с уже забронируемыми таймслотами
-            foreach (var t in employedTimeslots)
-            {
-                if (t != null)
-                {
-                    if (DateTime.Parse(t.From) <= DateTime.Parse(timeslotDto.From) && DateTime.Parse(t.To) > DateTime.Parse(timeslotDto.From) ||
-                        DateTime.Parse(t.From) < DateTime.Parse(timeslotDto.To) && DateTime.Parse(t.To) >= DateTime.Parse(timeslotDto.To))
-                    {
-                        return null;
-                    }
-                }
             }
 
             Timeslot timeslot = _mapper.Map<Timeslot>(timeslotDto);

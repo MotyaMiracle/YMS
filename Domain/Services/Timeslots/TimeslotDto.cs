@@ -1,5 +1,4 @@
 ﻿using Domain.Enums;
-using Domain.Shared;
 
 namespace Domain.Services.Timeslots
 {
@@ -10,6 +9,6 @@ namespace Domain.Services.Timeslots
         public string From { get; set; }
         public string To { get; set; }
         public GateStatus Status { get; set; }
-        public LookUpDto TripId { get; set; }
+        public Guid TripId { get; set; }
     }
 }
