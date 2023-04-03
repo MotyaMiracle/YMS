@@ -5,6 +5,7 @@ using Application.Services.Files;
 using Application.Services.Gates;
 using Application.Services.History;
 using Application.Services.Storages;
+using Application.Services.Timeslots;
 using Application.Services.Trailers;
 using Application.Services.Trips;
 using Application.Services.Trucks;
@@ -15,6 +16,7 @@ using Domain.Services.Files;
 using Domain.Services.Gates;
 using Domain.Services.History;
 using Domain.Services.Storages;
+using Domain.Services.Timeslots;
 using Domain.Services.Trailers;
 using Domain.Services.Trips;
 using Domain.Services.Trucks;
@@ -39,6 +41,7 @@ namespace Install
             services.AddScoped<IGatesService, GateService>();
             services.AddScoped<ITrailerService, TrailerService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<ITimeslotService, TimeslotService>();
 
             services.AddAutoMapper(
                 typeof(MapUser),
@@ -49,8 +52,9 @@ namespace Install
                 typeof(MapTruck),
                 typeof(AppMappingGate),
                 typeof(MapTrailer),
-                typeof(AppMappingCompany)
-    );
+                typeof(AppMappingCompany),
+                typeof(MapTimeslot)
+                );
 
         }
     }

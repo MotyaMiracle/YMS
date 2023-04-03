@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230316102936_AddTimeslotToTrip")]
+    partial class AddTimeslotToTrip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,9 +207,6 @@ namespace YardManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Capacity")
-                        .HasColumnType("integer");
-
                     b.Property<string>("ClosingHour")
                         .IsRequired()
                         .HasColumnType("text");
@@ -224,12 +224,6 @@ namespace YardManagementSystem.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("OccupancyActual")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OccupancyExpected")
-                        .HasColumnType("integer");
 
                     b.Property<string>("OpeningHour")
                         .IsRequired()
@@ -255,9 +249,6 @@ namespace YardManagementSystem.Migrations
                     b.Property<string>("From")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<string>("To")
                         .IsRequired()
@@ -346,8 +337,6 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("GateId");
 
                     b.HasIndex("StorageId");
-
-                    b.HasIndex("TimeslotId");
 
                     b.HasIndex("TrailerId");
 
@@ -443,7 +432,7 @@ namespace YardManagementSystem.Migrations
 
                     b.Navigation("Trip");
                 });
-                
+
             modelBuilder.Entity("Domain.Entity.Trailer", b =>
                 {
                     b.HasOne("Domain.Entity.Company", "Company")
@@ -454,7 +443,7 @@ namespace YardManagementSystem.Migrations
 
                     b.Navigation("Company");
                 });
-                        
+
             modelBuilder.Entity("Domain.Entity.Trip", b =>
                 {
                     b.HasOne("Domain.Entity.Driver", "Driver")
@@ -497,6 +486,7 @@ namespace YardManagementSystem.Migrations
 
                     b.Navigation("Truck");
                 });
+
             modelBuilder.Entity("Domain.Entity.Truck", b =>
                 {
                     b.HasOne("Domain.Entity.Company", "Company")
