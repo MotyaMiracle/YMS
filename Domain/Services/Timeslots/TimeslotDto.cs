@@ -8,6 +8,6 @@ namespace Domain.Services.Timeslots
         public DateTime Date { get; set; }
         public string From { get; set; }
         public string To { get; set; }
-        public GateStatus Status { get; set; }
+        public OperationType Status { get; set; }
     }
 }
