@@ -114,10 +114,10 @@ namespace Application.Services.Timeslots
             };
         }
 
-        public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, CancellationToken token)
+        public async Task<TimeslotDto> CreateAsync(TimeslotDto timeslotDto, Guid tripId, CancellationToken token)
         {
             Trip trip = await _db.Trips
-                .FirstOrDefaultAsync(t => t.Id == timeslotDto.TripId, token);
+                .FirstOrDefaultAsync(t => t.Id == tripId, token);
 
             Dictionary<string, List<Timeslot>> timeslotsByGates = await _db.Trips
                 .Include(t => t.Timeslot)
