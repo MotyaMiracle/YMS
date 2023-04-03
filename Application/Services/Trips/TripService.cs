@@ -37,7 +37,7 @@ namespace Application.Services.Trips
             await _db.SaveChangesAsync(token);
         }
 
-        public async Task OperationAsync(Guid tripId, CancellationToken token)
+        public async Task OccupancyAsync(Guid tripId, CancellationToken token)
         {
             var trip = await _db.Trips.FirstOrDefaultAsync(t => t.Id == tripId, token);
 
@@ -55,11 +55,11 @@ namespace Application.Services.Trips
             switch (timeslot.Status)
             {
                 case OperationType.Loading:
-                    storage.OccupancyActual -= trip.PalletsCount;
+                        storage.OccupancyActual -= trip.PalletsCount;
                     break;
 
                 case OperationType.Unloading:
-                    storage.OccupancyActual += trip.PalletsCount;
+                        storage.OccupancyActual += trip.PalletsCount;
                     break;
             }
 

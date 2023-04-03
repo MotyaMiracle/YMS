@@ -34,7 +34,7 @@ namespace Yard_Management_System.Controllers
         [HttpGet("startOperation/{tripId}")]
         public async Task<IActionResult> Operation(Guid tripId, CancellationToken token)
         {
-            await _tripService.OperationAsync(tripId, token);
+            await _tripService.OccupancyAsync(tripId, token);
             return Ok();
         }
     }
