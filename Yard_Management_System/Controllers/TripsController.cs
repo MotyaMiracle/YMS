@@ -38,7 +38,7 @@ namespace Yard_Management_System.Controllers
         public async Task<IActionResult> Operation(DateTime selectedDate, string storageName, CancellationToken token)
         {
                
-            return Ok(await _storageService.GetExcpectedOccupancy(selectedDate,storageName,token));
+            return Ok(await _storageService.GetExcpectedOccupancy(selectedDate, storageName, token));
         }
     }
 }

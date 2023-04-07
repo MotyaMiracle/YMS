@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.Storages;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Application.Services.Storages
 {
@@ -66,17 +68,49 @@ namespace Application.Services.Storages
             return _mapper.Map<IEnumerable<StorageDto>>(storages).ToList();
         }
 
-        public async Task<List<Trip>> GetExcpectedOccupancy(DateTime selectedDate, string storageName, CancellationToken token)
+        public async Task<int> GetExcpectedOccupancy(DateTime selectedDate, string storageName, CancellationToken token)
         {
-            var startDate = selectedDate.Date;
-            var endDate = selectedDate.Date;
+            if (string.IsNullOrWhiteSpace(storageName))
+            {
+                var trips = await _database.Trips
+                    .Include(s => s.Storage)
+                    .Include(t => t.Timeslot)
+                    .Where(t => t.ArrivalTime.Date == selectedDate)
+                    .ToListAsync(token);
 
-            var trips = await _database.Trips
-                .Include(s => s.Storage)
-                .Where(t => t.ArrivalTime.Date >= startDate && t.ArrivalTime.Date < endDate && t.Storage.Name == storageName)
-                .ToListAsync(token);
+                return await CalculateExpectedOccupancy(trips);
+            }
+            else
+            {
+                var trips = await _database.Trips
+                                    .Include(s => s.Storage)
+                                    .Include(l => l.Timeslot)
+                                    .Where(t => t.ArrivalTime.Date == selectedDate && t.Storage.Name == storageName)
+                                    .ToListAsync(token);
 
-            return trips;
+                return await CalculateExpectedOccupancy(trips);
+            }
+        }
+
+        private async Task<int> CalculateExpectedOccupancy(List<Trip> trips)
+        {
+            var expectedOccupancy = 0;
+
+            foreach(var trip in trips)
+            {
+                switch (trip.Timeslot.Status)
+                {
+                    case OperationType.Loading:
+                        expectedOccupancy -= trip.PalletsCount;
+                        break;
+
+                    case OperationType.Unloading:
+                        expectedOccupancy += trip.PalletsCount;
+                        break;
+                }
+            }
+
+            return expectedOccupancy;
         }
     }
 }

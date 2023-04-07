@@ -11,7 +11,7 @@ namespace Domain.Services.Storages
         Task DeleteStorageAsync(Guid storageId, CancellationToken token);
 
         Task<IEnumerable<StorageDto>> GetAllAsync(CancellationToken token);
-        Task<List<Trip>> GetExcpectedOccupancy(DateTime selectedDate, string storageName, CancellationToken token);
+        Task<int> GetExcpectedOccupancy(DateTime selectedDate, string storageName, CancellationToken token);
 
     }
 }

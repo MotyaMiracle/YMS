@@ -137,6 +137,7 @@ namespace Application.Services.Timeslots
             }
 
             Timeslot timeslot = _mapper.Map<Timeslot>(timeslotDto);
+            timeslot.TripId = tripId;
             await _db.Timeslots.AddAsync(timeslot, token);
             await _db.SaveChangesAsync(token);
 

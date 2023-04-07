@@ -61,10 +61,10 @@ namespace YardManagementSystem.Migrations
 
             migrationBuilder.InsertData(
                 table: "Timeslots",
-                columns: new[] { "Id", "Date", "From", "To", "Status" },
+                columns: new[] { "Id", "Date", "From", "To", "TripId","Status" },
                 values: new object[,]
                 {
-                    { new Guid("b120c29d-3610-46d7-bee9-0d7e2836baf9"), new DateTime(2023,03,28,00,00,00,DateTimeKind.Utc), "16:00", "18:30", 0 },
+                    { new Guid("b120c29d-3610-46d7-bee9-0d7e2836baf9"), new DateTime(2023,03,28,00,00,00,DateTimeKind.Utc), "16:00", "18:30", new Guid("6a3733ab-63e3-4c5c-a2c9-9f44397d4393"),0 },
                 });
 
             migrationBuilder.InsertData(
