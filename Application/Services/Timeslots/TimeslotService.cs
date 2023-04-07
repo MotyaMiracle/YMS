@@ -59,7 +59,7 @@ namespace Application.Services.Timeslots
             for (int i = 0; i < maxTimeslotPerDay; i++)
             {
                 timeslots.Add(new TimeSpan(0, minutes, 0));
-                if (timeslots[i] >= OneDay)
+                if (timeslots[i] + new TimeSpan(0, time, 0) >= OneDay)
                 {
                     break;
                 }
@@ -137,6 +137,7 @@ namespace Application.Services.Timeslots
             }
 
             Timeslot timeslot = _mapper.Map<Timeslot>(timeslotDto);
+            timeslot.TripId = tripId;
             await _db.Timeslots.AddAsync(timeslot, token);
             await _db.SaveChangesAsync(token);
 
