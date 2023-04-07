@@ -2,6 +2,7 @@
 using Database;
 using Domain.Entity;
 using Domain.Services.Gates;
+using Domain.Services.Trips;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Gates
@@ -9,12 +10,14 @@ namespace Application.Services.Gates
     public class GateService : IGatesService
     {
         private readonly ApplicationContext _database;
+        private readonly ITripService _tripService;
         private readonly IMapper _mapper;
 
-        public GateService(ApplicationContext database, IMapper mapper)
+        public GateService(ApplicationContext database, IMapper mapper, ITripService tripService)
         {
             _database = database;
             _mapper = mapper;
+            _tripService = tripService;
         }
 
         public async Task CreateAndUpdateAsync(GateDto gateDto, CancellationToken token)
@@ -69,7 +72,14 @@ namespace Application.Services.Gates
         public async Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token)
         {
             DateTime arrivalTime = DateTime.UtcNow;
-            return await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+            if (trip != null)
+            {
+                await _tripService.OccupancyAsync(trip, token);
+                return true;
+            }
+            return false;
         }
+        
     }
 }

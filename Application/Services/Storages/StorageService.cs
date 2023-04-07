@@ -65,5 +65,18 @@ namespace Application.Services.Storages
 
             return _mapper.Map<IEnumerable<StorageDto>>(storages).ToList();
         }
+
+        public async Task<List<Trip>> GetExcpectedOccupancy(DateTime selectedDate, string storageName, CancellationToken token)
+        {
+            var startDate = selectedDate.Date;
+            var endDate = selectedDate.Date;
+
+            var trips = await _database.Trips
+                .Include(s => s.Storage)
+                .Where(t => t.ArrivalTime.Date >= startDate && t.ArrivalTime.Date < endDate && t.Storage.Name == storageName)
+                .ToListAsync(token);
+
+            return trips;
+        }
     }
 }
