@@ -35,7 +35,7 @@ namespace Yard_Management_System.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Operation(DateTime selectedDate, string storageName, CancellationToken token)
+        public async Task<IActionResult> Operation(DateTime selectedDate, string? storageName, CancellationToken token)
         {
                
             return Ok(await _storageService.GetExcpectedOccupancy(selectedDate, storageName, token));
