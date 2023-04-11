@@ -59,7 +59,7 @@ namespace Application.Services.Timeslots
             for (int i = 0; i < maxTimeslotPerDay; i++)
             {
                 timeslots.Add(new TimeSpan(0, minutes, 0));
-                if (timeslots[i] >= OneDay)
+                if (timeslots[i] + new TimeSpan(0, time, 0) >= OneDay)
                 {
                     break;
                 }

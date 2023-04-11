@@ -1,6 +1,4 @@
-﻿using Domain.Entity;
-using Domain.Services.Timeslots;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Domain.Shared;
 
 namespace Domain.Services.Trips
