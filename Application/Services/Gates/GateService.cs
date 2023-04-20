@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.Gates;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,7 +70,22 @@ namespace Application.Services.Gates
         public async Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token)
         {
             DateTime arrivalTime = DateTime.UtcNow;
-            return await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+
+            Trip trip = await _database.Trips.FirstOrDefaultAsync(
+                x => x.Truck.Number == carNumber, token);
+
+            bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
+            x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime &&
+            arrivalTime <= x.ArrivalTimePlan.AddMinutes(30),
+            token);
+
+            if (check)
+            {
+                trip.ArrivalTimeFact = arrivalTime;
+                trip.NowStatus = TripStatus.ArriveAtStorage;
+            }
+            await _database.SaveChangesAsync(token);
+            return check;
         }
     }
 }
