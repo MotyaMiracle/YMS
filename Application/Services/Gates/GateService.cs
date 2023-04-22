@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.Gates;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace Application.Services.Gates
 {
@@ -69,7 +71,25 @@ namespace Application.Services.Gates
         public async Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token)
         {
             DateTime arrivalTime = DateTime.UtcNow;
-            return await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+
+            Trip trip = await _database.Trips
+                .Include(t => t.Truck)
+                .FirstOrDefaultAsync(x => x.Truck.Number== carNumber);
+
+            bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
+            x.ArrivalTime.AddMinutes(-30) <= arrivalTime &&
+            arrivalTime <= x.ArrivalTime.AddMinutes(30),
+            token);
+
+            if (check)
+                trip.Truck.ColorStatus = ColorStatus.InWork;
+
+            if (trip.ArrivalTime < arrivalTime)
+                trip.Truck.ColorStatus = ColorStatus.BeLate;
+
+            await _database.SaveChangesAsync(token);
+
+            return check;
         }
     }
 }

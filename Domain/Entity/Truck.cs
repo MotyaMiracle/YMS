@@ -1,4 +1,6 @@
-﻿namespace Domain.Entity
+﻿using Domain.Enums;
+
+namespace Domain.Entity
 {
     public class Truck
     {
@@ -7,6 +9,7 @@
         public string Number { get; set; }
         public Guid CompanyId { get; set; }
         public Company Company { get; set; }
+        public ColorStatus? ColorStatus { get; set; }
         public string Description { get; set; }
     }
 }

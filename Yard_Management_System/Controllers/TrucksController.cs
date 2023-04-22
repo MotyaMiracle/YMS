@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Database;
+using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.Trucks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Yard_Management_System.Controllers
 {
@@ -24,7 +27,7 @@ namespace Yard_Management_System.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(Guid truckId, CancellationToken token)
         {
-            return Ok (await _truckService.GetAsync(truckId, token));
+            return Ok(await _truckService.GetAsync(truckId, token));
         }
 
         [HttpPost]
@@ -51,5 +54,12 @@ namespace Yard_Management_System.Controllers
             await _truckService.DeleteAsync(truckId, token);
             return Ok();
         }
+
+        [HttpGet("status")]
+        public async Task<IActionResult> TruckStatus(string carNumber, CancellationToken token)
+        {
+            return Ok(await _truckService.TruckStatusAsync(carNumber, token));
+        }
+
     }
 }
