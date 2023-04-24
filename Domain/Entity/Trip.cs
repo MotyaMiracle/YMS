@@ -26,5 +26,6 @@ namespace Domain.Entity
         public Gate Gate { get; set; }
         public string Number { get; set; }
         public int PalletsCount { get; set; }
+        public byte[] QRCode { get; set; }
     }
 }
