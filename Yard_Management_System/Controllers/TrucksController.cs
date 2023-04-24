@@ -2,6 +2,7 @@
 using Database;
 using Domain.Entity;
 using Domain.Enums;
+using Domain.Services.Color;
 using Domain.Services.Trucks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,14 @@ namespace Yard_Management_System.Controllers
         private readonly ApplicationContext _db;
         private readonly IMapper _mapper;
         private readonly ITruckService _truckService;
+        private readonly IColorStatus _colorStatus;
 
-        public TrucksController(ApplicationContext db, IMapper mapper, ITruckService truckService)
+        public TrucksController(ApplicationContext db, IMapper mapper, ITruckService truckService, IColorStatus colorStatus)
         {
             _db = db;
             _mapper = mapper;
             _truckService = truckService;
+            _colorStatus = colorStatus;
         }
         [HttpGet]
         public async Task<IActionResult> Get(Guid truckId, CancellationToken token)
@@ -58,7 +61,7 @@ namespace Yard_Management_System.Controllers
         [HttpGet("status")]
         public async Task<IActionResult> TruckStatus(string carNumber, CancellationToken token)
         {
-            return Ok(await _truckService.TruckStatusAsync(carNumber, token));
+            return Ok(await _colorStatus.TruckStatusAsync(carNumber, token));
         }
 
     }

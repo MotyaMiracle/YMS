@@ -78,14 +78,19 @@ namespace Application.Services.Gates
 
             bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
             x.ArrivalTime.AddMinutes(-30) <= arrivalTime &&
-            arrivalTime <= x.ArrivalTime.AddMinutes(30),
-            token);
+            arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
 
             if (check)
+            {
                 trip.Truck.ColorStatus = ColorStatus.InWork;
+                trip.Truck.Backlight = Backlights.Green;
+            }
 
             if (trip.ArrivalTime < arrivalTime)
+            {
                 trip.Truck.ColorStatus = ColorStatus.BeLate;
+                trip.Truck.Backlight = Backlights.Red;
+            }
 
             await _database.SaveChangesAsync(token);
 

@@ -10,6 +10,7 @@ namespace Domain.Entity
         public Guid CompanyId { get; set; }
         public Company Company { get; set; }
         public ColorStatus? ColorStatus { get; set; }
+        public Backlights? Backlight { get; set; }
         public string Description { get; set; }
     }
 }

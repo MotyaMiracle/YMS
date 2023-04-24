@@ -8,6 +8,5 @@ namespace Domain.Services.Trucks
         Task<TruckDto> GetAsync(Guid truckId, CancellationToken token);
         Task<IEnumerable<TruckDto>> GetAllAsync(CancellationToken token);
         Task DeleteAsync(Guid truckId, CancellationToken token);
-        Task<ColorStatus?> TruckStatusAsync(string carNumber, CancellationToken token);
     }
 }
