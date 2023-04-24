@@ -79,11 +79,19 @@ namespace Application.Services.Gates
             arrivalTime <= x.ArrivalTimePlan.AddMinutes(30),
             token);
 
-            if (check)
+            if (trip.NowStatus == TripStatus.ArriveAtStorage)
+            {
+                trip.NowStatus = TripStatus.Left;
+                await _database.SaveChangesAsync(token);
+                return true;
+            }
+
+            if (check && trip.NowStatus != TripStatus.Left)
             {
                 trip.ArrivalTimeFact = arrivalTime;
                 trip.NowStatus = TripStatus.ArriveAtStorage;
             }
+
             await _database.SaveChangesAsync(token);
             return check;
         }

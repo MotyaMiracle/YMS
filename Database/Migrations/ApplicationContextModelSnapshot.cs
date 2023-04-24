@@ -38,7 +38,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Driver", b =>
@@ -88,7 +88,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Passport", "DriveLicense")
                         .IsUnique();
 
-                    b.ToTable("Drivers");
+                    b.ToTable("Drivers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.EntityFile", b =>
@@ -110,7 +110,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Gate", b =>
@@ -146,7 +146,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gates");
+                    b.ToTable("Gates", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.HistoryEntry", b =>
@@ -172,7 +172,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HistoryEntries");
+                    b.ToTable("HistoryEntries", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Role", b =>
@@ -191,7 +191,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Storage", b =>
@@ -237,7 +237,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Storages");
+                    b.ToTable("Storages", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Timeslot", b =>
@@ -268,7 +268,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("TripId")
                         .IsUnique();
 
-                    b.ToTable("Timeslots");
+                    b.ToTable("Timeslots", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Trailer", b =>
@@ -296,7 +296,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Trailers");
+                    b.ToTable("Trailers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Trip", b =>
@@ -351,7 +351,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("TruckId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.Truck", b =>
@@ -379,7 +379,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Trucks");
+                    b.ToTable("Trucks", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.User", b =>
@@ -417,7 +417,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Login", "Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.HistoryEntry", b =>
