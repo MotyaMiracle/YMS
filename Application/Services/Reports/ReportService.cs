@@ -25,20 +25,20 @@ namespace Application.Services.Reports
             if (reportDto == null)
                 return null;
 
-            //if (!string.IsNullOrEmpty(reportDto.OperationType.ToString()))
-            //{
-            //    return await FilterByOperationAsync(reportDto, token);
-            //}
+            if (!string.IsNullOrEmpty(reportDto.OperationType.ToString()))
+            {
+                return await FilterByOperationAsync(reportDto, token);
+            }
 
-            //if (!string.IsNullOrEmpty(reportDto.Duration.ToString()))
-            //{
-            //    return await FilterByDurationAsync(reportDto, token);
-            //}
+            if (!string.IsNullOrEmpty(reportDto.Duration.ToString()))
+            {
+                return await FilterByDurationAsync(reportDto, token);
+            }
 
-            //if(!string.IsNullOrEmpty(reportDto.PalletsCount.ToString()))
-            //{
-            //    return await FilterByPalletAsync(reportDto, token);
-            //}
+            if (!string.IsNullOrEmpty(reportDto.PalletsCount.ToString()))
+            {
+                return await FilterByPalletAsync(reportDto, token);
+            }
 
             if (!string.IsNullOrEmpty(reportDto.StorageName))
             {
