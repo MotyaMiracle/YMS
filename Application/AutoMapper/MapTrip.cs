@@ -14,7 +14,8 @@ namespace Application.AutoMapper
                 .ForPath(dest => dest.DriverId.Value, opt => opt.MapFrom(src => src.DriverId.ToString()))
                 .ForPath(dest => dest.TrailerId.Value, opt => opt.MapFrom(src => src.TrailerId.ToString()))
                 .ForPath(dest => dest.TruckId.Value, opt => opt.MapFrom(src => src.TruckId.ToString()))
-                .ForPath(dest => dest.GateId.Value, opt => opt.MapFrom(src => src.GateId.ToString()));
+                .ForPath(dest => dest.GateId.Value, opt => opt.MapFrom(src => src.GateId.ToString()))
+                .ForPath(dest => dest.CompanyId.Value, opt => opt.MapFrom(src => src.CompanyId.ToString()));
 
             CreateMap<TripDto, Trip>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => string.IsNullOrWhiteSpace(src.Id) ? Guid.NewGuid() : Guid.Parse(src.Id)))
@@ -22,7 +23,8 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.DriverId, opt => opt.MapFrom(src => Guid.Parse(src.DriverId.Value)))
                 .ForMember(dest => dest.TrailerId, opt => opt.MapFrom(src => Guid.Parse(src.TrailerId.Value)))
                 .ForMember(dest => dest.GateId, opt => opt.MapFrom(src => Guid.Parse(src.GateId.Value)))
-                .ForMember(dest => dest.TruckId, opt => opt.MapFrom(src => Guid.Parse(src.TruckId.Value)));
+                .ForMember(dest => dest.TruckId, opt => opt.MapFrom(src => Guid.Parse(src.TruckId.Value)))
+                .ForMember(dest => dest.CompanyId, opt => opt.MapFrom(src => Guid.Parse(src.CompanyId.Value)));
         }
     }
 }
