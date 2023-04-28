@@ -5,7 +5,7 @@ namespace Domain.Services.Reports
 {
     public class ResponseReportDto
     {
-        public List<ReportEntryDto> Entries { get; set; }
-        public int TripsCount { get; set; }
+        public List<DetalizationReportRow> Entries { get; set; }
+        
     }
 }

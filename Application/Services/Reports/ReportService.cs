@@ -25,66 +25,132 @@ namespace Application.Services.Reports
             if (reportDto == null)
                 return null;
 
-            if (!string.IsNullOrEmpty(reportDto.OperationType.ToString()))
-            {
-                return await FilterByOperationAsync(reportDto, token);
-            }
 
-            if (!string.IsNullOrEmpty(reportDto.Duration.ToString()))
+            switch (reportDto.FilterDetalization)
             {
-                return await FilterByDurationAsync(reportDto, token);
+                case FilterDetalization.Loading:
+                    return await FilterByOperationAsync(reportDto, token);
+                    
+                case FilterDetalization.Unloading:
+                    return await FilterByOperationAsync(reportDto, token);
+                    
+                case FilterDetalization.Duration:
+                    return await FilterByDurationAsync(reportDto, token);
+                    
+                case FilterDetalization.Pallets:
+                    return await FilterByPalletAsync(reportDto, token);
+                    
+                case FilterDetalization.Storage:
+                    return await FilterByStorageAsync(reportDto, token);  
             }
-
-            if (!string.IsNullOrEmpty(reportDto.PalletsCount.ToString()))
-            {
-                return await FilterByPalletAsync(reportDto, token);
-            }
-
-            if (!string.IsNullOrEmpty(reportDto.StorageName))
-            {
-                return await FilterByStorageAsync(reportDto, token);
-            }
-
             return null;
         }
 
+        private async Task<List<Trip>> GetTripAsync(CancellationToken token)
+        {
+            return null;
+        }
 
         private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, CancellationToken token)
         {
             ResponseReportDto response = new ResponseReportDto();
 
-            switch (requestReport.OperationType)
+            switch (requestReport.FilterDetalization)
             {
-                case OperationType.Loading:
+                case FilterDetalization.Loading:
                     var trips = await _database.Trips
                         .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                        .Include(t => t.Timeslot)
                         .Include(c => c.Company)
-                        .Where(t => t.Timeslot.Status.HasFlag(OperationType.Loading))
-                        .ToListAsync();
+                        .Include(t => t.Timeslot)
+                        .Where(t => t.Timeslot.Status == OperationType.Loading)
+                        .GroupBy(c => c.Company.Name)
+                        .Select(g => new
+                        {
+                            CompanyName = g.Key,
+                            Count = g.Count(),
 
-                    response.Entries = trips.Select(x => new ReportEntryDto
+                        })
+                        .ToListAsync();
+                    if (requestReport.DetailByCompany == true)
                     {
-                        CompanyName = x.Company.Name,
-                        DetailType = "Загрузка"
-                    }).ToList();
-                    response.TripsCount = trips.Count;
+                        response.Entries = trips.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.CompanyName,
+                            TripsCount = trips.Count(),
+                            SubRows = new List<DetalizationReportRow>
+                        {
+                            new DetalizationReportRow
+                            {
+                                DetailType = "Загрузка",
+                                TripsCount = x.Count
+                            }
+                        }
+                        }).ToList();
+                    }
+                    else
+                    {
+                        response.Entries = trips.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = "Загрузка",
+                            TripsCount = trips.Count(),
+                            SubRows = new List<DetalizationReportRow>
+                            {
+                            new DetalizationReportRow
+                            {
+                               TripsCount = x.Count
+                            }
+                        }
+                        }).ToList();
+                    }
                     break;
 
-                case OperationType.Unloading:
+                case FilterDetalization.Unloading:
                     trips = await _database.Trips
-                       .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                       .Include(t => t.Timeslot)
-                       .Include(c => c.Company)
-                       .Where(t => t.Timeslot.Status.HasFlag(OperationType.Unloading))
-                       .ToListAsync();
+                        .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
+                        .Include(c => c.Company)
+                        .Include(t => t.Timeslot)
+                        .Where(t => t.Timeslot.Status == OperationType.Unloading)
+                        .GroupBy(c => c.Company.Name)
+                        .Select(g => new
+                        {
+                            CompanyName = g.Key,
+                            Count = g.Count(),
 
-                    response.Entries = trips.Select(x => new ReportEntryDto
+                        })
+                        .ToListAsync();
+
+                    if (requestReport.DetailByCompany == true)
                     {
-                        CompanyName = x.Company.Name,
-                        DetailType = "Разгрузка"
-                    }).ToList();
-                    response.TripsCount = trips.Count;
+                        response.Entries = trips.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.CompanyName,
+                            TripsCount = trips.Count(),
+                            SubRows = new List<DetalizationReportRow>
+                        {
+                            new DetalizationReportRow
+                            {
+                                DetailType = "Разгрузка",
+                                TripsCount = x.Count
+                            }
+                        }
+                        }).ToList();
+                    }
+                    else
+                    {
+                        response.Entries = trips.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = "Разгрузка",
+                            TripsCount = trips.Count(),
+                            SubRows = new List<DetalizationReportRow>
+                            {
+                            new DetalizationReportRow
+                            {
+                               TripsCount = x.Count
+                            }
+                        }
+                        }).ToList();
+                    }
+
                     break;
             }
 
@@ -98,39 +164,105 @@ namespace Application.Services.Reports
             var trips = await _database.Trips
                         .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
                         .Include(c => c.Company)
-                        .Include(g => g.Gate)
                         .Where(t => (Math.Ceiling(((double)t.Gate.PalletHandlingTime * t.PalletsCount) / 30) * 30) == requestReport.Duration)
+                        .GroupBy(g => g.Company.Name)
+                        .Select(g => new
+                        {
+                            CompanyName = g.Key,
+                            Count = g.Count(),
+                        })
                         .ToListAsync();
-
-            return new ResponseReportDto
+            if (requestReport.DetailByCompany == true)
             {
-                Entries = trips.Select(x => new ReportEntryDto
+                return new ResponseReportDto
                 {
-                    CompanyName = x.Company.Name,
-                    DetailType = $"Продолжительность в минутах: {requestReport.Duration}"
-                }).ToList(),
-                TripsCount = trips.Count
-            };
-        }
-
-
+                    Entries = trips.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.CompanyName,
+                        TripsCount = trips.Count(),
+                        SubRows = new List<DetalizationReportRow>
+                    {
+                        new DetalizationReportRow
+                        {
+                            DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
+                            TripsCount = x.Count
+                        }
+                    }
+                    }).ToList()
+                };
+            }
+            else
+            {
+                return new ResponseReportDto
+                {
+                    Entries = trips.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
+                        TripsCount = trips.Count(),
+                        SubRows = new List<DetalizationReportRow>
+                    {
+                        new DetalizationReportRow
+                        {
+                            TripsCount = x.Count
+                        }
+                    }
+                    }).ToList()
+                };
+            }
+                
+        }   
+    
         private async Task<ResponseReportDto> FilterByPalletAsync(RequestReportDto requestReport, CancellationToken token)
         {
             var trips = await _database.Trips
                         .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
                         .Include(c => c.Company)
                         .Where(t => t.PalletsCount == requestReport.PalletsCount)
+                        .GroupBy(g => g.Company.Name)
+                        .Select(g => new
+                        {
+                            CompanyName = g.Key,
+                            Count = g.Count(),
+                        })
                         .ToListAsync();
 
-            return new ResponseReportDto
+            if (requestReport.DetailByCompany == true)
             {
-                Entries = trips.Select(x => new ReportEntryDto
+                return new ResponseReportDto
                 {
-                    CompanyName = x.Company.Name,
-                    DetailType = $"Количество паллет: {requestReport.PalletsCount}"
-                }).ToList(),
-                TripsCount = trips.Count
-            };
+                    Entries = trips.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.CompanyName,
+                        TripsCount = trips.Count(),
+                        SubRows = new List<DetalizationReportRow>
+                    {
+                        new DetalizationReportRow
+                        {
+                            DetailType = $"Количество паллет: {requestReport.PalletsCount}",
+                            TripsCount = x.Count
+                        }
+                    }
+                    }).ToList()
+                };
+            }
+            else
+            {
+                return new ResponseReportDto
+                {
+                    Entries = trips.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = $"Количество паллет: {requestReport.PalletsCount}",
+                        TripsCount = trips.Count(),
+                        SubRows = new List<DetalizationReportRow>
+                    {
+                        new DetalizationReportRow
+                        {
+                            TripsCount = x.Count
+                        }
+                    }
+                    }).ToList()
+                };
+            }
         }
 
         private async Task<ResponseReportDto> FilterByStorageAsync(RequestReportDto requestReport, CancellationToken token)
@@ -140,17 +272,52 @@ namespace Application.Services.Reports
                         .Include(c => c.Company)
                         .Include(s => s.Storage)
                         .Where(t => t.Storage.Name == requestReport.StorageName)
+                        .GroupBy(g => g.Company.Name)
+                        .Select(g => new
+                        {
+                            CompanyName = g.Key,
+                            Count = g.Count(),
+                        })
                         .ToListAsync();
 
-            return new ResponseReportDto
+            if (requestReport.DetailByCompany == true)
             {
-                Entries = trips.Select(x => new ReportEntryDto
+                return new ResponseReportDto
                 {
-                    CompanyName = x.Company.Name,
-                    DetailType = $"{requestReport.StorageName}"
-                }).ToList(),
-                TripsCount = trips.Count
-            };
+                    Entries = trips.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.CompanyName,
+                        TripsCount = trips.Count(),
+                        SubRows = new List<DetalizationReportRow>
+                    {
+                        new DetalizationReportRow
+                        {
+                            DetailType = $"Склад: {requestReport.StorageName}",
+                            TripsCount = x.Count
+                        }
+                    }
+                    }).ToList()
+                };
+            }
+            else
+            {
+                return new ResponseReportDto
+                {
+                    Entries = trips.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = $"Склад: {requestReport.StorageName}",
+                        TripsCount = trips.Count(),
+                        SubRows = new List<DetalizationReportRow>
+                    {
+                        new DetalizationReportRow
+                        {
+                            TripsCount = x.Count
+                        }
+                    }
+                    }).ToList()
+                };
+            }
         }
-    }
+    };
 }
+

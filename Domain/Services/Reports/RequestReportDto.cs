@@ -15,21 +15,13 @@ namespace Domain.Services.Reports
         public DateTime EndDate { get; set; }
 
         /// <summary>
-        /// Тип операции
+        /// Тип фильтрации
         /// </summary>
-        public OperationType? OperationType { get; set; }
-
-        /// <summary>
-        /// Продолжительность
-        /// </summary>
-        public double? Duration { get; set; }
-
-        /// <summary>
-        /// Количество паллет
-        /// </summary>
+        public FilterDetalization FilterDetalization { get; set; }
+        public int? Duration { get; set; }
         public int? PalletsCount { get; set; }
         public string? StorageName { get; set; }
-        public bool? CompanyName { get; set; }
+        public bool? DetailByCompany { get; set; }
         public bool? Trips { get; set; }
 
     }
