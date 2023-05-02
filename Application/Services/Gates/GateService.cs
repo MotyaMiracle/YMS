@@ -3,6 +3,7 @@ using Database;
 using Domain.Entity;
 using Domain.Services.Gates;
 using Domain.Services.Trips;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Gates
@@ -80,6 +81,30 @@ namespace Application.Services.Gates
             }
             return false;
         }
-        
+
+        public async Task<bool> CanDriveToGateQRCodeAsync(IFormFile formFile, CancellationToken token)
+        {
+            if (formFile is null)
+                return false;
+
+            byte[] data;
+            DateTime arrivalTime = DateTime.UtcNow;
+
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream);
+                data = stream.ToArray();
+            }
+
+            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.QRCode == data && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+
+            if (trip != null)
+            {
+                await _tripService.OccupancyAsync(trip, token);
+                return true;
+            }
+            return false;
+        }
+
     }
 }

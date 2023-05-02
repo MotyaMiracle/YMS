@@ -5,7 +5,10 @@ using Domain.Enums;
 using Domain.Services.History;
 using Domain.Services.Trips;
 using Domain.Services.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using System.Drawing;
 
 namespace Application.Services.Trips
 {
@@ -32,6 +35,7 @@ namespace Application.Services.Trips
         {
             trip.NowStatus = TripStatus.Create;
             Trip newTrip = _mapper.Map<Trip>(trip);
+            newTrip.QRCode = GenerateQRCode(newTrip.Number);
             await _historyService.SaveAsync(newTrip.Id, "Создана путёвка", await _userProvider.GetCurrentUserAsync(token), token);
             await _db.Trips.AddAsync(newTrip, token);
             await _db.SaveChangesAsync(token);
@@ -62,6 +66,25 @@ namespace Application.Services.Trips
             }
 
             await _db.SaveChangesAsync(token);
+        }
+
+        private byte[] GenerateQRCode(string number)
+        {
+            QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+            QRCodeData qRCodeData = qRCodeGenerator.CreateQrCode(number, QRCodeGenerator.ECCLevel.Q);
+            QRCode qRCode = new QRCode(qRCodeData);
+            Bitmap bitmap = qRCode.GetGraphic(15);
+            var bitmapBytes = ConvertBitmapToBytes(bitmap);
+            return bitmapBytes;
+        }
+
+        private byte[] ConvertBitmapToBytes(Bitmap bitmap)
+        {
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
         }
     }
 }
