@@ -94,6 +94,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();

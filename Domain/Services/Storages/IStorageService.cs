@@ -1,4 +1,6 @@
-﻿namespace Domain.Services.Storages
+﻿using Domain.Entity;
+
+namespace Domain.Services.Storages
 {
     public interface IStorageService
     {
@@ -9,6 +11,7 @@
         Task DeleteStorageAsync(Guid storageId, CancellationToken token);
 
         Task<IEnumerable<StorageDto>> GetAllAsync(CancellationToken token);
+        Task<int> GetExcpectedOccupancy(DateTime selectedDate, string storageName, CancellationToken token);
 
     }
 }

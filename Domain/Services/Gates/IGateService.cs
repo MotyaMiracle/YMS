@@ -1,4 +1,6 @@
-﻿namespace Domain.Services.Gates
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Domain.Services.Gates
 {
     public interface IGatesService
     {
@@ -11,5 +13,7 @@
         Task<IEnumerable<GateDto>> GetAllAsync(CancellationToken token);
 
         public Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token);
+
+        public Task<bool> CanDriveToGateQRCodeAsync(IFormFile formFile, CancellationToken token);
     }
 }

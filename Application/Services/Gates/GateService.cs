@@ -3,6 +3,8 @@ using Database;
 using Domain.Entity;
 using Domain.Enums;
 using Domain.Services.Gates;
+using Domain.Services.Trips;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Gates
@@ -10,12 +12,14 @@ namespace Application.Services.Gates
     public class GateService : IGatesService
     {
         private readonly ApplicationContext _database;
+        private readonly ITripService _tripService;
         private readonly IMapper _mapper;
 
-        public GateService(ApplicationContext database, IMapper mapper)
+        public GateService(ApplicationContext database, IMapper mapper, ITripService tripService)
         {
             _database = database;
             _mapper = mapper;
+            _tripService = tripService;
         }
 
         public async Task CreateAndUpdateAsync(GateDto gateDto, CancellationToken token)
@@ -93,7 +97,39 @@ namespace Application.Services.Gates
             }
 
             await _database.SaveChangesAsync(token);
+            
+            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+            if (trip != null)
+            {
+                await _tripService.OccupancyAsync(trip, token);
+                return true;
+            }
             return check;
         }
+
+        public async Task<bool> CanDriveToGateQRCodeAsync(IFormFile formFile, CancellationToken token)
+        {
+            if (formFile is null)
+                return false;
+
+            byte[] data;
+            DateTime arrivalTime = DateTime.UtcNow;
+
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream);
+                data = stream.ToArray();
+            }
+
+            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.QRCode == data && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+
+            if (trip != null)
+            {
+                await _tripService.OccupancyAsync(trip, token);
+                return true;
+            }
+            return false;
+        }
+
     }
 }
