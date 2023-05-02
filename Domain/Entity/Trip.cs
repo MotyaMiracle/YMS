@@ -6,17 +6,22 @@ namespace Domain.Entity
     public class Trip
     {
         public Guid Id { get; set; }
-        public Guid StorageId { get; set; }
+        public Guid? StorageId { get; set; }
         public Guid DriverId { get; set; }
         public Guid TruckId { get; set; }
         public Guid TrailerId { get; set; }
-        public Guid GateId { get; set; }
-        public Guid TimeslotId { get; set; }
+        public Guid? GateId { get; set; }
+        public Guid? TimeslotId { get; set; }
 
         /// <summary>
-        /// Год, месяц, день, час, минута
+        /// Планируемое время прибытия
         /// </summary>
-        public DateTime ArrivalTime { get; set; }
+        public DateTime ArrivalTimePlan { get; set; }
+
+        /// <summary>
+        /// Фактическое время прибытия
+        /// </summary>
+        public DateTime? ArrivalTimeFact { get; set; }
         public TripStatus NowStatus { get; set; }
         public Driver Driver { get; set; }
         public Storage Storage { get; set; }
