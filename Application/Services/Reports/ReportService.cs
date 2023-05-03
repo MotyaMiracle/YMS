@@ -40,15 +40,15 @@ namespace Application.Services.Reports
             {
                 case FilterDetalization.OperationType:
                     return await FilterByOperationAsync(reportDto, trips, token);
-                    
-                //case FilterDetalization.Duration:
-                //    return await FilterByDurationAsync(reportDto, token);
-                    
-                //case FilterDetalization.Pallets:
-                //    return await FilterByPalletAsync(reportDto, token);
-                    
-                //case FilterDetalization.Storage:
-                //    return await FilterByStorageAsync(reportDto, token);  
+
+                    //case FilterDetalization.Duration:
+                    //    return await FilterByDurationAsync(reportDto, token);
+
+                    //case FilterDetalization.Pallets:
+                    //    return await FilterByPalletAsync(reportDto, token);
+
+                    //case FilterDetalization.Storage:
+                    //    return await FilterByStorageAsync(reportDto, token);  
             }
             return null;
         }
@@ -63,31 +63,39 @@ namespace Application.Services.Reports
 
         private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
         {
-            ResponseReportDto response = new ResponseReportDto();
-            response.Entries = new List<DetalizationReportRow> 
+            ResponseReportDto response = new();
+
+            if (trips != null && trips.Any())
             {
-                
+                response.Entries = trips.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key,
+                    TripsCount = x.Value.Count
+                }).ToList();
+
+                foreach (var entry in response.Entries)
+                {
+                    var tripsByTc = trips[entry.DetailType];
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.Timeslot.Status);
+                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
             }
-            var tripByDetalizationType = trips.Values.SelectMany(x => x).GroupBy(t => t.Timeslot.Status);
-
-
-
-            response.Entries = tripByDetalizationType.Select(x => new DetalizationReportRow
+            else
             {
-                DetailType = 
-                TripsCount = trips.Count(),
-                SubRows = new List<DetalizationReportRow>
-                        {
-                            new DetalizationReportRow
-                            {
-                                DetailType = "Загрузка",
-                                TripsCount = x.Count
-                            }
-                        }
-            }).ToList();
-            
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.Timeslot.Status);
+                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key.ToString(),
+                    TripsCount = x.Count()
+                }).ToList();
+            }
+
             return response;
-        } 
+        }
 
 
         //private async Task<ResponseReportDto> FilterByDurationAsync(RequestReportDto requestReport, CancellationToken token)
