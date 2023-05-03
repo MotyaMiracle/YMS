@@ -41,14 +41,14 @@ namespace Application.Services.Reports
                 case FilterDetalization.OperationType:
                     return await FilterByOperationAsync(reportDto, trips, token);
 
-                    //case FilterDetalization.Duration:
-                    //    return await FilterByDurationAsync(reportDto, token);
+                case FilterDetalization.Duration:
+                    return await FilterByDurationAsync(reportDto, trips, token);
 
-                    //case FilterDetalization.Pallets:
-                    //    return await FilterByPalletAsync(reportDto, token);
+                case FilterDetalization.Pallets:
+                    return await FilterByPalletAsync(reportDto, trips, token);
 
-                    //case FilterDetalization.Storage:
-                    //    return await FilterByStorageAsync(reportDto, token);  
+                case FilterDetalization.Storage:
+                    return await FilterByStorageAsync(reportDto, trips, token);
             }
             return null;
         }
@@ -98,165 +98,114 @@ namespace Application.Services.Reports
         }
 
 
-        //private async Task<ResponseReportDto> FilterByDurationAsync(RequestReportDto requestReport, CancellationToken token)
-        //{
-        //    var trips = await _database.Trips
-        //                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-        //                .Include(c => c.Company)
-        //                .Where(t => (Math.Ceiling(((double)t.Gate.PalletHandlingTime * t.PalletsCount) / 30) * 30) == requestReport.Duration)
-        //                .GroupBy(g => g.Company.Name)
-        //                .Select(g => new
-        //                {
-        //                    CompanyName = g.Key,
-        //                    Count = g.Count(),
-        //                })
-        //                .ToListAsync();
-        //    if (requestReport.DetailByCompany == true)
-        //    {
-        //        return new ResponseReportDto
-        //        {
-        //            Entries = trips.Select(x => new DetalizationReportRow
-        //            {
-        //                DetailType = x.CompanyName,
-        //                TripsCount = trips.Count(),
-        //                SubRows = new List<DetalizationReportRow>
-        //            {
-        //                new DetalizationReportRow
-        //                {
-        //                    DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
-        //                    TripsCount = x.Count
-        //                }
-        //            }
-        //            }).ToList()
-        //        };
-        //    }
-        //    else
-        //    {
-        //        return new ResponseReportDto
-        //        {
-        //            Entries = trips.Select(x => new DetalizationReportRow
-        //            {
-        //                DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
-        //                TripsCount = trips.Count(),
-        //                SubRows = new List<DetalizationReportRow>
-        //            {
-        //                new DetalizationReportRow
-        //                {
-        //                    TripsCount = x.Count
-        //                }
-        //            }
-        //            }).ToList()
-        //        };
-        //    }
+        private async Task<ResponseReportDto> FilterByDurationAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
+        {
+            ResponseReportDto response = new();
 
-        //}   
+            if (trips != null && trips.Any())
+            {
+                response.Entries = trips.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key,
+                    TripsCount = x.Value.Count
+                }).ToList();
 
-        //private async Task<ResponseReportDto> FilterByPalletAsync(RequestReportDto requestReport, CancellationToken token)
-        //{
-        //    var trips = await _database.Trips
-        //                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-        //                .Include(c => c.Company)
-        //                .Where(t => t.PalletsCount == requestReport.PalletsCount)
-        //                .GroupBy(g => g.Company.Name)
-        //                .Select(g => new
-        //                {
-        //                    CompanyName = g.Key,
-        //                    Count = g.Count(),
-        //                })
-        //                .ToListAsync();
+                foreach (var entry in response.Entries)
+                {
+                    var tripsByTc = trips[entry.DetailType];
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.Timeslot.Minutes);
+                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+            }
+            else
+            {
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.Timeslot.Minutes);
+                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key.ToString(),
+                    TripsCount = x.Count()
+                }).ToList();
+            }
 
-        //    if (requestReport.DetailByCompany == true)
-        //    {
-        //        return new ResponseReportDto
-        //        {
-        //            Entries = trips.Select(x => new DetalizationReportRow
-        //            {
-        //                DetailType = x.CompanyName,
-        //                TripsCount = trips.Count(),
-        //                SubRows = new List<DetalizationReportRow>
-        //            {
-        //                new DetalizationReportRow
-        //                {
-        //                    DetailType = $"Количество паллет: {requestReport.PalletsCount}",
-        //                    TripsCount = x.Count
-        //                }
-        //            }
-        //            }).ToList()
-        //        };
-        //    }
-        //    else
-        //    {
-        //        return new ResponseReportDto
-        //        {
-        //            Entries = trips.Select(x => new DetalizationReportRow
-        //            {
-        //                DetailType = $"Количество паллет: {requestReport.PalletsCount}",
-        //                TripsCount = trips.Count(),
-        //                SubRows = new List<DetalizationReportRow>
-        //            {
-        //                new DetalizationReportRow
-        //                {
-        //                    TripsCount = x.Count
-        //                }
-        //            }
-        //            }).ToList()
-        //        };
-        //    }
-        //}
+            return response;
 
-        //private async Task<ResponseReportDto> FilterByStorageAsync(RequestReportDto requestReport, CancellationToken token)
-        //{
-        //    var trips = await _database.Trips
-        //                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-        //                .Include(c => c.Company)
-        //                .Include(s => s.Storage)
-        //                .Where(t => t.Storage.Name == requestReport.StorageName)
-        //                .GroupBy(g => g.Company.Name)
-        //                .Select(g => new
-        //                {
-        //                    CompanyName = g.Key,
-        //                    Count = g.Count(),
-        //                })
-        //                .ToListAsync();
+        }
 
-        //    if (requestReport.DetailByCompany == true)
-        //    {
-        //        return new ResponseReportDto
-        //        {
-        //            Entries = trips.Select(x => new DetalizationReportRow
-        //            {
-        //                DetailType = x.CompanyName,
-        //                TripsCount = trips.Count(),
-        //                SubRows = new List<DetalizationReportRow>
-        //            {
-        //                new DetalizationReportRow
-        //                {
-        //                    DetailType = $"Склад: {requestReport.StorageName}",
-        //                    TripsCount = x.Count
-        //                }
-        //            }
-        //            }).ToList()
-        //        };
-        //    }
-        //    else
-        //    {
-        //        return new ResponseReportDto
-        //        {
-        //            Entries = trips.Select(x => new DetalizationReportRow
-        //            {
-        //                DetailType = $"Склад: {requestReport.StorageName}",
-        //                TripsCount = trips.Count(),
-        //                SubRows = new List<DetalizationReportRow>
-        //            {
-        //                new DetalizationReportRow
-        //                {
-        //                    TripsCount = x.Count
-        //                }
-        //            }
-        //            }).ToList()
-        //        };
-        //    }
-        //}
+        private async Task<ResponseReportDto> FilterByPalletAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
+        {
+            ResponseReportDto response = new();
+
+            if (trips != null && trips.Any())
+            {
+                response.Entries = trips.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key,
+                    TripsCount = x.Value.Count
+                }).ToList();
+
+                foreach (var entry in response.Entries)
+                {
+                    var tripsByTc = trips[entry.DetailType];
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.PalletsCount);
+                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+            }
+            else
+            {
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.PalletsCount);
+                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key.ToString(),
+                    TripsCount = x.Count()
+                }).ToList();
+            }
+
+            return response;
+        }
+
+        private async Task<ResponseReportDto> FilterByStorageAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
+        {
+            ResponseReportDto response = new();
+
+            if (trips != null && trips.Any())
+            {
+                response.Entries = trips.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key,
+                    TripsCount = x.Value.Count
+                }).ToList();
+
+                foreach (var entry in response.Entries)
+                {
+                    var tripsByTc = trips[entry.DetailType];
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.Storage.Name);
+                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+            }
+            else
+            {
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.Storage.Name);
+                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                {
+                    DetailType = x.Key.ToString(),
+                    TripsCount = x.Count()
+                }).ToList();
+            }
+
+            return response;
+        }
     };
 }
 
