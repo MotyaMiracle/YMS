@@ -18,11 +18,8 @@ namespace Domain.Services.Reports
         /// Тип фильтрации
         /// </summary>
         public FilterDetalization FilterDetalization { get; set; }
-        public int? Duration { get; set; }
-        public int? PalletsCount { get; set; }
-        public string? StorageName { get; set; }
-        public bool? DetailByCompany { get; set; }
-        public bool? Trips { get; set; }
+        public bool DetailByCompany { get; set; }
+        public bool Trips { get; set; }
 
     }
 }

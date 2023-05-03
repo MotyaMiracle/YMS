@@ -3,9 +3,11 @@ using Domain.Entity;
 using Domain.Enums;
 using Domain.Services.Reports;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,299 +27,246 @@ namespace Application.Services.Reports
             if (reportDto == null)
                 return null;
 
+            IQueryable<IGrouping<string, Trip>> trips = null;
+
+            if (reportDto.DetailByCompany)
+            {
+                trips = GetBaseQuery(reportDto)
+                    .GroupBy(x => x.Company.Name);
+            }
 
             switch (reportDto.FilterDetalization)
             {
-                case FilterDetalization.Loading:
-                    return await FilterByOperationAsync(reportDto, token);
+                case FilterDetalization.OperationType:
+                    return await FilterByOperationAsync(reportDto, trips, token);
                     
-                case FilterDetalization.Unloading:
-                    return await FilterByOperationAsync(reportDto, token);
+                //case FilterDetalization.Duration:
+                //    return await FilterByDurationAsync(reportDto, token);
                     
-                case FilterDetalization.Duration:
-                    return await FilterByDurationAsync(reportDto, token);
+                //case FilterDetalization.Pallets:
+                //    return await FilterByPalletAsync(reportDto, token);
                     
-                case FilterDetalization.Pallets:
-                    return await FilterByPalletAsync(reportDto, token);
-                    
-                case FilterDetalization.Storage:
-                    return await FilterByStorageAsync(reportDto, token);  
+                //case FilterDetalization.Storage:
+                //    return await FilterByStorageAsync(reportDto, token);  
             }
             return null;
         }
 
-        private async Task<List<Trip>> GetTripAsync(CancellationToken token)
+        private IQueryable<Trip> GetBaseQuery(RequestReportDto requestReport)
         {
-            return null;
+            return _database.Trips
+                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
+                .Include(c => c.Company)
+                .Include(t => t.Timeslot);
         }
 
-        private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, CancellationToken token)
+        private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, IQueryable<IGrouping<string, Trip>> trips, CancellationToken token)
         {
             ResponseReportDto response = new ResponseReportDto();
 
-            switch (requestReport.FilterDetalization)
+            await trips.Select(x => new
             {
-                case FilterDetalization.Loading:
-                    var trips = await _database.Trips
-                        .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                        .Include(c => c.Company)
-                        .Include(t => t.Timeslot)
-                        .Where(t => t.Timeslot.Status == OperationType.Loading)
-                        .GroupBy(c => c.Company.Name)
-                        .Select(g => new
-                        {
-                            CompanyName = g.Key,
-                            Count = g.Count(),
+                CompanyName = x.Key,
+                Count = x.Key,
+                DetailType = x.Select(t => t.Timeslot.Status)
+            }).ToListAsync(token);
 
-                        })
-                        .ToListAsync();
-                    if (requestReport.DetailByCompany == true)
-                    {
-                        response.Entries = trips.Select(x => new DetalizationReportRow
-                        {
-                            DetailType = x.CompanyName,
-                            TripsCount = trips.Count(),
-                            SubRows = new List<DetalizationReportRow>
-                        {
-                            new DetalizationReportRow
-                            {
-                                DetailType = "Загрузка",
-                                TripsCount = x.Count
-                            }
-                        }
-                        }).ToList();
-                    }
-                    else
-                    {
-                        response.Entries = trips.Select(x => new DetalizationReportRow
-                        {
-                            DetailType = "Загрузка",
-                            TripsCount = trips.Count(),
-                            SubRows = new List<DetalizationReportRow>
-                            {
-                            new DetalizationReportRow
-                            {
-                               TripsCount = x.Count
-                            }
-                        }
-                        }).ToList();
-                    }
-                    break;
-
-                case FilterDetalization.Unloading:
-                    trips = await _database.Trips
-                        .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                        .Include(c => c.Company)
-                        .Include(t => t.Timeslot)
-                        .Where(t => t.Timeslot.Status == OperationType.Unloading)
-                        .GroupBy(c => c.Company.Name)
-                        .Select(g => new
-                        {
-                            CompanyName = g.Key,
-                            Count = g.Count(),
-
-                        })
-                        .ToListAsync();
-
-                    if (requestReport.DetailByCompany == true)
-                    {
-                        response.Entries = trips.Select(x => new DetalizationReportRow
-                        {
-                            DetailType = x.CompanyName,
-                            TripsCount = trips.Count(),
-                            SubRows = new List<DetalizationReportRow>
-                        {
-                            new DetalizationReportRow
-                            {
-                                DetailType = "Разгрузка",
-                                TripsCount = x.Count
-                            }
-                        }
-                        }).ToList();
-                    }
-                    else
-                    {
-                        response.Entries = trips.Select(x => new DetalizationReportRow
-                        {
-                            DetailType = "Разгрузка",
-                            TripsCount = trips.Count(),
-                            SubRows = new List<DetalizationReportRow>
-                            {
-                            new DetalizationReportRow
-                            {
-                               TripsCount = x.Count
-                            }
-                        }
-                        }).ToList();
-                    }
-
-                    break;
-            }
+            //if (requestReport.DetailByCompany)
+            //{
+            //    response.Entries = trips.Select(x => new DetalizationReportRow
+            //    {
+            //        DetailType = x.
+            //        TripsCount = trips.Count(),
+            //        SubRows = new List<DetalizationReportRow>
+            //            {
+            //                new DetalizationReportRow
+            //                {
+            //                    DetailType = "Загрузка",
+            //                    TripsCount = x.Count
+            //                }
+            //            }
+            //    }).ToList();
+            //}
+            //else
+            //{
+            //    response.Entries = trips.Select(x => new DetalizationReportRow
+            //    {
+            //        DetailType = "Загрузка",
+            //        TripsCount = trips.Count(),
+            //        SubRows = new List<DetalizationReportRow>
+            //                {
+            //                new DetalizationReportRow
+            //                {
+            //                   TripsCount = x.Count
+            //                }
+            //            }
+            //    }).ToList();
+            //}
 
             return response;
 
         }
 
 
-        private async Task<ResponseReportDto> FilterByDurationAsync(RequestReportDto requestReport, CancellationToken token)
-        {
-            var trips = await _database.Trips
-                        .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                        .Include(c => c.Company)
-                        .Where(t => (Math.Ceiling(((double)t.Gate.PalletHandlingTime * t.PalletsCount) / 30) * 30) == requestReport.Duration)
-                        .GroupBy(g => g.Company.Name)
-                        .Select(g => new
-                        {
-                            CompanyName = g.Key,
-                            Count = g.Count(),
-                        })
-                        .ToListAsync();
-            if (requestReport.DetailByCompany == true)
-            {
-                return new ResponseReportDto
-                {
-                    Entries = trips.Select(x => new DetalizationReportRow
-                    {
-                        DetailType = x.CompanyName,
-                        TripsCount = trips.Count(),
-                        SubRows = new List<DetalizationReportRow>
-                    {
-                        new DetalizationReportRow
-                        {
-                            DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
-                            TripsCount = x.Count
-                        }
-                    }
-                    }).ToList()
-                };
-            }
-            else
-            {
-                return new ResponseReportDto
-                {
-                    Entries = trips.Select(x => new DetalizationReportRow
-                    {
-                        DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
-                        TripsCount = trips.Count(),
-                        SubRows = new List<DetalizationReportRow>
-                    {
-                        new DetalizationReportRow
-                        {
-                            TripsCount = x.Count
-                        }
-                    }
-                    }).ToList()
-                };
-            }
-                
-        }   
-    
-        private async Task<ResponseReportDto> FilterByPalletAsync(RequestReportDto requestReport, CancellationToken token)
-        {
-            var trips = await _database.Trips
-                        .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                        .Include(c => c.Company)
-                        .Where(t => t.PalletsCount == requestReport.PalletsCount)
-                        .GroupBy(g => g.Company.Name)
-                        .Select(g => new
-                        {
-                            CompanyName = g.Key,
-                            Count = g.Count(),
-                        })
-                        .ToListAsync();
+        //private async Task<ResponseReportDto> FilterByDurationAsync(RequestReportDto requestReport, CancellationToken token)
+        //{
+        //    var trips = await _database.Trips
+        //                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
+        //                .Include(c => c.Company)
+        //                .Where(t => (Math.Ceiling(((double)t.Gate.PalletHandlingTime * t.PalletsCount) / 30) * 30) == requestReport.Duration)
+        //                .GroupBy(g => g.Company.Name)
+        //                .Select(g => new
+        //                {
+        //                    CompanyName = g.Key,
+        //                    Count = g.Count(),
+        //                })
+        //                .ToListAsync();
+        //    if (requestReport.DetailByCompany == true)
+        //    {
+        //        return new ResponseReportDto
+        //        {
+        //            Entries = trips.Select(x => new DetalizationReportRow
+        //            {
+        //                DetailType = x.CompanyName,
+        //                TripsCount = trips.Count(),
+        //                SubRows = new List<DetalizationReportRow>
+        //            {
+        //                new DetalizationReportRow
+        //                {
+        //                    DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
+        //                    TripsCount = x.Count
+        //                }
+        //            }
+        //            }).ToList()
+        //        };
+        //    }
+        //    else
+        //    {
+        //        return new ResponseReportDto
+        //        {
+        //            Entries = trips.Select(x => new DetalizationReportRow
+        //            {
+        //                DetailType = $"Продолжительность в минутах: {requestReport.Duration}",
+        //                TripsCount = trips.Count(),
+        //                SubRows = new List<DetalizationReportRow>
+        //            {
+        //                new DetalizationReportRow
+        //                {
+        //                    TripsCount = x.Count
+        //                }
+        //            }
+        //            }).ToList()
+        //        };
+        //    }
 
-            if (requestReport.DetailByCompany == true)
-            {
-                return new ResponseReportDto
-                {
-                    Entries = trips.Select(x => new DetalizationReportRow
-                    {
-                        DetailType = x.CompanyName,
-                        TripsCount = trips.Count(),
-                        SubRows = new List<DetalizationReportRow>
-                    {
-                        new DetalizationReportRow
-                        {
-                            DetailType = $"Количество паллет: {requestReport.PalletsCount}",
-                            TripsCount = x.Count
-                        }
-                    }
-                    }).ToList()
-                };
-            }
-            else
-            {
-                return new ResponseReportDto
-                {
-                    Entries = trips.Select(x => new DetalizationReportRow
-                    {
-                        DetailType = $"Количество паллет: {requestReport.PalletsCount}",
-                        TripsCount = trips.Count(),
-                        SubRows = new List<DetalizationReportRow>
-                    {
-                        new DetalizationReportRow
-                        {
-                            TripsCount = x.Count
-                        }
-                    }
-                    }).ToList()
-                };
-            }
-        }
+        //}   
 
-        private async Task<ResponseReportDto> FilterByStorageAsync(RequestReportDto requestReport, CancellationToken token)
-        {
-            var trips = await _database.Trips
-                        .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
-                        .Include(c => c.Company)
-                        .Include(s => s.Storage)
-                        .Where(t => t.Storage.Name == requestReport.StorageName)
-                        .GroupBy(g => g.Company.Name)
-                        .Select(g => new
-                        {
-                            CompanyName = g.Key,
-                            Count = g.Count(),
-                        })
-                        .ToListAsync();
+        //private async Task<ResponseReportDto> FilterByPalletAsync(RequestReportDto requestReport, CancellationToken token)
+        //{
+        //    var trips = await _database.Trips
+        //                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
+        //                .Include(c => c.Company)
+        //                .Where(t => t.PalletsCount == requestReport.PalletsCount)
+        //                .GroupBy(g => g.Company.Name)
+        //                .Select(g => new
+        //                {
+        //                    CompanyName = g.Key,
+        //                    Count = g.Count(),
+        //                })
+        //                .ToListAsync();
 
-            if (requestReport.DetailByCompany == true)
-            {
-                return new ResponseReportDto
-                {
-                    Entries = trips.Select(x => new DetalizationReportRow
-                    {
-                        DetailType = x.CompanyName,
-                        TripsCount = trips.Count(),
-                        SubRows = new List<DetalizationReportRow>
-                    {
-                        new DetalizationReportRow
-                        {
-                            DetailType = $"Склад: {requestReport.StorageName}",
-                            TripsCount = x.Count
-                        }
-                    }
-                    }).ToList()
-                };
-            }
-            else
-            {
-                return new ResponseReportDto
-                {
-                    Entries = trips.Select(x => new DetalizationReportRow
-                    {
-                        DetailType = $"Склад: {requestReport.StorageName}",
-                        TripsCount = trips.Count(),
-                        SubRows = new List<DetalizationReportRow>
-                    {
-                        new DetalizationReportRow
-                        {
-                            TripsCount = x.Count
-                        }
-                    }
-                    }).ToList()
-                };
-            }
-        }
+        //    if (requestReport.DetailByCompany == true)
+        //    {
+        //        return new ResponseReportDto
+        //        {
+        //            Entries = trips.Select(x => new DetalizationReportRow
+        //            {
+        //                DetailType = x.CompanyName,
+        //                TripsCount = trips.Count(),
+        //                SubRows = new List<DetalizationReportRow>
+        //            {
+        //                new DetalizationReportRow
+        //                {
+        //                    DetailType = $"Количество паллет: {requestReport.PalletsCount}",
+        //                    TripsCount = x.Count
+        //                }
+        //            }
+        //            }).ToList()
+        //        };
+        //    }
+        //    else
+        //    {
+        //        return new ResponseReportDto
+        //        {
+        //            Entries = trips.Select(x => new DetalizationReportRow
+        //            {
+        //                DetailType = $"Количество паллет: {requestReport.PalletsCount}",
+        //                TripsCount = trips.Count(),
+        //                SubRows = new List<DetalizationReportRow>
+        //            {
+        //                new DetalizationReportRow
+        //                {
+        //                    TripsCount = x.Count
+        //                }
+        //            }
+        //            }).ToList()
+        //        };
+        //    }
+        //}
+
+        //private async Task<ResponseReportDto> FilterByStorageAsync(RequestReportDto requestReport, CancellationToken token)
+        //{
+        //    var trips = await _database.Trips
+        //                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
+        //                .Include(c => c.Company)
+        //                .Include(s => s.Storage)
+        //                .Where(t => t.Storage.Name == requestReport.StorageName)
+        //                .GroupBy(g => g.Company.Name)
+        //                .Select(g => new
+        //                {
+        //                    CompanyName = g.Key,
+        //                    Count = g.Count(),
+        //                })
+        //                .ToListAsync();
+
+        //    if (requestReport.DetailByCompany == true)
+        //    {
+        //        return new ResponseReportDto
+        //        {
+        //            Entries = trips.Select(x => new DetalizationReportRow
+        //            {
+        //                DetailType = x.CompanyName,
+        //                TripsCount = trips.Count(),
+        //                SubRows = new List<DetalizationReportRow>
+        //            {
+        //                new DetalizationReportRow
+        //                {
+        //                    DetailType = $"Склад: {requestReport.StorageName}",
+        //                    TripsCount = x.Count
+        //                }
+        //            }
+        //            }).ToList()
+        //        };
+        //    }
+        //    else
+        //    {
+        //        return new ResponseReportDto
+        //        {
+        //            Entries = trips.Select(x => new DetalizationReportRow
+        //            {
+        //                DetailType = $"Склад: {requestReport.StorageName}",
+        //                TripsCount = trips.Count(),
+        //                SubRows = new List<DetalizationReportRow>
+        //            {
+        //                new DetalizationReportRow
+        //                {
+        //                    TripsCount = x.Count
+        //                }
+        //            }
+        //            }).ToList()
+        //        };
+        //    }
+        //}
     };
 }
 
