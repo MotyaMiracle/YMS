@@ -27,12 +27,13 @@ namespace Application.Services.Reports
             if (reportDto == null)
                 return null;
 
-            IQueryable<IGrouping<string, Trip>> trips = null;
+            var trips = new Dictionary<string, List<Trip>>();
 
             if (reportDto.DetailByCompany)
             {
                 trips = GetBaseQuery(reportDto)
-                    .GroupBy(x => x.Company.Name);
+                    .GroupBy(x => x.Company.Name)
+                    .ToDictionary(x => x.Key, x => x.ToList());
             }
 
             switch (reportDto.FilterDetalization)
@@ -60,52 +61,33 @@ namespace Application.Services.Reports
                 .Include(t => t.Timeslot);
         }
 
-        private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, IQueryable<IGrouping<string, Trip>> trips, CancellationToken token)
+        private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
         {
             ResponseReportDto response = new ResponseReportDto();
-
-            await trips.Select(x => new
+            response.Entries = new List<DetalizationReportRow> 
             {
-                CompanyName = x.Key,
-                Count = x.Key,
-                DetailType = x.Select(t => t.Timeslot.Status)
-            }).ToListAsync(token);
+                
+            }
+            var tripByDetalizationType = trips.Values.SelectMany(x => x).GroupBy(t => t.Timeslot.Status);
 
-            //if (requestReport.DetailByCompany)
-            //{
-            //    response.Entries = trips.Select(x => new DetalizationReportRow
-            //    {
-            //        DetailType = x.
-            //        TripsCount = trips.Count(),
-            //        SubRows = new List<DetalizationReportRow>
-            //            {
-            //                new DetalizationReportRow
-            //                {
-            //                    DetailType = "Загрузка",
-            //                    TripsCount = x.Count
-            //                }
-            //            }
-            //    }).ToList();
-            //}
-            //else
-            //{
-            //    response.Entries = trips.Select(x => new DetalizationReportRow
-            //    {
-            //        DetailType = "Загрузка",
-            //        TripsCount = trips.Count(),
-            //        SubRows = new List<DetalizationReportRow>
-            //                {
-            //                new DetalizationReportRow
-            //                {
-            //                   TripsCount = x.Count
-            //                }
-            //            }
-            //    }).ToList();
-            //}
 
+
+            response.Entries = tripByDetalizationType.Select(x => new DetalizationReportRow
+            {
+                DetailType = 
+                TripsCount = trips.Count(),
+                SubRows = new List<DetalizationReportRow>
+                        {
+                            new DetalizationReportRow
+                            {
+                                DetailType = "Загрузка",
+                                TripsCount = x.Count
+                            }
+                        }
+            }).ToList();
+            
             return response;
-
-        }
+        } 
 
 
         //private async Task<ResponseReportDto> FilterByDurationAsync(RequestReportDto requestReport, CancellationToken token)
