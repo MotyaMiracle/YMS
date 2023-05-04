@@ -58,7 +58,8 @@ namespace Application.Services.Reports
             return _database.Trips
                 .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
                 .Include(c => c.Company)
-                .Include(t => t.Timeslot);
+                .Include(t => t.Timeslot)
+                .Include(s => s.Storage);
         }
 
         private async Task<ResponseReportDto> FilterByOperationAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
