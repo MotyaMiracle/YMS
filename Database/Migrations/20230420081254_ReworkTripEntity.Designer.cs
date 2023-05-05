@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace YardManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230420081254_ReworkTripEntity")]
+    partial class ReworkTripEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies", (string)null);
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Domain.Entity.Driver", b =>
@@ -88,7 +91,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Passport", "DriveLicense")
                         .IsUnique();
 
-                    b.ToTable("Drivers", (string)null);
+                    b.ToTable("Drivers");
                 });
 
             modelBuilder.Entity("Domain.Entity.EntityFile", b =>
@@ -110,7 +113,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Files", (string)null);
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("Domain.Entity.Gate", b =>
@@ -146,7 +149,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gates", (string)null);
+                    b.ToTable("Gates");
                 });
 
             modelBuilder.Entity("Domain.Entity.HistoryEntry", b =>
@@ -172,7 +175,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HistoryEntries", (string)null);
+                    b.ToTable("HistoryEntries");
                 });
 
             modelBuilder.Entity("Domain.Entity.Role", b =>
@@ -191,7 +194,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Domain.Entity.Storage", b =>
@@ -237,7 +240,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Storages", (string)null);
+                    b.ToTable("Storages");
                 });
 
             modelBuilder.Entity("Domain.Entity.Timeslot", b =>
@@ -268,7 +271,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("TripId")
                         .IsUnique();
 
-                    b.ToTable("Timeslots", (string)null);
+                    b.ToTable("Timeslots");
                 });
 
             modelBuilder.Entity("Domain.Entity.Trailer", b =>
@@ -296,7 +299,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Trailers", (string)null);
+                    b.ToTable("Trailers");
                 });
 
             modelBuilder.Entity("Domain.Entity.Trip", b =>
@@ -310,9 +313,6 @@ namespace YardManagementSystem.Migrations
 
                     b.Property<DateTime>("ArrivalTimePlan")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid>("DriverId")
                         .HasColumnType("uuid");
@@ -330,11 +330,7 @@ namespace YardManagementSystem.Migrations
                     b.Property<int>("PalletsCount")
                         .HasColumnType("integer");
 
-                    b.Property<byte[]>("QRCode")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<Guid>("StorageId")
+                    b.Property<Guid?>("StorageId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("TimeslotId")
@@ -348,8 +344,6 @@ namespace YardManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("DriverId");
 
                     b.HasIndex("GateId");
@@ -360,7 +354,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("TruckId");
 
-                    b.ToTable("Trips", (string)null);
+                    b.ToTable("Trips");
                 });
 
             modelBuilder.Entity("Domain.Entity.Truck", b =>
@@ -388,7 +382,7 @@ namespace YardManagementSystem.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Trucks", (string)null);
+                    b.ToTable("Trucks");
                 });
 
             modelBuilder.Entity("Domain.Entity.User", b =>
@@ -426,7 +420,7 @@ namespace YardManagementSystem.Migrations
                     b.HasIndex("Login", "Email")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Domain.Entity.HistoryEntry", b =>
@@ -464,12 +458,6 @@ namespace YardManagementSystem.Migrations
 
             modelBuilder.Entity("Domain.Entity.Trip", b =>
                 {
-                    b.HasOne("Domain.Entity.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entity.Driver", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverId")
@@ -495,8 +483,6 @@ namespace YardManagementSystem.Migrations
                         .HasForeignKey("TruckId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Company");
 
                     b.Navigation("Driver");
 

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.Gates;
 using Domain.Services.Trips;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Gates
@@ -72,7 +74,55 @@ namespace Application.Services.Gates
         public async Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token)
         {
             DateTime arrivalTime = DateTime.UtcNow;
+
+            Trip trip = await _database.Trips.FirstOrDefaultAsync(
+                x => x.Truck.Number == carNumber, token);
+
+            bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
+            x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime &&
+            arrivalTime <= x.ArrivalTimePlan.AddMinutes(30),
+            token);
+
+            if (trip.NowStatus == TripStatus.ArriveAtStorage)
+            {
+                trip.NowStatus = TripStatus.Left;
+                await _database.SaveChangesAsync(token);
+                return true;
+            }
+
+            if (check && trip.NowStatus != TripStatus.Left)
+            {
+                trip.ArrivalTimeFact = arrivalTime;
+                trip.NowStatus = TripStatus.ArriveAtStorage;
+            }
+
+            await _database.SaveChangesAsync(token);
+            
             var trip = await _database.Trips.FirstOrDefaultAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+            if (trip != null)
+            {
+                await _tripService.OccupancyAsync(trip, token);
+                return true;
+            }
+            return check;
+        }
+
+        public async Task<bool> CanDriveToGateQRCodeAsync(IFormFile formFile, CancellationToken token)
+        {
+            if (formFile is null)
+                return false;
+
+            byte[] data;
+            DateTime arrivalTime = DateTime.UtcNow;
+
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream);
+                data = stream.ToArray();
+            }
+
+            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.QRCode == data && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+
             if (trip != null)
             {
                 await _tripService.OccupancyAsync(trip, token);
@@ -80,6 +130,6 @@ namespace Application.Services.Gates
             }
             return false;
         }
-        
+
     }
 }

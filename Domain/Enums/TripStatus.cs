@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Enums
+﻿namespace Domain.Enums
 {
     public enum TripStatus
     {
@@ -14,13 +8,28 @@ namespace Domain.Enums
         Create = 0, 
 
         /// <summary>
+        /// Подтверждена
+        /// </summary>
+        Confirmed = 1,
+
+        /// <summary>
         /// В пути
         /// </summary>
-        Arrived = 1, 
+        Arrived = 2, 
+
+        /// <summary>
+        /// Прибыл на склад
+        /// </summary>
+        ArriveAtStorage = 3,
+
+        /// <summary>
+        /// Убыл
+        /// </summary>
+        Left = 4,
 
         /// <summary>
         /// В архиве
         /// </summary>
-        InArchive = 2
+        InArchive = 5
     }
 }
