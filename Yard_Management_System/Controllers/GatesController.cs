@@ -52,6 +52,5 @@ namespace Yard_Management_System.Controllers
         {
             return Ok(await _gatesService.CanDriveToGateAsync(carNumber, token));
         }
-
     }
 }

@@ -6,46 +6,49 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Status
 {
-    public class ColorStatusService : IColorStatus
+    public class BacklightService : IBackligth
     {
         private readonly ApplicationContext _db;
 
-        public ColorStatusService(ApplicationContext db)
+        public BacklightService(ApplicationContext db)
         {
             _db = db;
         }
 
-        public async Task<ColorStatusDto> TruckStatusAsync(string carNumber, CancellationToken token)
+        public BacklightType Type { get; set ; }
+
+        public async Task<bool> IsActive(string entityId, CancellationToken token)
         {
             DateTime arrivalTime = DateTime.UtcNow;
+
+            bool changes = false;
 
             Trip trip = await _db.Trips
                 .Include(t => t.Truck)
                 .Include(t => t.Timeslot)
-                .FirstOrDefaultAsync(x => x.Truck.Number == carNumber);
+                .FirstOrDefaultAsync(t => t.Id == Guid.Parse(entityId));
+
+            if (trip == null)
+                return false;
 
             if (trip.ArrivalTime < arrivalTime)
             {
-                trip.Truck.ColorStatus = ColorStatus.BeLate;
-                trip.Truck.Backlight = Backlights.Red;
+                Type = BacklightType.BeLate;
+                changes = true;
             }
 
             if (DateTime.Parse(trip.Timeslot.To) <= arrivalTime + new TimeSpan(3, 5, 0) &&
                 trip.Timeslot.Date.Day == arrivalTime.Day)
             {
-                trip.Truck.ColorStatus = ColorStatus.NeedToSpeedUp;
-                trip.Truck.Backlight = Backlights.Orange;
+                Type = BacklightType.NeedToSpeedUp;
+                changes = true;
             }
 
-            ColorStatusDto colorStatus = new ColorStatusDto()
-            {
-                Backlight = trip.Truck.Backlight,
-                ColorStatus = trip.Truck.ColorStatus
-            };
+            trip.Backlights = Type.ToString();
 
             _db.SaveChangesAsync(token);
 
-            return colorStatus;
+            return changes;
         }
     }
 }

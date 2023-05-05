@@ -18,9 +18,9 @@ namespace Yard_Management_System.Controllers
         private readonly ApplicationContext _db;
         private readonly IMapper _mapper;
         private readonly ITruckService _truckService;
-        private readonly IColorStatus _colorStatus;
+        private readonly IBackligth _colorStatus;
 
-        public TrucksController(ApplicationContext db, IMapper mapper, ITruckService truckService, IColorStatus colorStatus)
+        public TrucksController(ApplicationContext db, IMapper mapper, ITruckService truckService, IBackligth colorStatus)
         {
             _db = db;
             _mapper = mapper;
@@ -57,12 +57,5 @@ namespace Yard_Management_System.Controllers
             await _truckService.DeleteAsync(truckId, token);
             return Ok();
         }
-
-        [HttpGet("status")]
-        public async Task<IActionResult> TruckStatus(string carNumber, CancellationToken token)
-        {
-            return Ok(await _colorStatus.TruckStatusAsync(carNumber, token));
-        }
-
     }
 }

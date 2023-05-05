@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum ColorStatus
+    public enum BacklightType
     {
         /// <summary>
         /// В работе

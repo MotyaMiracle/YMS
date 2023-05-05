@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using Application.Services.Status;
+using AutoMapper;
 using Database;
 using Domain.Entity;
 using Domain.Enums;
+using Domain.Services.Color;
 using Domain.Services.History;
 using Domain.Services.Trips;
 using Domain.Services.Users;
@@ -15,18 +17,17 @@ namespace Application.Services.Trips
         private readonly IHistoryService _historyService;
         private readonly IUserProvider _userProvider;
         private readonly ApplicationContext _db;
+        private readonly IBackligth _backlightService;
 
-        public TripService(ApplicationContext db, IMapper mapper, IHistoryService historyService, IUserProvider userProvider)
+        public TripService(ApplicationContext db, IMapper mapper, IHistoryService historyService, IUserProvider userProvider, IBackligth backlightService)
         {
             _mapper = mapper;
             _db = db;
             _historyService = historyService;
             _userProvider = userProvider;
+            _backlightService = backlightService;
         }
-        public void Create(Guid entityId)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task CreateAsync(TripDto trip, CancellationToken token)
         {
@@ -64,6 +65,26 @@ namespace Application.Services.Trips
             }
 
             await _db.SaveChangesAsync(token);
+        }
+        public async Task<BackligthDto> BackligthAsync(string entityId, CancellationToken token)
+        {
+            Trip trip = await _db.Trips
+                .Include(t => t.Truck)
+                .Include(t => t.Timeslot)
+                .FirstOrDefaultAsync(t => t.Id == Guid.Parse(entityId));
+
+            BackligthDto backligth = new BackligthDto();
+
+            var temp = await _backlightService.IsActive(entityId, token);
+
+            backligth.Backlight = _backlightService.Type;
+
+            return backligth;
+        }
+
+        public void Create(Guid entityId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -37,5 +37,11 @@ namespace Yard_Management_System.Controllers
             await _tripService.OccupancyAsync(tripId, token);
             return Ok();
         }
+
+        [HttpGet("backlight")]
+        public async Task<IActionResult> Backlight(string entityId, CancellationToken token)
+        {
+            return Ok(await _tripService.BackligthAsync(entityId, token));
+        }
     }
 }

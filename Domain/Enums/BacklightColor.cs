@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum Backlights
+    public enum BacklightColor
     {
         Green = 0,
 

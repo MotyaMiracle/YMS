@@ -15,5 +15,6 @@ namespace Domain.Services.Trips
         public TripStatus NowStatus { get; set; }
         public string Number { get; set; }
         public int PalletsCount { get; set; }
+        public string Backlights { get; set; }
     }
 }

@@ -1,9 +1,10 @@
 using Domain.Enums;
+using Domain.Services.ColorStatus;
 
 namespace Domain.Entity
 
 {
-    public class Trip
+    public class Trip:IListDto
     {
         public Guid Id { get; set; }
         public Guid StorageId { get; set; }
@@ -26,5 +27,6 @@ namespace Domain.Entity
         public Gate Gate { get; set; }
         public string Number { get; set; }
         public int PalletsCount { get; set; }
+        public string Backlights { get; set; }
     }
 }

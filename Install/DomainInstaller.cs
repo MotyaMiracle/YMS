@@ -44,7 +44,7 @@ namespace Install
             services.AddScoped<ITrailerService, TrailerService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<ITimeslotService, TimeslotService>();
-            services.AddScoped<IColorStatus, ColorStatusService>();
+            services.AddScoped<IBackligth, BacklightService>();
 
             services.AddAutoMapper(
                 typeof(MapUser),

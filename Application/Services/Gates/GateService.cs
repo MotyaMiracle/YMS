@@ -82,14 +82,7 @@ namespace Application.Services.Gates
 
             if (check)
             {
-                trip.Truck.ColorStatus = ColorStatus.InWork;
-                trip.Truck.Backlight = Backlights.Green;
-            }
-
-            if (trip.ArrivalTime < arrivalTime)
-            {
-                trip.Truck.ColorStatus = ColorStatus.BeLate;
-                trip.Truck.Backlight = Backlights.Red;
+                trip.Backlights = BacklightType.InWork.ToString();
             }
 
             await _database.SaveChangesAsync(token);
