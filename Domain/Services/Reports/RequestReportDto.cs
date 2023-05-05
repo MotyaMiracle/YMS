@@ -19,7 +19,6 @@ namespace Domain.Services.Reports
         /// </summary>
         public FilterDetalization FilterDetalization { get; set; }
         public bool DetailByCompany { get; set; }
-        public bool DetalizationByTrips { get; set; }
 
     }
 }

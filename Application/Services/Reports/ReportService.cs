@@ -3,13 +3,6 @@ using Domain.Entity;
 using Domain.Enums;
 using Domain.Services.Reports;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services.Reports
 {
