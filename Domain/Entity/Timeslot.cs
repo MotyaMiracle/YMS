@@ -11,5 +11,7 @@ namespace Domain.Entity
         public Guid TripId { get; set; }
         public Trip Trip { get; set; }
         public OperationType Status { get; set; }
+        public int Minutes => (DateTime.Parse(To) - DateTime.Parse(From)).Hours * 60 + (DateTime.Parse(To) - DateTime.Parse(From)).Minutes;
+
     }
 }

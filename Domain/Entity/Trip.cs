@@ -10,6 +10,7 @@ namespace Domain.Entity
         public Guid DriverId { get; set; }
         public Guid TruckId { get; set; }
         public Guid TrailerId { get; set; }
+        public Guid CompanyId { get; set; }
         public Guid? GateId { get; set; }
         public Guid? TimeslotId { get; set; }
 
@@ -29,6 +30,7 @@ namespace Domain.Entity
         public Trailer Trailer { get; set; }
         public Timeslot Timeslot { get; set; }
         public Gate Gate { get; set; }
+        public Company Company { get; set; }
         public string Number { get; set; }
         public int PalletsCount { get; set; }
         public byte[] QRCode { get; set; }

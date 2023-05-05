@@ -36,7 +36,7 @@ namespace Application.Services.Timeslots
 
             int workingTime = trip.PalletsCount * trip.Gate.PalletHandlingTime;
 
-            int time = (int)Math.Ceiling((double)workingTime / 30) * 30;
+            int time = (int)Math.Ceiling((double)workingTime / 60) * 60;
 
             //Проверка на правильно ,указанную дату, +- 1 день от запланированного приезда тс
             if (trip.ArrivalTimePlan.Date != selectedDate.Date &&

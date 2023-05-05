@@ -11,6 +11,7 @@ namespace Domain.Services.Trips
         public LookUpDto TruckId { get; set; }
         public LookUpDto TrailerId { get; set; }
         public LookUpDto GateId { get; set; }
+        public LookUpDto CompanyId { get; set; }
         public DateTime ArrivalTime { get; set; }
         public TripStatus NowStatus { get; set; }
         public string Number { get; set; }
