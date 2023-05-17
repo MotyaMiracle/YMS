@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Database;
+using Domain.Entity;
+using Domain.Enums;
+using Domain.Services.Color;
 using Domain.Services.Trucks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Yard_Management_System.Controllers
 {
@@ -14,17 +18,19 @@ namespace Yard_Management_System.Controllers
         private readonly ApplicationContext _db;
         private readonly IMapper _mapper;
         private readonly ITruckService _truckService;
+        private readonly IBackligth _colorStatus;
 
-        public TrucksController(ApplicationContext db, IMapper mapper, ITruckService truckService)
+        public TrucksController(ApplicationContext db, IMapper mapper, ITruckService truckService, IBackligth colorStatus)
         {
             _db = db;
             _mapper = mapper;
             _truckService = truckService;
+            _colorStatus = colorStatus;
         }
         [HttpGet]
         public async Task<IActionResult> Get(Guid truckId, CancellationToken token)
         {
-            return Ok (await _truckService.GetAsync(truckId, token));
+            return Ok(await _truckService.GetAsync(truckId, token));
         }
 
         [HttpPost]

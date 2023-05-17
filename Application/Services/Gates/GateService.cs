@@ -6,6 +6,7 @@ using Domain.Services.Gates;
 using Domain.Services.Trips;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace Application.Services.Gates
 {
@@ -75,13 +76,18 @@ namespace Application.Services.Gates
         {
             DateTime arrivalTime = DateTime.UtcNow;
 
-            Trip trip = await _database.Trips.FirstOrDefaultAsync(
-                x => x.Truck.Number == carNumber, token);
+            Trip trip = await _database.Trips
+                .Include(t => t.Truck)
+                .FirstOrDefaultAsync(x => x.Truck.Number== carNumber);
 
             bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
-            x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime &&
-            arrivalTime <= x.ArrivalTimePlan.AddMinutes(30),
-            token);
+            x.ArrivalTime.AddMinutes(-30) <= arrivalTime &&
+            arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+
+            if (check)
+            {
+                trip.Backlights = BacklightType.InWork.ToString();
+            }
 
             if (trip.NowStatus == TripStatus.ArriveAtStorage)
             {
@@ -104,6 +110,7 @@ namespace Application.Services.Gates
                 await _tripService.OccupancyAsync(trip, token);
                 return true;
             }
+
             return check;
         }
 

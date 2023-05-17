@@ -4,6 +4,7 @@ using Application.Services.Drivers;
 using Application.Services.Files;
 using Application.Services.Gates;
 using Application.Services.History;
+using Application.Services.Status;
 using Application.Services.Reports;
 using Application.Services.Storages;
 using Application.Services.Timeslots;
@@ -11,6 +12,7 @@ using Application.Services.Trailers;
 using Application.Services.Trips;
 using Application.Services.Trucks;
 using Application.Services.Users;
+using Domain.Services.Color;
 using Domain.Services.Companies;
 using Domain.Services.Drivers;
 using Domain.Services.Files;
@@ -44,6 +46,7 @@ namespace Install
             services.AddScoped<ITrailerService, TrailerService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<ITimeslotService, TimeslotService>();
+            services.AddScoped<IBackligth, BacklightService>();
             services.AddScoped<IReportService, ReportService>();
 
             services.AddAutoMapper(

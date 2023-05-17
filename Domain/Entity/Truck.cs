@@ -1,4 +1,6 @@
-﻿namespace Domain.Entity
+﻿using Domain.Enums;
+
+namespace Domain.Entity
 {
     public class Truck
     {

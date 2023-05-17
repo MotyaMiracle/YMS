@@ -40,5 +40,11 @@ namespace Yard_Management_System.Controllers
                
             return Ok(await _storageService.GetExcpectedOccupancy(selectedDate, storageName, token));
         }
+
+        [HttpGet("backlight")]
+        public async Task<IActionResult> Backlight(string entityId, CancellationToken token)
+        {
+            return Ok(await _tripService.BackligthAsync(entityId, token));
+        }
     }
 }

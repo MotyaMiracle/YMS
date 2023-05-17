@@ -1,4 +1,6 @@
-﻿namespace Domain.Services.Trucks
+﻿using Domain.Enums;
+
+namespace Domain.Services.Trucks
 {
     public interface ITruckService
     {
