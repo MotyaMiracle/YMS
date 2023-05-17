@@ -70,22 +70,58 @@ namespace Application.Services.Reports
                 foreach (var entry in response.Entries)
                 {
                     var tripsByTc = trips[entry.DetailType];
-                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.Timeslot.Status);
-                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => new { t.Timeslot.Status, t.Number});
+                    if (requestReport.DetailByTrip)
                     {
-                        DetailType = x.Key.ToString(),
-                        TripsCount = x.Count()
-                    }).ToList();
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.Status.ToString(),
+                            TripsCount = x.Count(),
+                            SubRows = tripByDetalizationType.Select(g => new DetalizationReportRow
+                            {
+                                DetailType = g.Key.Number,
+                                TripsCount = g.Count()
+                            }).ToList()
+                        }).ToList();
+                    }
+                    else
+                    {
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.Status.ToString(),
+                            TripsCount = x.Count(),
+                        }).ToList();
+                    }
+                    
                 }
             }
             else
             {
-                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.Timeslot.Status);
-                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport)
+                    .ToListAsync(token))
+                    .GroupBy(t => new { t.Timeslot.Status, t.Number });
+                if (requestReport.DetailByTrip)
                 {
-                    DetailType = x.Key.ToString(),
-                    TripsCount = x.Count()
-                }).ToList();
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.Status.ToString(),
+                        TripsCount = x.Count(),
+                        SubRows = tripsByDetalizationType.Select(g => new DetalizationReportRow
+                        {
+                            DetailType = g.Key.Number,
+                            TripsCount = g.Count()
+                        }).ToList()
+                    }).ToList();
+                }
+                else
+                {
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.Status.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+                
             }
 
             return response;
@@ -107,22 +143,58 @@ namespace Application.Services.Reports
                 foreach (var entry in response.Entries)
                 {
                     var tripsByTc = trips[entry.DetailType];
-                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.Timeslot.Minutes);
-                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => new { t.Timeslot.Minutes, t.Number });
+                    if (requestReport.DetailByTrip)
                     {
-                        DetailType = x.Key.ToString(),
-                        TripsCount = x.Count()
-                    }).ToList();
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.Minutes.ToString(),
+                            TripsCount = x.Count(),
+                            SubRows = tripByDetalizationType.Select(g => new DetalizationReportRow
+                            {
+                                DetailType = g.Key.Number,
+                                TripsCount = g.Count()
+                            }).ToList()
+                        }).ToList();
+                    }
+                    else
+                    {
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.Minutes.ToString(),
+                            TripsCount = x.Count(),
+                        }).ToList();
+                    }
+
                 }
             }
             else
             {
-                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.Timeslot.Minutes);
-                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport)
+                    .ToListAsync(token))
+                    .GroupBy(t => new { t.Timeslot.Minutes, t.Number });
+                if (requestReport.DetailByTrip)
                 {
-                    DetailType = x.Key.ToString(),
-                    TripsCount = x.Count()
-                }).ToList();
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.Minutes.ToString(),
+                        TripsCount = x.Count(),
+                        SubRows = tripsByDetalizationType.Select(g => new DetalizationReportRow
+                        {
+                            DetailType = g.Key.Number,
+                            TripsCount = g.Count()
+                        }).ToList()
+                    }).ToList();
+                }
+                else
+                {
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.Minutes.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+
             }
 
             return response;
@@ -144,25 +216,62 @@ namespace Application.Services.Reports
                 foreach (var entry in response.Entries)
                 {
                     var tripsByTc = trips[entry.DetailType];
-                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.PalletsCount);
-                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => new { t.PalletsCount, t.Number });
+                    if (requestReport.DetailByTrip)
                     {
-                        DetailType = x.Key.ToString(),
-                        TripsCount = x.Count()
-                    }).ToList();
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.PalletsCount.ToString(),
+                            TripsCount = x.Count(),
+                            SubRows = tripByDetalizationType.Select(g => new DetalizationReportRow
+                            {
+                                DetailType = g.Key.Number,
+                                TripsCount = g.Count()
+                            }).ToList()
+                        }).ToList();
+                    }
+                    else
+                    {
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.PalletsCount.ToString(),
+                            TripsCount = x.Count(),
+                        }).ToList();
+                    }
+
                 }
             }
             else
             {
-                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.PalletsCount);
-                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport)
+                    .ToListAsync(token))
+                    .GroupBy(t => new { t.PalletsCount, t.Number });
+                if (requestReport.DetailByTrip)
                 {
-                    DetailType = x.Key.ToString(),
-                    TripsCount = x.Count()
-                }).ToList();
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.PalletsCount.ToString(),
+                        TripsCount = x.Count(),
+                        SubRows = tripsByDetalizationType.Select(g => new DetalizationReportRow
+                        {
+                            DetailType = g.Key.Number,
+                            TripsCount = g.Count()
+                        }).ToList()
+                    }).ToList();
+                }
+                else
+                {
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.PalletsCount.ToString(),
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+
             }
 
             return response;
+
         }
 
         private async Task<ResponseReportDto> FilterByStorageAsync(RequestReportDto requestReport, Dictionary<string, List<Trip>> trips, CancellationToken token)
@@ -180,25 +289,62 @@ namespace Application.Services.Reports
                 foreach (var entry in response.Entries)
                 {
                     var tripsByTc = trips[entry.DetailType];
-                    var tripByDetalizationType = tripsByTc.GroupBy(t => t.Storage.Name);
-                    entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                    var tripByDetalizationType = tripsByTc.GroupBy(t => new { t.Storage.Name, t.Number });
+                    if (requestReport.DetailByTrip)
                     {
-                        DetailType = x.Key.ToString(),
-                        TripsCount = x.Count()
-                    }).ToList();
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.Name,
+                            TripsCount = x.Count(),
+                            SubRows = tripByDetalizationType.Select(g => new DetalizationReportRow
+                            {
+                                DetailType = g.Key.Number,
+                                TripsCount = g.Count()
+                            }).ToList()
+                        }).ToList();
+                    }
+                    else
+                    {
+                        entry.SubRows = tripByDetalizationType.Select(x => new DetalizationReportRow
+                        {
+                            DetailType = x.Key.Name,
+                            TripsCount = x.Count(),
+                        }).ToList();
+                    }
+
                 }
             }
             else
             {
-                var tripsByDetalizationType = (await GetBaseQuery(requestReport).ToListAsync(token)).GroupBy(x => x.Storage.Name);
-                response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                var tripsByDetalizationType = (await GetBaseQuery(requestReport)
+                    .ToListAsync(token))
+                    .GroupBy(t => new { t.Storage.Name, t.Number });
+                if (requestReport.DetailByTrip)
                 {
-                    DetailType = x.Key.ToString(),
-                    TripsCount = x.Count()
-                }).ToList();
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.Name,
+                        TripsCount = x.Count(),
+                        SubRows = tripsByDetalizationType.Select(g => new DetalizationReportRow
+                        {
+                            DetailType = g.Key.Number,
+                            TripsCount = g.Count()
+                        }).ToList()
+                    }).ToList();
+                }
+                else
+                {
+                    response.Entries = tripsByDetalizationType.Select(x => new DetalizationReportRow
+                    {
+                        DetailType = x.Key.Name,
+                        TripsCount = x.Count()
+                    }).ToList();
+                }
+
             }
 
             return response;
+
         }
     };
 }
