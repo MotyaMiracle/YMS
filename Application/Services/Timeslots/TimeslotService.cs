@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Entity;
+using Domain.Enums;
 using Domain.Services.Timeslots;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,20 +36,20 @@ namespace Application.Services.Timeslots
 
             int workingTime = trip.PalletsCount * trip.Gate.PalletHandlingTime;
 
-            int time = (int)Math.Ceiling((double)workingTime / 30) * 30;
+            int time = (int)Math.Ceiling((double)workingTime / 60) * 60;
 
             //Проверка на правильно ,указанную дату, +- 1 день от запланированного приезда тс
-            if (trip.ArrivalTime.Date != selectedDate.Date &&
-                (trip.ArrivalTime.Date + OneDay) != selectedDate.Date &&
-                (trip.ArrivalTime.Date - OneDay) != selectedDate.Date)
+            if (trip.ArrivalTimePlan.Date != selectedDate.Date &&
+                (trip.ArrivalTimePlan.Date + OneDay) != selectedDate.Date &&
+                (trip.ArrivalTimePlan.Date - OneDay) != selectedDate.Date)
                 return null;
 
             Dictionary<string, List<Timeslot>> timeslotsByGates = await _db.Trips
                 .Include(t => t.Timeslot)
                 .Where(t => t.Timeslot != null)
-                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + OneDay ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - OneDay)
+                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTimePlan.Date ||
+                 d.Timeslot.Date.Date == trip.ArrivalTimePlan.Date + OneDay ||
+                 d.Timeslot.Date.Date == trip.ArrivalTimePlan.Date - OneDay)
                 .Where(g => g.StorageId == trip.StorageId)
                 .OrderBy(g => g.GateId)
                 .GroupBy(g => g.Gate.Name)
@@ -122,9 +123,9 @@ namespace Application.Services.Timeslots
             Dictionary<string, List<Timeslot>> timeslotsByGates = await _db.Trips
                 .Include(t => t.Timeslot)
                 .Where(t => t.Timeslot != null)
-                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTime.Date ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date + OneDay ||
-                 d.Timeslot.Date.Date == trip.ArrivalTime.Date - OneDay)
+                .Where(d => d.Timeslot.Date.Date == trip.ArrivalTimePlan.Date ||
+                 d.Timeslot.Date.Date == trip.ArrivalTimePlan.Date + OneDay ||
+                 d.Timeslot.Date.Date == trip.ArrivalTimePlan.Date - OneDay)
                 .Where(g => g.StorageId == trip.StorageId)
                 .OrderBy(g => g.GateId)
                 .GroupBy(g => g.Gate.Name)
@@ -138,6 +139,9 @@ namespace Application.Services.Timeslots
 
             Timeslot timeslot = _mapper.Map<Timeslot>(timeslotDto);
             timeslot.TripId = tripId;
+
+            trip.NowStatus = TripStatus.Confirmed;
+
             await _db.Timeslots.AddAsync(timeslot, token);
             await _db.SaveChangesAsync(token);
 

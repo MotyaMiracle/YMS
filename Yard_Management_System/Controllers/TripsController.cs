@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Database;
 using Domain.Services.History;
+using Domain.Services.Storages;
 using Domain.Services.Trips;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,15 @@ namespace Yard_Management_System.Controllers
         private readonly ApplicationContext _db;
         private readonly ITripService _tripService;
         private readonly IMapper _mapper;
+        private readonly IStorageService _storageService;
         
 
-        public TripsController(ApplicationContext db, IHistoryService historyService, IMapper mapper, ITripService tripService)
+        public TripsController(ApplicationContext db, IMapper mapper, ITripService tripService, IStorageService storageService)
         {
             _db = db;
             _mapper = mapper;
             _tripService = tripService;
+            _storageService = storageService;
         }
 
         [HttpPost]
@@ -31,11 +34,11 @@ namespace Yard_Management_System.Controllers
             return Ok(trip);    
         }
 
-        [HttpGet("startOperation/{tripId}")]
-        public async Task<IActionResult> Operation(Guid tripId, CancellationToken token)
+        [HttpGet]
+        public async Task<IActionResult> Operation(DateTime selectedDate, string? storageName, CancellationToken token)
         {
-            await _tripService.OccupancyAsync(tripId, token);
-            return Ok();
+               
+            return Ok(await _storageService.GetExcpectedOccupancy(selectedDate, storageName, token));
         }
 
         [HttpGet("backlight")]

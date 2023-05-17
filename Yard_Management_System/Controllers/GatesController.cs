@@ -52,5 +52,11 @@ namespace Yard_Management_System.Controllers
         {
             return Ok(await _gatesService.CanDriveToGateAsync(carNumber, token));
         }
+
+        [HttpPost("QRCode")]
+        public async Task<IActionResult> CanDriveQrCode(IFormFile formFile, CancellationToken token)
+        {
+            return Ok(await _gatesService.CanDriveToGateQRCodeAsync(formFile, token));
+        }
     }
 }
