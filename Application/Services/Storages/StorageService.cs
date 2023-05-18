@@ -75,7 +75,7 @@ namespace Application.Services.Storages
                 var trips = await _database.Trips
                     .Include(s => s.Storage)
                     .Include(t => t.Timeslot)
-                    .Where(t => t.ArrivalTime.Date == selectedDate)
+                    .Where(t => t.ArrivalTimePlan.Date == selectedDate)
                     .ToListAsync(token);
 
                 return await CalculateExpectedOccupancy(trips);
@@ -85,7 +85,7 @@ namespace Application.Services.Storages
                 var trips = await _database.Trips
                                     .Include(s => s.Storage)
                                     .Include(l => l.Timeslot)
-                                    .Where(t => t.ArrivalTime.Date == selectedDate && t.Storage.Name == storageName)
+                                    .Where(t => t.ArrivalTimePlan.Date == selectedDate && t.Storage.Name == storageName)
                                     .ToListAsync(token);
 
                 return await CalculateExpectedOccupancy(trips);
