@@ -305,23 +305,17 @@ namespace YardManagementSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ArrivalTimeFact")
+                    b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Backlights")
                         .IsRequired()
                         .HasColumnType("text");
-                        
-                    b.Property<DateTime>("ArrivalTimePlan")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid>("DriverId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("GateId")
+                    b.Property<Guid>("GateId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("NowStatus")
@@ -334,14 +328,10 @@ namespace YardManagementSystem.Migrations
                     b.Property<int>("PalletsCount")
                         .HasColumnType("integer");
 
-                    b.Property<byte[]>("QRCode")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
                     b.Property<Guid>("StorageId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("TimeslotId")
+                    b.Property<Guid>("TimeslotId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("TrailerId")
@@ -351,8 +341,6 @@ namespace YardManagementSystem.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("DriverId");
 
@@ -468,12 +456,6 @@ namespace YardManagementSystem.Migrations
 
             modelBuilder.Entity("Domain.Entity.Trip", b =>
                 {
-                    b.HasOne("Domain.Entity.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entity.Driver", "Driver")
                         .WithMany()
                         .HasForeignKey("DriverId")
@@ -482,11 +464,15 @@ namespace YardManagementSystem.Migrations
 
                     b.HasOne("Domain.Entity.Gate", "Gate")
                         .WithMany()
-                        .HasForeignKey("GateId");
+                        .HasForeignKey("GateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entity.Storage", "Storage")
                         .WithMany()
-                        .HasForeignKey("StorageId");
+                        .HasForeignKey("StorageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entity.Trailer", "Trailer")
                         .WithMany()
@@ -499,8 +485,6 @@ namespace YardManagementSystem.Migrations
                         .HasForeignKey("TruckId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Company");
 
                     b.Navigation("Driver");
 

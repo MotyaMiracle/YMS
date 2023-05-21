@@ -308,7 +308,7 @@ namespace YardManagementSystem.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("ArrivalTime")
+                    b.Property<DateTime>("ArrivalTimePlan")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CompanyId")

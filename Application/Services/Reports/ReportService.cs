@@ -49,7 +49,7 @@ namespace Application.Services.Reports
         private IQueryable<Trip> GetBaseQuery(RequestReportDto requestReport)
         {
             return _database.Trips
-                .Where(t => requestReport.StartDate.Date <= t.ArrivalTime.Date && t.ArrivalTime <= requestReport.EndDate.Date)
+                .Where(t => requestReport.StartDate.Date <= t.ArrivalTimePlan.Date && t.ArrivalTimePlan <= requestReport.EndDate.Date)
                 .Include(c => c.Company)
                 .Include(t => t.Timeslot)
                 .Include(s => s.Storage);

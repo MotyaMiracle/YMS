@@ -81,8 +81,8 @@ namespace Application.Services.Gates
                 .FirstOrDefaultAsync(x => x.Truck.Number== carNumber);
 
             bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
-            x.ArrivalTime.AddMinutes(-30) <= arrivalTime &&
-            arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+            x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime &&
+            arrivalTime <= x.ArrivalTimePlan.AddMinutes(30), token);
 
             if (check)
             {
@@ -104,10 +104,10 @@ namespace Application.Services.Gates
 
             await _database.SaveChangesAsync(token);
             
-            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.Truck.Number == carNumber && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
-            if (trip != null)
+            var _trip = await _database.Trips.FirstOrDefaultAsync(x => x.Truck.Number == carNumber && x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTimePlan.AddMinutes(30), token);
+            if (_trip != null)
             {
-                await _tripService.OccupancyAsync(trip, token);
+                await _tripService.OccupancyAsync(_trip, token);
                 return true;
             }
 
@@ -128,7 +128,7 @@ namespace Application.Services.Gates
                 data = stream.ToArray();
             }
 
-            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.QRCode == data && x.ArrivalTime.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTime.AddMinutes(30), token);
+            var trip = await _database.Trips.FirstOrDefaultAsync(x => x.QRCode == data && x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime && arrivalTime <= x.ArrivalTimePlan.AddMinutes(30), token);
 
             if (trip != null)
             {

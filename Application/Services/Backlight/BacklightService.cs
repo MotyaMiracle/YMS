@@ -31,7 +31,7 @@ namespace Application.Services.Status
             if (trip == null)
                 return false;
 
-            if (trip.ArrivalTime < arrivalTime)
+            if (trip.ArrivalTimePlan < arrivalTime)
             {
                 Type = BacklightType.BeLate;
                 changes = true;
