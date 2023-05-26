@@ -1,8 +1,10 @@
 ﻿using Domain.Services.Timeslots;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Yard_Management_System.Controllers
 {
+    [Authorize]
     [Route("api/timeslot")]
     [ApiController]
     public class TimeslotController : Controller

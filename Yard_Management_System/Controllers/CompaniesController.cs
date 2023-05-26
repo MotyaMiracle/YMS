@@ -1,10 +1,12 @@
 ﻿using Domain.Services.Companies;
 using Domain.Services.Storages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Yard_Management_System.Controllers
 {
+    [Authorize]
     [Route("api/company")]
     [ApiController]
     public class CompaniesController : ControllerBase

@@ -47,5 +47,17 @@ namespace Yard_Management_System.Controllers
 
             return Ok();
         }
+
+        [HttpGet("{carNumber}")]
+        public async Task<IActionResult> CanDrive(string carNumber, CancellationToken token)
+        {
+            return Ok(await _storageService.CanDriveToStorageAsync(carNumber, token));
+        }
+
+        [HttpPost("QRCode")]
+        public async Task<IActionResult> CanDriveQrCode(IFormFile formFile, CancellationToken token)
+        {
+            return Ok(await _storageService.CanDriveToStorageQRCodeAsync(formFile, token));
+        }
     }
 }

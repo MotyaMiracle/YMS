@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Database;
-using Domain.Services.History;
 using Domain.Services.Storages;
 using Domain.Services.Trips;
 using Microsoft.AspNetCore.Authorization;
@@ -27,14 +26,14 @@ namespace Yard_Management_System.Controllers
             _storageService = storageService;
         }
 
-        [HttpPost]
+        [HttpPost("createTrip")]
         public async Task<IActionResult> Create(TripDto trip, CancellationToken token)
         {
             await _tripService.CreateAsync(trip, token);
             return Ok(trip);    
         }
 
-        [HttpGet]
+        [HttpGet("expectedOccupancy")]
         public async Task<IActionResult> Operation(DateTime selectedDate, string? storageName, CancellationToken token)
         {
                

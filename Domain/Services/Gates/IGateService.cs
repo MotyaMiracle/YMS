@@ -12,8 +12,5 @@ namespace Domain.Services.Gates
 
         Task<IEnumerable<GateDto>> GetAllAsync(CancellationToken token);
 
-        public Task<bool> CanDriveToGateAsync(string carNumber, CancellationToken token);
-
-        public Task<bool> CanDriveToGateQRCodeAsync(IFormFile formFile, CancellationToken token);
     }
 }
