@@ -12,7 +12,7 @@ namespace Domain.Services.Trips
         public LookUpDto TrailerId { get; set; }
         public LookUpDto GateId { get; set; }
         public LookUpDto CompanyId { get; set; }
-        public DateTime ArrivalTime { get; set; }
+        public DateTime ArrivalTimePlan { get; set; }
         public TripStatus NowStatus { get; set; }
         public string Number { get; set; }
         public int PalletsCount { get; set; }

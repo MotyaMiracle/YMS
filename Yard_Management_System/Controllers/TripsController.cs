@@ -12,16 +12,12 @@ namespace Yard_Management_System.Controllers
     [ApiController]
     public class TripsController : Controller
     {
-        private readonly ApplicationContext _db;
         private readonly ITripService _tripService;
-        private readonly IMapper _mapper;
         private readonly IStorageService _storageService;
         
 
-        public TripsController(ApplicationContext db, IMapper mapper, ITripService tripService, IStorageService storageService)
+        public TripsController(ITripService tripService, IStorageService storageService)
         {
-            _db = db;
-            _mapper = mapper;
             _tripService = tripService;
             _storageService = storageService;
         }
@@ -31,6 +27,12 @@ namespace Yard_Management_System.Controllers
         {
             await _tripService.CreateAsync(trip, token);
             return Ok(trip);    
+        }
+
+        [HttpGet("getTrip")]
+        public async Task<IActionResult> Get(Guid tripId, CancellationToken token)
+        {
+            return Ok(await _tripService.GetAsync(tripId, token));
         }
 
         [HttpGet("expectedOccupancy")]
