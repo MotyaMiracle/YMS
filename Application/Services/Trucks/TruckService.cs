@@ -23,7 +23,6 @@ namespace Application.Services.Trucks
             if (string.IsNullOrWhiteSpace(truckDto.Id))
             {
                 Truck truck = _mapper.Map<Truck>(truckDto);
-                //truck.CompanyId = Guid.NewGuid();
                 await _db.Trucks.AddAsync(truck, token);
             }
             //Update

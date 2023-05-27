@@ -9,13 +9,13 @@ namespace Application.Services.Users
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
-        private readonly ApplicationContext _db;
+        private readonly ApplicationContext _database;
 
 
         public UserService(ApplicationContext db, IMapper mapper)
         {
             _mapper = mapper;
-            _db= db;
+            _database= db;
         }
 
         public async Task RegistrationAndUpdateAsync(UserDto user,CancellationToken token)
@@ -24,31 +24,31 @@ namespace Application.Services.Users
             if (string.IsNullOrWhiteSpace(user.Id))
             {
                 User newUser = _mapper.Map<User>(user);
-                await _db.Users.AddAsync(newUser, token);
+                await _database.Users.AddAsync(newUser, token);
             }
             //Update
             else 
             {
                 User updateUser = _mapper.Map<User>(user);
-                _db.Users.Update(updateUser);
+                _database.Users.Update(updateUser);
             }
-            await _db.SaveChangesAsync(token);
+            await _database.SaveChangesAsync(token);
         }
 
         public async Task DeleteUserAsync(Guid userId, CancellationToken token)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId, token);
+            User user = await _database.Users.FirstOrDefaultAsync(u => u.Id == userId, token);
 
             if (user is null)
                 return;
 
-            _db.Users.Remove(user);
-            await _db.SaveChangesAsync(token);
+            _database.Users.Remove(user);
+            await _database.SaveChangesAsync(token);
         }
 
         public async Task<UserDto> GetAsync(Guid userId, CancellationToken token)
         {
-            var user = await _db.Users
+            var user = await _database.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.Id == userId, token);
 
@@ -61,7 +61,7 @@ namespace Application.Services.Users
 
         public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken token)
         {
-            var users = await _db.Users
+            var users = await _database.Users
                 .Include(u => u.Role)
                 .ToListAsync(token);
 

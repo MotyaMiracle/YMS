@@ -6,6 +6,7 @@ using Domain.Services.Storages;
 using Domain.Services.Trips;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
 namespace Application.Services.Storages
@@ -99,19 +100,34 @@ namespace Application.Services.Storages
         private async Task<int> CalculateExpectedOccupancy(List<Trip> trips)
         {
             var expectedOccupancy = 0;
-
+            
             foreach(var trip in trips)
             {
-                switch (trip.Timeslot.Status)
+                try
                 {
-                    case OperationType.Loading:
-                        expectedOccupancy -= trip.PalletsCount;
-                        break;
+                    if (trip.Timeslot is null)
+                    {
+                        throw new Exception("Таймслот не задан");
+                    }
+                    else
+                    {
+                        switch (trip.Timeslot.Status)
+                        {
+                            case OperationType.Loading:
+                                expectedOccupancy -= trip.PalletsCount;
+                                break;
 
-                    case OperationType.Unloading:
-                        expectedOccupancy += trip.PalletsCount;
-                        break;
+                            case OperationType.Unloading:
+                                expectedOccupancy += trip.PalletsCount;
+                                break;
+                        }
+                    }
                 }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Ошибка: {ex.Message}");
+                }
+                
             }
 
             return expectedOccupancy;

@@ -66,18 +66,29 @@ namespace Application.Services.Trips
             if (storage is null && timeslot is null)
                 return;
 
-
-            switch (timeslot.Status)
+            try
             {
-                case OperationType.Loading:
-                        storage.OccupancyActual -= trip.PalletsCount;
-                    break;
+                if(timeslot is null)
+                    throw new Exception("Таймслот не задан");
+                else
+                {
+                    switch (timeslot.Status)
+                    {
+                        case OperationType.Loading:
+                            storage.OccupancyActual -= trip.PalletsCount;
+                            break;
 
-                case OperationType.Unloading:
-                        storage.OccupancyActual += trip.PalletsCount;
-                    break;
+                        case OperationType.Unloading:
+                            storage.OccupancyActual += trip.PalletsCount;
+                            break;
+                    }
+                }
             }
-
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+            
             await _database.SaveChangesAsync(token);
         }
         

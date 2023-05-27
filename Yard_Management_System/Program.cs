@@ -106,37 +106,4 @@ app.UseEndpoints(endpoints =>
 
 app.MapControllers();
 
-app.MapGet("/", () => Results.Redirect("api/login"));
-
-
-app.MapGet("api/login", async (HttpContext context) =>
-{
-    context.Response.ContentType = "text/html; charset=utf-8";
-    // html-ôîðìà äëÿ ââîäà ëîãèíà/ïàðîëÿ
-    string loginForm = @"<!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset='utf-8' />
-        <title>METANIT.COM</title>
-    </head>
-    <body>
-        <h2>Login Form</h2>
-        <form method='post'>
-            <p>
-                <label>Login</label><br />
-                <input name='login' />
-            </p>
-            <p>
-                <label>Password</label><br />
-                <input type='password' name='password' />
-            </p>
-            <input type='submit' value='Login' />
-        </form>
-    </body>
-    </html>";
-    await context.Response.WriteAsync(loginForm);
-});
-
-Company company = new Company() { Id = Guid.Parse("f360f334-25c7-424d-827b-7607f67931ba") };
-
 app.Run();
