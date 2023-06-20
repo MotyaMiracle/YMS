@@ -140,6 +140,11 @@ namespace Application.Services.Storages
                 .Include(t => t.Truck)
                 .FirstOrDefaultAsync(x => x.Truck.Number == carNumber);
 
+            if(trip == null)
+            {
+                return false;
+            }
+
             bool check = await _database.Trips.AnyAsync(x => x.Truck.Number == carNumber &&
             x.ArrivalTimePlan.AddMinutes(-30) <= arrivalTime &&
             arrivalTime <= x.ArrivalTimePlan.AddMinutes(30), token);
